@@ -39,7 +39,7 @@ document.onkeydown = function (e) {
 var isNS = (navigator.appName == "Netscape") ? 1 : 0;
 if (navigator.appName == "Netscape") document.captureEvents(Event.MOUSEDOWN || Event.MOUSEUP);
 function mischandler() {
-    alert('CopyRight SP!!!');
+    alert('nuh-uh');
     return false;
 }
 function mousehandler(e) {
