@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    scroll-behavior: smooth; /* Smooth scroll hozzáadva */
 }
 
 body {
@@ -73,23 +74,61 @@ nav {
 
 .hero {
     height: 100vh;
-    background: url('hero.jpg') no-repeat center center/cover;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 80px; /* Térköz a hero és az alábbi szekciók között */
+}
+
+.slideshow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1a1a1a; /* Háttérszín az SVG-ekhez */
+}
+
+.bombasz-text {
+    width: 100%;
+    height: 100%;
+    animation: floatText 4s ease-in-out infinite; /* Lassabb animáció */
+}
+
+@keyframes floatText {
+    0%, 100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-20px); /* Lebegés hatása */
+        opacity: 0.8; /* Átlátszóság változása */
+    }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    text-align: center;
+    height: 100%;
     color: #ffffff;
     padding: 0 20px;
 }
 
-.hero h1 {
+.hero-content h1 {
     font-size: 3rem;
     animation: fadeIn 2s ease-in-out;
     color: #ff6f61;
 }
 
-.hero p {
+.hero-content p {
     font-size: 1.5rem;
     margin: 20px 0;
     animation: fadeIn 3s ease-in-out;
@@ -119,17 +158,17 @@ nav {
 }
 
 .about, .services, .contact {
-    padding: 60px 20px;
+    padding: 80px 20px; /* Térköz növelve */
     text-align: center;
     background-color: #262626;
-    margin: 20px 0;
+    margin: 40px 0; /* Térköz növelve */
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .service-item {
-    margin: 20px 0;
-    padding: 20px;
+    margin: 30px 0; /* Térköz növelve */
+    padding: 30px; /* Térköz növelve */
     background: #333333;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -156,8 +195,8 @@ footer {
     background: #0a0a0a;
     color: #ffffff;
     text-align: center;
-    padding: 20px 0;
-    margin-top: 40px;
+    padding: 40px 0; /* Térköz növelve */
+    margin-top: 80px; /* Térköz növelve */
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
 }
 
@@ -197,5 +236,17 @@ footer {
             opacity: 1;
             transform: translateX(0px);
         }
+    }
+
+    .hero-content h1 {
+        font-size: 2rem; /* Kisebb betűméret mobil eszközökön */
+    }
+
+    .hero-content p {
+        font-size: 1.2rem; /* Kisebb betűméret mobil eszközökön */
+    }
+
+    .bombasz-text {
+        font-size: 30px; /* Kisebb betűméret mobil eszközökön */
     }
 }
