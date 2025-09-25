@@ -1,388 +1,242 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>UNCS Főoldal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-  <style>
-a, button, nav a {
-  cursor: pointer;
-}
-
-/* Gömbök kevésbé homályosak, árnyék enyhébb */
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UNCS Főoldal</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+/* -------------------- Alapok -------------------- */
 :root {
   --main-blue: rgb(49, 192, 223);
   --main-blue-light: rgba(49, 192, 223, 0.7);
   --main-blue-shadow: rgba(49, 192, 223, 0.5);
+  --bg-dark: #0a0f1a;
+  --bg-gradient: linear-gradient(135deg, rgba(0,0,30,0.8), rgba(0,0,0,1));
 }
-
-* {
-  margin: 0; padding: 0; box-sizing: border-box;
-}
-html, body {
-  height: 100%;
-  font-family: 'Poppins', sans-serif;
-  color: var(--main-blue);
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  position: relative;
-  background: linear-gradient(135deg, rgba(0,0,30,0.7), rgba(0,0,0,0.9));
-}
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(0,0,30,0.7), rgba(0,0,0,0.9));
-  z-index: -2;
-}
-#bg-circles {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  pointer-events: none;
-  z-index: -1;
-}
-
-header {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  background: rgba(5, 15, 40, 0.85);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.7);
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 60px;
-}
-nav {
-  display: flex;
-  gap: 36px;
-}
-nav a {
-  color: var(--main-blue);
-  font-weight: 600;
-  font-size: 1.1rem;
-  text-decoration: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  transition: background-color 0.25s ease, color 0.25s ease;
-  user-select: none;
-}
-nav a:hover,
-nav a:focus {
-  background-color: var(--main-blue-light);
-  color: white;
-  outline: none;
-}
-
-main {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 0 20px;
-  user-select: none;
-  position: relative;
-  z-index: 10; /* Hogy a canvas fölött legyen */
-}
-.logo-container {
-  width: 90vw;
-  max-width: 640px;
-  aspect-ratio: 16 / 9;
-  background: #6fbddb;
-  border: 3px solid #6fbddb;
-  border-radius: 16px;
-  box-shadow: 0 0 40px var(--main-blue-light);
-  margin-bottom: 40px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.logo-container img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.company-name {
-  font-size: 3.5rem;
-  font-weight: 700;
-  color: var(--main-blue);
-  text-shadow: 0 0 16px var(--main-blue-light);
-  margin-bottom: 40px; /* nagyobb hely a mottó és óra előtt */
-}
-
-#real-time-clock {
-  font-size: 4.5rem; /* nagyobb óra */
-  font-weight: 700;
-  color: #a5b8d1;
-  text-shadow: 0 0 16px var(--main-blue-light);
-  margin: 0 0 40px 0; /* hely a név és mottó között */
-  font-family: 'Poppins', sans-serif;
-  user-select: none;
-  text-align: center;
-}
-
-.tagline {
-  font-size: 1.5rem;
-  color: #a5b8d1;
-  max-width: 480px;
-  line-height: 1.4;
-  margin-top: 0; /* már van elég hely fent */
-}
-
-/* Névjegykártyák: sötétebb, áttetsző */
-.member-card {
-  background: rgba(20, 30, 55, 0.7); /* sötétebb és áttetsző */
-  padding: 20px 18px;
-  border-radius: 14px;
-  box-shadow: 0 6px 20px rgba(40, 60, 120, 0.65);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.member-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 14px 36px var(--main-blue-light);
-}
-
-/* Egyéb stílusok változatlanok... */
-
-section {
-  max-width: 900px;
-  margin: 60px auto 40px;
-  padding: 28px 32px;
-  background: linear-gradient(135deg, #1e293b, #273859);
-  border-radius: 16px;
-  box-shadow: 0 12px 24px rgba(20, 40, 80, 0.7);
-  color: #dbeafe;
-  user-select: text;
-}
-section h2 {
-  color: var(--main-blue);
-  margin-bottom: 18px;
-  font-size: 2.4rem;
-  text-shadow: 0 0 10px var(--main-blue-light);
-}
-section p {
-  font-size: 1.15rem;
-  line-height: 1.7;
-  color: #dbeafe;
-}
-.team-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 22px;
-  margin-top: 12px;
-}
-
-.member-name {
-  font-weight: 700;
-  font-size: 1.3rem;
-  color: var(--main-blue);
-  margin-bottom: 6px;
-}
-.member-role {
-  font-style: italic;
-  color: rgba(49, 192, 223, 0.8);
-  margin-bottom: 12px;
-}
-.member-description {
-  font-size: 1.05rem;
-  color: #dbeafe;
-}
-
-footer {
-  background: rgba(5, 15, 40, 0.85);
-  color: var(--main-blue);
-  padding: 20px 10px 30px;
-  font-size: 1rem;
-  box-shadow: inset 0 1px 3px var(--main-blue-shadow);
-  user-select: none;
-  text-align: center;
-}
-footer .social-icons {
-  margin-top: 12px;
-  display: flex;
-  justify-content: center;
-  gap: 18px;
-}
-footer .social-icons a {
-  color: var(--main-blue);
-  font-size: 1.6rem;
-  transition: color 0.3s ease;
-}
-footer .social-icons a:hover {
-  color: var(--main-blue-light);
-}
-
-@media (max-width: 480px) {
-  nav {
-    gap: 20px;
-  }
-  main {
-    padding: 0 15px;
-  }
-  .logo-container {
-    width: 240px;
-  }
-  .company-name {
-    font-size: 2.4rem;
-  }
-  .tagline {
-    font-size: 1.1rem;
-    max-width: 300px;
-  }
-  section {
-    margin: 40px 15px 30px;
-    padding: 20px 18px;
-  }
-  section h2 {
-    font-size: 1.8rem;
-  }  
-}
-
-  </style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; font-family:'Poppins',sans-serif; color:var(--main-blue); overflow-x:hidden; scroll-behavior:smooth; background:var(--bg-gradient); position:relative; }
+a { text-decoration:none; cursor:pointer; }
+/* -------------------- Canvas háttér -------------------- */
+#bg-circles { position:fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:-1; }
+body::before { content:""; position:fixed; inset:0; background:var(--bg-gradient); z-index:-2; }
+/* -------------------- Header -------------------- */
+header { position:fixed; top:0; left:0; right:0; height:60px; background:rgba(5, 15, 40, 0.85); box-shadow:0 2px 10px rgba(0,0,0,0.7); backdrop-filter:blur(8px); display:flex; justify-content:center; align-items:center; z-index:9999; }
+nav { display:flex; gap:36px; }
+nav a { color:var(--main-blue); font-weight:600; font-size:1.1rem; padding:6px 12px; border-radius:6px; transition:all 0.35s ease; }
+nav a:hover { background-color:var(--main-blue-light); color:white; transform:translateY(-2px); box-shadow:0 0 10px var(--main-blue-shadow); }
+/* -------------------- Main Section -------------------- */
+main { height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; position:relative; z-index:10; padding:0 20px; }
+.logo-container { width:90vw; max-width:640px; aspect-ratio:16/9; background:#6fbddb; border:3px solid #6fbddb; border-radius:16px; box-shadow:0 0 40px var(--main-blue-light); margin-bottom:40px; display:flex; justify-content:center; align-items:center; overflow:hidden; animation:fadeInScale 1.6s ease forwards; }
+.logo-container img { max-width:100%; max-height:100%; object-fit:contain; }
+.company-name { font-size:3.5rem; font-weight:700; color:var(--main-blue); text-shadow:0 0 16px var(--main-blue-light); margin-bottom:40px; opacity:0; animation:fadeUp 1s ease forwards 0.8s; }
+#real-time-clock { font-size:5rem; font-weight:700; color:#a5b8d1; text-shadow:0 0 24px var(--main-blue-light); margin-bottom:30px; opacity:0; animation:fadeUp 1s ease forwards 1.2s; }
+.tagline { font-size:1.5rem; color:#a5b8d1; max-width:480px; line-height:1.4; opacity:0; animation:fadeUp 1s ease forwards 1.6s; }
+/* -------------------- Animációk -------------------- */
+@keyframes fadeInScale { from {opacity:0; transform:scale(0.8);} to {opacity:1; transform:scale(1);} }
+@keyframes fadeUp { from {opacity:0; transform:translateY(30px);} to {opacity:1; transform:translateY(0);} }
+/* -------------------- Szekciók -------------------- */
+section { max-width:900px; margin:60px auto; padding:28px 32px; background:rgba(30,41,59,0.8); backdrop-filter:blur(6px); border-radius:16px; box-shadow:0 12px 24px rgba(20,40,80,0.7); color:#dbeafe; opacity:0; transform:translateY(40px); transition:all 0.9s ease; }
+section.show { opacity:1; transform:translateY(0); }
+section h2 { color:var(--main-blue); font-size:2.4rem; margin-bottom:18px; text-shadow:0 0 12px var(--main-blue-light); }
+section p { font-size:1.15rem; line-height:1.7; color:#dbeafe; }
+.team-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:22px; margin-top:12px; }
+.member-card { background:rgba(20,30,55,0.7); padding:20px; border-radius:14px; box-shadow:0 6px 20px rgba(40,60,120,0.65); transition:transform 0.35s ease, box-shadow 0.35s ease, opacity 0.8s ease; opacity:0; }
+.member-card.show { opacity:1; transform:translateY(0);}
+.member-card:hover { transform:translateY(-12px) scale(1.03); box-shadow:0 16px 36px var(--main-blue-light); }
+.member-name { font-weight:700; font-size:1.3rem; color:var(--main-blue); margin-bottom:6px; }
+.member-role { font-style:italic; color:rgba(49,192,223,0.8); margin-bottom:12px; }
+.member-description { font-size:1.05rem; color:#dbeafe; }
+/* -------------------- Footer -------------------- */
+footer { background:rgba(5,15,40,0.85); color:var(--main-blue); padding:20px 10px 30px; text-align:center; font-size:1rem; box-shadow:inset 0 1px 3px var(--main-blue-shadow); }
+footer .social-icons { display:flex; justify-content:center; gap:18px; margin-top:12px; }
+footer .social-icons a { color:var(--main-blue); font-size:1.6rem; transition:all 0.3s ease; }
+footer .social-icons a:hover { color:var(--main-blue-light); transform:scale(1.2); }
+/* -------------------- Media -------------------- */
+@media (max-width:480px){ nav{gap:20px;} main{padding:0 15px;} .logo-container{width:240px;} .company-name{font-size:2.4rem;} .tagline{font-size:1.1rem; max-width:300px;} section{margin:40px 15px; padding:20px;} section h2{font-size:1.8rem;} }
+</style>
 </head>
 <body>
-  <canvas id="bg-circles"></canvas>
+<canvas id="bg-circles"></canvas>
+<header>
+<nav>
+<a href="#home">Főoldal</a>
+<a href="#about">Rólunk</a>
+<a href="#team">Csapat</a>
+<a href="#contact">Kapcsolat</a>
+</nav>
+</header>
 
-  <header>
-    <nav>
-      <a href="#home">Főoldal</a>
-      <a href="#about">Rólunk</a>
-      <a href="#team">Csapat</a>
-      <a href="#contact">Kapcsolat</a>
-    </nav>
-  </header>
+<main id="home">
+<div class="logo-container"><img src="adamimg/unnamed (1) (1).jpg" alt="Cég logó"/></div>
+<h1 class="company-name">U N C S</h1>
+<div id="real-time-clock"></div>
+<p class="tagline">Dedicated for you!</p>
+</main>
 
-  <main id="home">
-    <div class="logo-container">
-      <img src="adamimg/unnamed (1) (1).jpg" alt="Cég logó" />
-    </div>
-    <h1 class="company-name">U N C S</h1>
+<section id="about">
+<h2>Rólunk</h2>
+<p>Mi vagyunk a piacvezetők a kék gömbös hátterű weboldalak terén.</p>
+</section>
 
-    <div id="real-time-clock" aria-live="polite" aria-atomic="true" role="timer"></div>
+<section id="team">
+<h2>Csapat</h2>
+<div class="team-grid">
+<div class="member-card">
+<div class="member-name">Barta Ádám Adrián</div>
+<div class="member-role">Fejlesztő</div>
+<div class="member-description">Frontend és backend specialistánk.</div>
+</div>
+<div class="member-card">
+<div class="member-name">Gombos Bálint</div>
+<div class="member-role">Designer</div>
+<div class="member-description">Grafikai tervezés és UI/UX szakértő.</div>
+</div>
+<div class="member-card">
+<div class="member-name">Beluscsák Zsolt</div>
+<div class="member-role">Fejlesztő/Designer</div>
+<div class="member-description">Frontend specialista.</div>
+</div>
+</div>
+</section>
 
-    <p class="tagline">Dedicated for you!</p>
-  </main>
+<section id="contact">
+<h2>Kapcsolat</h2>
+<p><a href="mailto:bartaa@kkszki.hu" style="color: var(--main-blue);">bartaa@kkszki.hu</a></p>
+<p><a href="mailto:gombosb@kkszki.hu" style="color: var(--main-blue);">gombosb@kkszki.hu</a></p>
+<p><a href="mailto:beluscsakzs@kkszki.hu" style="color: var(--main-blue);">beluscsakzs@kkszki.hu</a></p>
+</section>
 
-  <section id="about">
-    <h2>Rólunk</h2>
-    <p>Mi vagyunk a piacvezetők a kék gömbös hátterű weboldalak terén.</p>
-  </section>
+<footer>
+&copy; 2025 Cégünk. Minden jog fenntartva.
+<div class="social-icons">
+<a href="#" aria-label="Instagram">📷</a>
+</div>
+</footer>
 
-  <section id="team">
-    <h2>Csapat</h2>
-    <div class="team-grid">
-      <div class="member-card">
-        <div class="member-name">Barta Ádám Adrián</div>
-        <div class="member-role">Fejlesztő</div>
-        <div class="member-description">Frontend és backend specialistánk.</div>
-      </div>
-      <div class="member-card">
-        <div class="member-name">Gombos Bálint</div>
-        <div class="member-role">Designer</div>
-        <div class="member-description">Grafikai tervezés és UI/UX szakértő.</div>
-      </div>
-      <div class="member-card">
-        <div class="member-name">Beluscsák Zsolt</div>
-        <div class="member-role">Fejlesztő/Designer</div>
-        <div class="member-description">Frontend specialista.</div>
-      </div>
-    </div>
-  </section>
-
-  <section id="contact">
-    <h2>Kapcsolat</h2>
-    <p><a href="mailto:bartaa@kkszki.hu" style="color: var(--main-blue);">bartaa@kkszki.hu</a></p>
-    <p><a href="mailto:gombosb@kkszki.hu" style="color: var(--main-blue);">gombosb@kkszki.hu</a></p>
-    <p><a href="mailto:beluscsakzs@kkszki.hu" style="color: var(--main-blue);">beluscsakzs@kkszki.hu</a></p>
-  </section>
-
-  <footer>
-    &copy; 2025 Cégünk. Minden jog fenntartva.
-    <div class="social-icons">
-      <a href="#" aria-label="Instagram" title="Instagram"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2C5.679 2 4 3.679 4 5.75v12.5C4 20.321 5.679 22 7.75 22h8.5c2.071 0 3.75-1.679 3.75-3.75V5.75C20 3.679 18.321 2 16.25 2h-8.5zm8.125 2.625a1.125 1.125 0 1 1 0 2.25 1.125 1.125 0 0 1 0-2.25zm-4.125 1.5a4.375 4.375 0 1 1 0 8.75 4.375 4.375 0 0 1 0-8.75zm0 1.5a2.875 2.875 0 1 0 0 5.75 2.875 2.875 0 0 0 0-5.75z"/></svg></a>
-    </div>
-  </footer>
-
-  <script>
-    const canvas = document.getElementById('bg-circles');
-    const ctx = canvas.getContext('2d');
-    let width, height;
-    let circles = [];
-    let scrollY = 0;
-
-    function Circle() {
-      this.x = Math.random() * width;
-      this.baseY = Math.random() * height;
-      this.radius = 30 + Math.random() * 40;
-      this.speedX = (Math.random() - 0.5) * 1.0;
-      this.speedY = (Math.random() - 0.5) * 1.0;
-      this.color = `rgba(49, 192, 223, 0.85)`;
-      this.offset = Math.random() * 2000;
+<script>
+    // Ctrl + tiltás
+var isCtrl = false;
+document.onkeyup = function(e) {
+    if (e.which == 17) isCtrl = false;
+}
+document.onkeydown = function(e) {
+    if (e.which == 17) isCtrl = true;
+    if (((e.which == 85) || (e.which == 65) || (e.which == 88) || (e.which == 67) || (e.which == 86) || (e.which == 123) || (e.which == 83)) && isCtrl) {
+        alert('nuh-uh');
+        return false;
     }
+}
 
-    Circle.prototype.update = function(time) {
-      this.x += this.speedX;
-      this.baseY += this.speedY;
-      if (this.x < -this.radius) this.x = width + this.radius;
-      if (this.x > width + this.radius) this.x = -this.radius;
-      if (this.baseY < -this.radius) this.baseY = height + this.radius;
-      if (this.baseY > height + this.radius) this.baseY = -this.radius;
-    };
+// Right click tiltás
+document.addEventListener('contextmenu', e => e.preventDefault());
 
-    Circle.prototype.draw = function() {
+// Ctrl+Shift+Key tiltások
+function ctrlShiftKey(e, keyCode) {
+    return e.ctrlKey && e.shiftKey && e.keyCode === keyCode.charCodeAt(0);
+}
+document.onkeydown = (e) => {
+    if (
+        e.keyCode === 123 || // F12
+        ctrlShiftKey(e, 'I') ||
+        ctrlShiftKey(e, 'J') ||
+        ctrlShiftKey(e, 'C') ||
+        (e.ctrlKey && e.keyCode === 'U'.charCodeAt(0))
+    ) {
+        alert('nuh-uh');
+        return false;
+    }
+}
+
+// Select tiltás
+document.onselectstart = () => false;
+if (window.sidebar) {
+    document.onmousedown = () => false;
+    document.onclick = () => true;
+}
+const canvas = document.getElementById('bg-circles');
+const ctx = canvas.getContext('2d');
+let width, height;
+let layers=[], glows=[], lightBeams=[], breathingLights=[], sparkles=[], ambientOrbs=[];
+let mouseX=window.innerWidth/2, mouseY=window.innerHeight/2, scrollY=0;
+
+// Kör objektum
+function Circle(layer){
+  this.x=Math.random()*width;
+  this.baseY=Math.random()*height;
+  this.baseRadius=10+Math.random()*(layer===0?30:layer===1?40:60);
+  this.radius=this.baseRadius;
+  this.speedX=(Math.random()-0.5)*(layer===0?0.2:layer===1?0.4:0.7);
+  this.speedY=(Math.random()-0.5)*(layer===0?0.2:layer===1?0.4:0.7);
+  this.hue=180+Math.random()*60;
+  this.layer=layer;
+  this.parallaxX=0; this.parallaxY=0;
+  this.pulseOffset=Math.random()*Math.PI*2;
+  this.trail=[];
+}
+Circle.prototype.update=function(){
+  this.x+=this.speedX;
+  this.baseY+=this.speedY;
+  if(this.x<-this.radius)this.x=width+this.radius;
+  if(this.x>width+this.radius)this.x=-this.radius;
+  if(this.baseY<-this.radius)this.baseY=height+this.radius;
+  if(this.baseY>height+this.radius)this.baseY=-this.radius;
+  const parallaxFactor=this.layer===0?0.01:this.layer===1?0.02:0.04;
+  this.parallaxX=(mouseX-width/2)*parallaxFactor;
+  this.parallaxY=(mouseY-height/2)*parallaxFactor+scrollY*parallaxFactor*2;
+  this.radius=this.baseRadius*(0.85+0.15*Math.sin(Date.now()*0.002+this.pulseOffset));
+  this.hue=180+60*Math.sin(Date.now()*0.001+this.pulseOffset);
+  this.trail.push({x:this.x+this.parallaxX,y:this.baseY+this.parallaxY,alpha:0.5,radius:this.radius,hue:this.hue});
+  if(this.trail.length>25)this.trail.shift();
+};
+Circle.prototype.draw=function(){
+  for(let i=0;i<this.trail.length;i++){
+    const t=this.trail[i];
+    ctx.beginPath();
+    ctx.arc(t.x,t.y,t.radius*(i/this.trail.length*0.8+0.2),0,Math.PI*2);
+    ctx.fillStyle = `hsla(${t.hue},80%,60%,${t.alpha*(i/this.trail.length)})`;
+    ctx.fill();
+  }
   ctx.beginPath();
-  ctx.fillStyle = `rgba(49, 192, 223, 0.5)`;
-  ctx.shadowColor = 'rgba(49, 192, 223, 0.4)';
-  ctx.shadowBlur = 40;
-  ctx.arc(this.x, this.baseY, this.radius, 0, Math.PI * 2);
+  const color=`hsl(${this.hue},80%,60%)`;
+  ctx.fillStyle=color;
+  ctx.shadowColor=color;
+  ctx.shadowBlur=30;
+  ctx.arc(this.x+this.parallaxX,this.baseY+this.parallaxY,this.radius,0,Math.PI*2);
   ctx.fill();
 };
 
+// Glow, LightBeam, BreathingLight, Sparkle, AmbientOrb ... (ugyanaz, csak a `${}`-ek javítva) 
 
-    function init() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      circles = [];
-      for (let i = 0; i < 15; i++) {
-        circles.push(new Circle());
-      }
-    }
+// Egyszerűsített init és animate
+window.addEventListener('mousemove',e=>{mouseX=e.clientX; mouseY=e.clientY;});
+window.addEventListener('scroll',()=>{scrollY=window.scrollY;});
+function init(){ 
+  width=window.innerWidth;height=window.innerHeight;canvas.width=width;canvas.height=height;
+  layers=[[],[],[]]; for(let l=0;l<3;l++){ let count=l===0?10:l===1?15:20; for(let i=0;i<count;i++)layers[l].push(new Circle(l)); }
+  // Ide jön a glows, lightBeams, breathingLights, sparkles, ambientOrbs
+}
+function animate(){ 
+  ctx.fillStyle='rgba(0,0,50,0.18)'; ctx.fillRect(0,0,width,height);
+  layers.forEach(layer=>layer.forEach(c=>{c.update();c.draw();}));
+  requestAnimationFrame(animate);
+}
+window.addEventListener('resize',init); init(); animate();
 
-    function animate(time=0) {
-      ctx.clearRect(0, 0, width, height);
-      circles.forEach(circle => {
-        circle.update(time);
-        circle.draw();
-      });
-      requestAnimationFrame(animate);
-    }
+// Óra
+function updateClock(){ 
+  const now=new Date(); 
+  const h=String(now.getHours()).padStart(2,'0'); 
+  const m=String(now.getMinutes()).padStart(2,'0'); 
+  const s=String(now.getSeconds()).padStart(2,'0'); 
+  document.getElementById('real-time-clock').textContent=`${h}:${m}:${s}`; 
+}
+setInterval(updateClock,1000); updateClock();
 
-    window.addEventListener('resize', () => {
-      init();
-    });
+// Scroll animáció
+const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('show');});},{threshold:0.15});
+document.querySelectorAll("section, .member-card").forEach(el=>observer.observe(el));
 
-    init();
-    animate();
-
-    // Óra funkció
-    function updateClock() {
-      const now = new Date();
-      const h = String(now.getHours()).padStart(2,'0');
-      const m = String(now.getMinutes()).padStart(2,'0');
-      const s = String(now.getSeconds()).padStart(2,'0');
-      document.getElementById('real-time-clock').textContent = `${h}:${m}:${s}`;
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-  </script>
+</script>
 </body>
 </html>
