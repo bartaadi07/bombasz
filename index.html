@@ -1,61 +1,388 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>bombasz</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UNCS Főoldal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+a, button, nav a {
+  cursor: pointer;
+}
+
+/* Gömbök kevésbé homályosak, árnyék enyhébb */
+
+:root {
+  --main-blue: rgb(49, 192, 223);
+  --main-blue-light: rgba(49, 192, 223, 0.7);
+  --main-blue-shadow: rgba(49, 192, 223, 0.5);
+}
+
+* {
+  margin: 0; padding: 0; box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+  color: var(--main-blue);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  position: relative;
+  background: linear-gradient(135deg, rgba(0,0,30,0.7), rgba(0,0,0,0.9));
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,0,30,0.7), rgba(0,0,0,0.9));
+  z-index: -2;
+}
+#bg-circles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+}
+
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(5, 15, 40, 0.85);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+}
+nav {
+  display: flex;
+  gap: 36px;
+}
+nav a {
+  color: var(--main-blue);
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  user-select: none;
+}
+nav a:hover,
+nav a:focus {
+  background-color: var(--main-blue-light);
+  color: white;
+  outline: none;
+}
+
+main {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px;
+  user-select: none;
+  position: relative;
+  z-index: 10; /* Hogy a canvas fölött legyen */
+}
+.logo-container {
+  width: 90vw;
+  max-width: 640px;
+  aspect-ratio: 16 / 9;
+  background: #6fbddb;
+  border: 3px solid #6fbddb;
+  border-radius: 16px;
+  box-shadow: 0 0 40px var(--main-blue-light);
+  margin-bottom: 40px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.company-name {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--main-blue);
+  text-shadow: 0 0 16px var(--main-blue-light);
+  margin-bottom: 40px; /* nagyobb hely a mottó és óra előtt */
+}
+
+#real-time-clock {
+  font-size: 4.5rem; /* nagyobb óra */
+  font-weight: 700;
+  color: #a5b8d1;
+  text-shadow: 0 0 16px var(--main-blue-light);
+  margin: 0 0 40px 0; /* hely a név és mottó között */
+  font-family: 'Poppins', sans-serif;
+  user-select: none;
+  text-align: center;
+}
+
+.tagline {
+  font-size: 1.5rem;
+  color: #a5b8d1;
+  max-width: 480px;
+  line-height: 1.4;
+  margin-top: 0; /* már van elég hely fent */
+}
+
+/* Névjegykártyák: sötétebb, áttetsző */
+.member-card {
+  background: rgba(20, 30, 55, 0.7); /* sötétebb és áttetsző */
+  padding: 20px 18px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(40, 60, 120, 0.65);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.member-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 14px 36px var(--main-blue-light);
+}
+
+/* Egyéb stílusok változatlanok... */
+
+section {
+  max-width: 900px;
+  margin: 60px auto 40px;
+  padding: 28px 32px;
+  background: linear-gradient(135deg, #1e293b, #273859);
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(20, 40, 80, 0.7);
+  color: #dbeafe;
+  user-select: text;
+}
+section h2 {
+  color: var(--main-blue);
+  margin-bottom: 18px;
+  font-size: 2.4rem;
+  text-shadow: 0 0 10px var(--main-blue-light);
+}
+section p {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #dbeafe;
+}
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 22px;
+  margin-top: 12px;
+}
+
+.member-name {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--main-blue);
+  margin-bottom: 6px;
+}
+.member-role {
+  font-style: italic;
+  color: rgba(49, 192, 223, 0.8);
+  margin-bottom: 12px;
+}
+.member-description {
+  font-size: 1.05rem;
+  color: #dbeafe;
+}
+
+footer {
+  background: rgba(5, 15, 40, 0.85);
+  color: var(--main-blue);
+  padding: 20px 10px 30px;
+  font-size: 1rem;
+  box-shadow: inset 0 1px 3px var(--main-blue-shadow);
+  user-select: none;
+  text-align: center;
+}
+footer .social-icons {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+footer .social-icons a {
+  color: var(--main-blue);
+  font-size: 1.6rem;
+  transition: color 0.3s ease;
+}
+footer .social-icons a:hover {
+  color: var(--main-blue-light);
+}
+
+@media (max-width: 480px) {
+  nav {
+    gap: 20px;
+  }
+  main {
+    padding: 0 15px;
+  }
+  .logo-container {
+    width: 240px;
+  }
+  .company-name {
+    font-size: 2.4rem;
+  }
+  .tagline {
+    font-size: 1.1rem;
+    max-width: 300px;
+  }
+  section {
+    margin: 40px 15px 30px;
+    padding: 20px 18px;
+  }
+  section h2 {
+    font-size: 1.8rem;
+  }  
+}
+
+  </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">bombasz</div>
-            <ul class="nav-links">
-                <li><a href="index.html">bombasz</a></li>
-            </ul>
-            <div class="burger">
-                <div class="line1"></div>
-                <div class="line2"></div>
-                <div class="line3"></div>
-            </div>
-        </nav>
-    </header>
+  <canvas id="bg-circles"></canvas>
 
-    <section id="home" class="hero">
-        <div class="slideshow">
-            <svg class="bombasz-text" viewBox="0 0 500 200" preserveAspectRatio="xMidYMid meet">
-                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="40" fill="#ff6f61" font-family="Arial, sans-serif">
-                    BOMBASZ
-                </text>
-            </svg>
-        </div>
-    </section>
+  <header>
+    <nav>
+      <a href="#home">Főoldal</a>
+      <a href="#about">Rólunk</a>
+      <a href="#team">Csapat</a>
+      <a href="#contact">Kapcsolat</a>
+    </nav>
+  </header>
 
-    <section id="about" class="about">
-        <h2>bombasz</h2>
-        <p>bombasz</p>
-    </section>
+  <main id="home">
+    <div class="logo-container">
+      <img src="adamimg/unnamed (1) (1).jpg" alt="Cég logó" />
+    </div>
+    <h1 class="company-name">U N C S</h1>
 
-    <section id="services" class="services">
-        <h2>bombasz</h2>
-        <div class="service-item">
-            <h3>bombasz</h3>
-            <p>bombasz</p>
-        </div>
-        <div class="service-item">
-            <h3>bombasz</h3>
-            <p>bombasz</p>
-        </div>
-        <div class="service-item">
-            <h3>bombasz</h3>
-            <p>bombasz</p>
-        </div>
-    </section>
+    <div id="real-time-clock" aria-live="polite" aria-atomic="true" role="timer"></div>
 
-    <footer>
-        <p>&copy; bombasz</p>
-    </footer>
+    <p class="tagline">Dedicated for you!</p>
+  </main>
 
-    <script src="script.js"></script>
+  <section id="about">
+    <h2>Rólunk</h2>
+    <p>Mi vagyunk a piacvezetők a kék gömbös hátterű weboldalak terén.</p>
+  </section>
+
+  <section id="team">
+    <h2>Csapat</h2>
+    <div class="team-grid">
+      <div class="member-card">
+        <div class="member-name">Barta Ádám Adrián</div>
+        <div class="member-role">Fejlesztő</div>
+        <div class="member-description">Frontend és backend specialistánk.</div>
+      </div>
+      <div class="member-card">
+        <div class="member-name">Gombos Bálint</div>
+        <div class="member-role">Designer</div>
+        <div class="member-description">Grafikai tervezés és UI/UX szakértő.</div>
+      </div>
+      <div class="member-card">
+        <div class="member-name">Beluscsák Zsolt</div>
+        <div class="member-role">Fejlesztő/Designer</div>
+        <div class="member-description">Frontend specialista.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>Kapcsolat</h2>
+    <p><a href="mailto:bartaa@kkszki.hu" style="color: var(--main-blue);">bartaa@kkszki.hu</a></p>
+    <p><a href="mailto:gombosb@kkszki.hu" style="color: var(--main-blue);">gombosb@kkszki.hu</a></p>
+    <p><a href="mailto:beluscsakzs@kkszki.hu" style="color: var(--main-blue);">beluscsakzs@kkszki.hu</a></p>
+  </section>
+
+  <footer>
+    &copy; 2025 Cégünk. Minden jog fenntartva.
+    <div class="social-icons">
+      <a href="#" aria-label="Instagram" title="Instagram"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2C5.679 2 4 3.679 4 5.75v12.5C4 20.321 5.679 22 7.75 22h8.5c2.071 0 3.75-1.679 3.75-3.75V5.75C20 3.679 18.321 2 16.25 2h-8.5zm8.125 2.625a1.125 1.125 0 1 1 0 2.25 1.125 1.125 0 0 1 0-2.25zm-4.125 1.5a4.375 4.375 0 1 1 0 8.75 4.375 4.375 0 0 1 0-8.75zm0 1.5a2.875 2.875 0 1 0 0 5.75 2.875 2.875 0 0 0 0-5.75z"/></svg></a>
+    </div>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById('bg-circles');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let circles = [];
+    let scrollY = 0;
+
+    function Circle() {
+      this.x = Math.random() * width;
+      this.baseY = Math.random() * height;
+      this.radius = 30 + Math.random() * 40;
+      this.speedX = (Math.random() - 0.5) * 1.0;
+      this.speedY = (Math.random() - 0.5) * 1.0;
+      this.color = `rgba(49, 192, 223, 0.85)`;
+      this.offset = Math.random() * 2000;
+    }
+
+    Circle.prototype.update = function(time) {
+      this.x += this.speedX;
+      this.baseY += this.speedY;
+      if (this.x < -this.radius) this.x = width + this.radius;
+      if (this.x > width + this.radius) this.x = -this.radius;
+      if (this.baseY < -this.radius) this.baseY = height + this.radius;
+      if (this.baseY > height + this.radius) this.baseY = -this.radius;
+    };
+
+    Circle.prototype.draw = function() {
+  ctx.beginPath();
+  ctx.fillStyle = `rgba(49, 192, 223, 0.5)`;
+  ctx.shadowColor = 'rgba(49, 192, 223, 0.4)';
+  ctx.shadowBlur = 40;
+  ctx.arc(this.x, this.baseY, this.radius, 0, Math.PI * 2);
+  ctx.fill();
+};
+
+
+    function init() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      circles = [];
+      for (let i = 0; i < 15; i++) {
+        circles.push(new Circle());
+      }
+    }
+
+    function animate(time=0) {
+      ctx.clearRect(0, 0, width, height);
+      circles.forEach(circle => {
+        circle.update(time);
+        circle.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', () => {
+      init();
+    });
+
+    init();
+    animate();
+
+    // Óra funkció
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2,'0');
+      const m = String(now.getMinutes()).padStart(2,'0');
+      const s = String(now.getSeconds()).padStart(2,'0');
+      document.getElementById('real-time-clock').textContent = `${h}:${m}:${s}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
 </body>
 </html>
