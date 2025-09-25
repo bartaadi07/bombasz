@@ -7,6 +7,13 @@
 <title>UNCS Főoldal</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
+  /* Member card toggle kiegészítés */
+.member-toggle { display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
+.member-arrow { transition: transform 0.3s ease; }
+.member-arrow.open { transform: rotate(180deg); }
+.member-extra { max-height:0; overflow:hidden; transition: max-height 0.4s ease, opacity 0.4s ease; opacity:0; margin-top:6px; }
+.member-extra.show { max-height:200px; opacity:1; }
+
 :root {
   --main-blue: rgb(49, 192, 223);
   --main-blue-light: rgba(49, 192, 223, 0.7);
@@ -163,20 +170,40 @@ footer .social-icons a:hover { color:var(--main-blue-light); transform:scale(1.2
   <h2>Csapat</h2>
   <div class="team-grid">
     <div class="member-card">
-      <div class="member-name">Barta Ádám Adrián</div>
-      <div class="member-role">Fejlesztő</div>
-      <div class="member-description">Frontend és backend specialistánk.</div>
+      <div class="member-toggle">
+        <div class="member-name">Barta Ádám</div>
+        <div class="member-arrow">▼</div>
+      </div>
+      <div class="member-extra">
+        <div class="member-role">Fejlesztő</div>
+        <div class="member-description">Profi ChatGPT használó.</div>
+      </div>
     </div>
+
     <div class="member-card">
-      <div class="member-name">Gombos Bálint</div>
-      <div class="member-role">Designer</div>
-      <div class="member-description">Grafikai tervezés és UI/UX szakértő.</div>
+      <div class="member-toggle">
+        <div class="member-name">Gombos Bálint</div>
+        <div class="member-arrow">▼</div>
+      </div>
+      <div class="member-extra">
+        <div class="member-role">Designer</div>
+        <div class="member-description">Grafikai tervezés és UI/UX szakértő.</div>
+      </div>
     </div>
+    
     <div class="member-card">
-      <div class="member-name">Beluscsák Zsolt</div>
-      <div class="member-role">Fejlesztő/Designer</div>
-      <div class="member-description">Frontend specialista.</div>
+      <div class="member-toggle">
+        <div class="member-name">Beluscsák Zsolt</div>
+        <div class="member-arrow">▼</div>
+      </div>
+      <div class="member-extra">
+        <div class="member-role">Fejlesztő/</div>
+        <div class="member-description">Frontend specialista.</div>
+      </div>
     </div>
+
+
+    
   </div>
 </section>
 
@@ -239,6 +266,15 @@ footer .social-icons a:hover { color:var(--main-blue-light); transform:scale(1.2
 </button>
 
 <script>
+  document.querySelectorAll('.member-toggle').forEach(toggle => {
+  toggle.addEventListener('click', () => {
+    const arrow = toggle.querySelector('.member-arrow');
+    const extra = toggle.nextElementSibling; // .member-extra
+    extra.classList.toggle('show');
+    arrow.classList.toggle('open');
+  });
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   // Slideshow alapból elrejtve
   const slideshowSection = document.querySelector('.slideshow-wrapper');
