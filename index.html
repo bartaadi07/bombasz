@@ -96,6 +96,16 @@
         <div class="dots"></div>
     </div>
 
+    <!-- Chat box -->
+    <div id="chat-box">
+                <header>AI Chatbot</header>
+                <div id="chat-messages"></div>
+                        <div id="chat-input-wrapper">
+                    <input type="text" id="chat-input" placeholder="Írj ide..." />
+                    <button id="send-chat">Küldés</button>
+                </div>
+            </div>
+
     <footer>
         &copy; 2025 Cégünk. Minden jog fenntartva.
         <div class="social-icons">
@@ -105,14 +115,10 @@
         </div>
     </footer>
 
-    <button id="toggle-slideshow" style="
-        position:fixed; bottom:30px; right:30px; padding:16px 22px; font-size:1rem; font-weight:700; border:none; 
-        border-radius:50px; background:var(--main-blue); color:white; box-shadow:0 6px 16px rgba(0,0,0,0.4); 
-        cursor:pointer; transition:all 0.3s ease; z-index:10000;">
-        Slideshow
-    </button>
+    <!-- Slideshow + Chat gombok -->
+    <button id="toggle-slideshow">Slideshow</button>
+    <button id="toggle-chat">Chat</button>
 
     <script src="script.js"></script>
 </body>
-
 </html>

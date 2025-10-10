@@ -509,3 +509,274 @@ footer .social-icons a:hover {
     background: var(--main-blue);
     transform: scale(1.2);
 }
+/* ========================== */
+/* 💬 CHAT + SLIDESHOW GOMBOK */
+/* ========================== */
+
+/* ========================== */
+/* 💬 CHAT + SLIDESHOW GOMBOK */
+/* ========================== */
+#toggle-slideshow,
+#toggle-chat {
+    position: fixed;
+    bottom: 30px;
+    padding: 14px 22px;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 50px;
+    background: var(--main-blue);
+    color: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10000;
+}
+
+#toggle-slideshow { left: 30px; }
+#toggle-chat { right: 30px; }
+
+#toggle-slideshow:hover,
+#toggle-chat:hover {
+    background: var(--main-blue-light);
+    transform: translateY(-3px);
+    box-shadow: 0 0 12px var(--main-blue-shadow);
+}
+
+/* ========================================== */
+/* 💬 CHAT ABLAK STÍLUSOK (RESZPONZÍV KIVITEL) */
+/* ========================================== */
+
+#chat-box {
+    display: flex;
+    position: fixed;
+    /* Csökkentett alsó távolság (rem-ben) */
+    bottom: 3rem; 
+    /* Reszponzív oldalsó távolság */
+    right: 3vw; 
+    /* Reszponzív szélesség (20rem az alap) */
+    width: clamp(200px, 20rem, 90vw); 
+    max-height: 80vh; /* Max. magasság a viewport 80%-a */
+    background: rgba(10, 20, 40, 0.95);
+    border: 0.125rem solid var(--main-blue-light); /* 2px -> rem */
+    border-radius: 1rem; /* 16px -> rem */
+    box-shadow: 0 0.5rem 1.8rem rgba(0, 0, 0, 0.6); /* 8px 30px -> rem */
+    overflow: hidden;
+    z-index: 10001;
+    flex-direction: column;
+    animation: fadeInUp 0.4s ease forwards;
+}
+
+#chat-box header {
+    background: var(--main-blue);
+    color: white;
+    padding: 0.6rem 1rem; /* 10px 16px -> rem */
+    font-weight: 700;
+    font-size: 1rem; 
+    text-align: center;
+}
+
+#chat-messages {
+    flex: 1;
+    padding: 0.6rem; 
+    overflow-y: auto;
+    font-size: 0.95rem; 
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; 
+    min-height: 6.25rem; /* 100px -> rem */
+}
+
+/* KESKENY RESZPONZÍV INPUT RÉSZ */
+#chat-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem; /* 6px -> rem */
+    /* ULTRA KESKENY PADDING: 2px felül/alul -> 0.125rem */
+    padding: 0.125rem 0.5rem; 
+    background: rgba(255, 255, 255, 0.05);
+    /* Az 1px border maradhat fix, vagy átváltható */
+    border-top: 1px solid rgba(49, 192, 223, 0.2); 
+}
+
+#chat-input {
+    flex: 1;
+    /* KESKENY PADDING: 5px felül/alul -> 0.3rem */
+    padding: 0.3rem 0.75rem; 
+    border-radius: 1.25rem; /* 20px -> rem */
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+    outline: none;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: border-color 0.2s ease;
+}
+
+#chat-input:focus {
+    border-color: var(--main-blue);
+}
+
+#send-chat {
+    /* KESKENY PADDING: 5px felül/alul -> 0.3rem */
+    padding: 0.3rem 0.9rem; 
+    background: var(--main-blue);
+    border: none;
+    border-radius: 1.25rem; /* 20px -> rem */
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.25s ease;
+}
+
+#send-chat:hover { 
+    background: var(--main-blue-light); 
+}
+
+/* Chat üzenetek buborékok */
+.user-msg, .bot-msg {
+    padding: 0.5rem 0.75rem; /* 8px 12px -> rem */
+    font-size: 0.9rem;
+    border-radius: 1rem 1rem 0 1rem; /* Csak az user-msg kapja meg. */
+}
+
+.bot-msg {
+    border-radius: 1rem 1rem 1rem 0; /* A bot-msg is rem-ben */
+}
+
+/* A fő gombok reszponzívvá tétele (opcionális, de ajánlott) */
+#toggle-slideshow,
+#toggle-chat {
+    /* ... (a korábbi fix 30px-es értéket váltjuk át) */
+    bottom: 2rem; 
+    padding: 0.7rem 1rem; /* 14px 22px -> rem */
+    font-size: 1rem;
+    left: 2rem; /* a 30px helyett */
+}
+
+#toggle-chat { 
+    right: 2rem; /* a 30px helyett */
+    left: auto;
+}
+/* Media Query reszponzív egységekkel */
+@media(max-width: 768px) {
+    #chat-box {
+        /* A mobil nézetben a szélesség nagy része */
+        width: 90vw; 
+        /* Kis képernyőn középre, hogy ne érjenek össze a gombokkal */
+        left: 5vw; 
+        right: 5vw;
+        /* A gombok fölé helyezzük, hogy ne takarja el őket a bemeneti mező */
+        bottom: 5rem;
+    }
+}
+/* Animációk */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOutDown {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(20px); }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-50px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* ========================== */
+/* 💳 Member card toggle javítás */
+.member-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.member-arrow {
+    transition: transform 0.3s ease;
+}
+
+.member-arrow.open {
+    transform: rotate(180deg);
+}
+
+.member-extra {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.4s ease, padding 0.4s ease;
+    opacity: 0;
+    margin-top: 0;
+    padding: 0 0;
+}
+
+.member-extra.show {
+    max-height: 250px; /* nagyobb ha több szöveg */
+    opacity: 1;
+    margin-top: 6px;
+    padding: 8px 0;
+}
+
+/* ========================== */
+/* Slideshow fix (arány + hover) */
+.slideshow-wrapper {
+    width: 90%;
+    max-width: 900px;
+    margin: 60px auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.slide img {
+    border-radius: 16px;
+    object-fit: cover;
+}
+
+/* Prev/Next gombok */
+.prev, .next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 24px;
+    padding: 12px;
+    border-radius: 50%;
+    user-select: none;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.prev:hover, .next:hover { background: rgba(0,0,0,0.8); }
+
+/* Dots */
+.dots {
+    text-align: center;
+    margin-top: 12px;
+}
+
+.dot {
+    cursor: pointer;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin: 0 5px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: var(--main-blue);
+    transform: scale(1.2);
+}
