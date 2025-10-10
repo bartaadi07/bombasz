@@ -1,455 +1,117 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>UNCS Főoldal</title>
-<link rel="icon" type="image/x-icon" href="adamimg/favicon.ico">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-<style>
-  /* Member card toggle kiegészítés */
-.member-toggle { display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
-.member-arrow { transition: transform 0.3s ease; }
-.member-arrow.open { transform: rotate(180deg); }
-.member-extra { max-height:0; overflow:hidden; transition: max-height 0.4s ease, opacity 0.4s ease; opacity:0; margin-top:6px; }
-.member-extra.show { max-height:200px; opacity:1; }
-
-:root {
-  --main-blue: rgb(49, 192, 223);
-  --main-blue-light: rgba(49, 192, 223, 0.7);
-  --main-blue-shadow: rgba(49, 192, 223, 0.5);
-  --bg-dark: #0a0f1a;
-  --bg-gradient: linear-gradient(135deg, rgba(0,0,30,0.8), rgba(0,0,0,1));
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-html, body { height:100%; font-family:'Poppins',sans-serif; color:var(--main-blue); overflow-x:hidden; scroll-behavior:smooth; background:var(--bg-gradient); position:relative; }
-a { text-decoration:none; cursor:pointer; }
-
-/* -------------------- Canvas háttér -------------------- */
-#bg-circles { position:fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:-1; }
-body::before { content:""; position:fixed; inset:0; background:var(--bg-gradient); z-index:-2; }
-
-/* -------------------- Header -------------------- */
-header {
-  position:fixed; top:0; left:0; right:0; height:60px;
-  background:rgba(5, 15, 40, 0.85);
-  box-shadow:0 2px 10px rgba(0,0,0,0.7);
-  backdrop-filter:blur(8px);
-  display:flex; justify-content:center; align-items:center; padding:0 20px; gap:20px;
-  z-index:9999;
-}
-header .logo { font-weight:700; font-size:1.5rem; color:var(--main-blue); position:absolute; left:20px; }
-nav { display:flex; gap:36px; }
-nav a {
-  color:var(--main-blue); font-weight:600; font-size:1.1rem;
-  padding:6px 12px; border-radius:6px; transition:all 0.35s ease;
-}
-nav a:hover { background-color:var(--main-blue-light); color:white; transform:translateY(-2px); box-shadow:0 0 10px var(--main-blue-shadow); }
-
-/* Hamburger mobilra */
-.hamburger { display:none; flex-direction:column; justify-content:space-between; width:28px; height:20px; cursor:pointer; position:absolute; right:20px; }
-.hamburger span { display:block; height:3px; background:var(--main-blue); border-radius:2px; }
-
-/* -------------------- Main Section -------------------- */
-main { height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; position:relative; z-index:10; padding:0 20px; }
-.logo-container { width:90vw; max-width:640px; aspect-ratio:16/9; background:#6fbddb; border:3px solid #6fbddb; border-radius:16px; box-shadow:0 0 40px var(--main-blue-light); margin-bottom:40px; display:flex; justify-content:center; align-items:center; overflow:hidden; animation:fadeInScale 1.6s ease forwards; }
-.logo-container img { max-width:100%; max-height:100%; object-fit:contain; }
-.company-name { font-size:3.5rem; font-weight:700; color:var(--main-blue); text-shadow:0 0 16px var(--main-blue-light); margin-bottom:40px; opacity:0; animation:fadeUp 1s ease forwards 0.8s; }
-#real-time-clock { font-size:5rem; font-weight:700; color:#a5b8d1; text-shadow:0 0 24px var(--main-blue-light); margin-bottom:30px; opacity:0; animation:fadeUp 1s ease forwards 1.2s; }
-.tagline { font-size:1.5rem; color:#a5b8d1; max-width:480px; line-height:1.4; opacity:0; animation:fadeUp 1s ease forwards 1.6s; }
-
-/* -------------------- Animációk -------------------- */
-@keyframes fadeInScale { from {opacity:0; transform:scale(0.8);} to {opacity:1; transform:scale(1);} }
-@keyframes fadeUp { from {opacity:0; transform:translateY(30px);} to {opacity:1; transform:translateY(0);} }
-
-/* -------------------- Szekciók -------------------- */
-section { max-width:900px; margin:60px auto; padding:28px 32px; background:rgba(30,41,59,0.8); backdrop-filter:blur(6px); border-radius:16px; box-shadow:0 12px 24px rgba(20,40,80,0.7); color:#dbeafe; opacity:0; transform:translateY(40px); transition:all 0.9s ease; }
-section.show { opacity:1; transform:translateY(0); }
-section h2 { color:var(--main-blue); font-size:2.4rem; margin-bottom:18px; text-shadow:0 0 12px var(--main-blue-light); }
-section p { font-size:1.15rem; line-height:1.7; color:#dbeafe; }
-.team-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:22px; margin-top:12px; }
-.member-card { background:rgba(20,30,55,0.7); padding:20px; border-radius:14px; box-shadow:0 6px 20px rgba(40,60,120,0.65); transition:transform 0.35s ease, box-shadow 0.35s ease, opacity 0.8s ease; opacity:0; }
-.member-card.show { opacity:1; transform:translateY(0);}
-.member-card:hover { transform:translateY(-12px) scale(1.03); box-shadow:0 16px 36px var(--main-blue-light); }
-.member-name { font-weight:700; font-size:1.3rem; color:var(--main-blue); margin-bottom:6px; }
-.member-role { font-style:italic; color:rgba(49,192,223,0.8); margin-bottom:12px; }
-.member-description { font-size:1.05rem; color:#dbeafe; }
-
-/* -------------------- Footer -------------------- */
-footer { background:rgba(5,15,40,0.85); color:var(--main-blue); padding:20px 10px 30px; text-align:center; font-size:1rem; box-shadow:inset 0 1px 3px var(--main-blue-shadow); }
-footer .social-icons { display:flex; justify-content:center; gap:18px; margin-top:12px; }
-footer .social-icons a { color:var(--main-blue); font-size:1.6rem; transition:all 0.3s ease; }
-footer .social-icons a:hover { color:var(--main-blue-light); transform:scale(1.2); }
-
-/* -------------------- Media Queries -------------------- */
-@media(max-width:768px){
-  header { justify-content:flex-start; }
-  nav { 
-    display:none; flex-direction:column; background:rgba(5,15,40,0.95); position:absolute; top:60px; right:0; width:200px; padding:20px; gap:16px; border-radius:0 0 0 12px; 
-  }
-  nav.show { display:flex; }
-  .hamburger { display:flex; }
-}
-@media(max-width:480px){
-  main { padding:0 15px; }
-  .logo-container{width:240px;}
-  .company-name{font-size:2.4rem;}
-  .tagline{font-size:1.1rem; max-width:300px;}
-  section{margin:40px 15px; padding:20px;}
-  section h2{font-size:1.8rem;}
-
-}
-/* Slideshow CSS */
-.slideshow-wrapper {
-  width:90%; max-width:900px; margin:60px auto; position:relative;
-}
-.slideshow-container {
-  position:relative;
-  overflow:hidden;
-  border-radius:16px;
-  /* Fix 16:9 arány */
-  padding-top:56.25%; /* 9/16*100% */
-}
-.slide {
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  opacity:0;
-  transition:opacity 0.8s ease;
-}
-.slide.active { opacity:1; position:absolute; }
-.slide img {
-  width:100%;
-  height:100%;
-  object-fit:cover; /* ne torzuljon */
-  display:block;
-  border-radius:16px;
-}
-.prev, .next {
-  cursor:pointer; position:absolute; top:50%; transform:translateY(-50%);
-  background:rgba(0,0,0,0.4); color:white; font-size:24px; padding:12px; border-radius:50%; user-select:none; transition:background 0.3s ease;
-}
-.prev:hover, .next:hover { background:rgba(0,0,0,0.7); }
-.prev { left:10px; } .next { right:10px; }
-.dots { text-align:center; margin-top:12px; }
-.dot { cursor:pointer; display:inline-block; width:12px; height:12px; margin:0 5px; background:rgba(255,255,255,0.5); border-radius:50%; transition:all 0.3s ease; }
-.dot.active { background:var(--main-blue); transform:scale(1.2); }
-
-
-</style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UNCS Főoldal</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="icon" type="image/x-icon" href="adamimg/favicon.ico">
 </head>
 <body>
-<canvas id="bg-circles"></canvas>
+    <canvas id="bg-circles"></canvas>
 
-<header>
-  <div class="logo">U N C S</div>
-  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-  <nav id="nav-menu">
-    <a href="#home">Főoldal</a>
-    <a href="#about">Rólunk</a>
-    <a href="#team">Csapat</a>
-    <a href="#contact">Kapcsolat</a>
-  </nav>
-</header>
+    <header>
+        <div class="logo">U N C S</div>
+        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        <nav id="nav-menu">
+            <a href="#home">Főoldal</a>
+            <a href="#about">Rólunk</a>
+            <a href="#team">Csapat</a>
+            <a href="#contact">Kapcsolat</a>
+        </nav>
+    </header>
 
-<main id="home">
-  <div class="logo-container"><img src="adamimg/unnamed (1) (1).jpg" alt="Cég logó"/></div>
-  <h1 class="company-name">U N C S</h1>
-  <div id="real-time-clock"></div>
-  <p class="tagline">Dedicated for you!</p>
-</main>
+    <main id="home">
+        <div class="logo-container"><img src="adamimg/unnamed (1) (1).jpg" alt="Cég logó"/></div>
+        <h1 class="company-name">U N C S</h1>
+        <div id="real-time-clock"></div>
+        <p class="tagline">Dedicated for you!</p>
+        
+        <a href="setup.exe" class="download-button" download>
+            SRT. Időzítő letöltése
+        </a>
+    </main>
 
-<section id="about">
-  <h2>Rólunk</h2>
-  <p>Mi vagyunk a piacvezetők a kék gömbös hátterű weboldalak terén.</p>
-</section>
+    <section id="about">
+        <h2>Rólunk</h2>
+        <p>Mi vagyunk a piacvezetők a kék gömbös hátterű weboldalak terén.</p>
+    </section>
 
-<section id="team">
-  <h2>Csapat</h2>
-  <div class="team-grid">
-    <div class="member-card">
-      <div class="member-toggle">
-        <div class="member-name">Barta Ádám</div>
-        <div class="member-arrow">▼</div>
-      </div>
-      <div class="member-extra">
-        <div class="member-role">Fejlesztő</div>
-        <div class="member-description">Profi ChatGPT használó.</div>
-      </div>
+    <section id="team">
+        <h2>Csapat</h2>
+        <div class="team-grid">
+            <div class="member-card">
+                <div class="member-toggle">
+                    <div class="member-name">Barta Ádám</div>
+                    <div class="member-arrow">▼</div>
+                </div>
+                <div class="member-extra">
+                    <div class="member-role">Fejlesztő</div>
+                    <div class="member-description">Profi ChatGPT használó.</div>
+                </div>
+            </div>
+            <div class="member-card">
+                <div class="member-toggle">
+                    <div class="member-name">Gombos Bálint</div>
+                    <div class="member-arrow">▼</div>
+                </div>
+                <div class="member-extra">
+                    <div class="member-role">Designer</div>
+                    <div class="member-description">Grafikai tervezés és UI/UX szakértő.</div>
+                </div>
+            </div>
+            <div class="member-card">
+                <div class="member-toggle">
+                    <div class="member-name">Beluscsák Zsolt</div>
+                    <div class="member-arrow">▼</div>
+                </div>
+                <div class="member-extra">
+                    <div class="member-role">Fejlesztő</div>
+                    <div class="member-description">Frontend/Backend specialista.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Kapcsolat</h2>
+        <p><a href="mailto:bartaa@kkszki.hu" style="color: var(--main-blue);">bartaa@kkszki.hu</a></p>
+        <p><a href="mailto:gombosb@kkszki.hu" style="color: var(--main-blue);">gombosb@kkszki.hu</a></p>
+        <p><a href="mailto:beluscsakzs@kkszki.hu" style="color: var(--main-blue);">beluscsakzs@kkszki.hu</a></p>
+    </section>
+
+    <div class="slideshow-wrapper">
+        <div class="slideshow-container">
+            <div class="slide active"><img src="adamimg/unnamed (1) (1).jpg" alt="Slide 1"></div>
+            <div class="slide"><img src="adamimg/140622-BLUE-LANDSCAPE-PC-HD.png" alt="Slide 2"></div>
+            <div class="slide"><img src="adamimg/abstract-blue-wave-background-digital-art-4k-wallpaper-uhdpaper.com-486@0@f.jpg" alt="Slide 3"></div>
+            <a class="prev">&#10094;</a>
+            <a class="next">&#10095;</a>
+        </div>
+        <div class="dots"></div>
     </div>
 
-    <div class="member-card">
-      <div class="member-toggle">
-        <div class="member-name">Gombos Bálint</div>
-        <div class="member-arrow">▼</div>
-      </div>
-      <div class="member-extra">
-        <div class="member-role">Designer</div>
-        <div class="member-description">Grafikai tervezés és UI/UX szakértő.</div>
-      </div>
-    </div>
-    
-    <div class="member-card">
-      <div class="member-toggle">
-        <div class="member-name">Beluscsák Zsolt</div>
-        <div class="member-arrow">▼</div>
-      </div>
-      <div class="member-extra">
-        <div class="member-role">Fejlesztő</div>
-        <div class="member-description">Frontend/Backend specialista.</div>
-      </div>
-    </div>
+    <footer>
+        &copy; 2025 Cégünk. Minden jog fenntartva.
+        <div class="social-icons">
+            <a target="_blank" href="https://www.instagram.com/bartaadi/" aria-label="Instagram">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+        </div>
+    </footer>
 
+    <button id="toggle-slideshow" style="
+        position:fixed; bottom:30px; right:30px; padding:16px 22px; font-size:1rem; font-weight:700; border:none; 
+        border-radius:50px; background:var(--main-blue); color:white; box-shadow:0 6px 16px rgba(0,0,0,0.4); 
+        cursor:pointer; transition:all 0.3s ease; z-index:10000;">
+        Slideshow
+    </button>
 
-    
-  </div>
-</section>
-
-<section id="contact">
-  <h2>Kapcsolat</h2>
-  <p><a href="mailto:bartaa@kkszki.hu" style="color: var(--main-blue);">bartaa@kkszki.hu</a></p>
-  <p><a href="mailto:gombosb@kkszki.hu" style="color: var(--main-blue);">gombosb@kkszki.hu</a></p>
-  <p><a href="mailto:beluscsakzs@kkszki.hu" style="color: var(--main-blue);">beluscsakzs@kkszki.hu</a></p>
-</section>
-
-
-
-
-<!-- Slideshow HTML -->
-<div class="slideshow-wrapper">
-  <div class="slideshow-container">
-    <div class="slide active"><img src="adamimg/unnamed (1) (1).jpg" alt="Slide 1"></div>
-    <div class="slide"><img src="adamimg/140622-BLUE-LANDSCAPE-PC-HD.png" alt="Slide 2"></div>
-    <div class="slide"><img src="adamimg/abstract-blue-wave-background-digital-art-4k-wallpaper-uhdpaper.com-486@0@f.jpg" alt="Slide 3"></div>
-
-    <a class="prev">&#10094;</a>
-    <a class="next">&#10095;</a>
-  </div>
-  <div class="dots"></div>
-</div>
-
-
-
-
-
-<footer>
-  &copy; 2025 Cégünk. Minden jog fenntartva.
-  <div class="social-icons">
-    <a target="_blank" href="https://www.instagram.com/bartaadi/" aria-label="Instagram">
-      <i class="fa-brands fa-instagram"></i>
-    </a>
-  </div>
-</footer>
-
-
-
-<!-- Slideshow Toggle Button -->
-<button id="toggle-slideshow" style="
-  position:fixed;
-  bottom:30px;
-  right:30px;
-  padding:16px 22px;
-  font-size:1rem;
-  font-weight:700;
-  border:none;
-  border-radius:50px;
-  background:var(--main-blue);
-  color:white;
-  box-shadow:0 6px 16px rgba(0,0,0,0.4);
-  cursor:pointer;
-  transition:all 0.3s ease;
-  z-index:10000;
-">
-  Slideshow
-</button>
-
-<script>
-  document.querySelectorAll('.member-toggle').forEach(toggle => {
-  toggle.addEventListener('click', () => {
-    const arrow = toggle.querySelector('.member-arrow');
-    const extra = toggle.nextElementSibling; // .member-extra
-    extra.classList.toggle('show');
-    arrow.classList.toggle('open');
-  });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  // Slideshow alapból elrejtve
-  const slideshowSection = document.querySelector('.slideshow-wrapper');
-  slideshowSection.style.display = 'none';
-  slideshowSection.style.opacity = '0';
-  slideshowSection.style.transform = 'translateY(20px)';
-  slideshowSection.style.transition = 'all 0.6s ease';
-
-  // Slideshow toggle gomb
-  const toggleBtn = document.getElementById('toggle-slideshow');
-  toggleBtn.addEventListener('click', () => {
-    if(slideshowSection.style.display === 'none') {
-      slideshowSection.style.display = 'block';
-      setTimeout(() => {
-        slideshowSection.style.opacity = '1';
-        slideshowSection.style.transform = 'translateY(0)';
-      }, 10);
-    }
-  });
-
-  
-
-  // Slideshow működés
-  const slides = document.querySelectorAll('.slide');
-  const prev = document.querySelector('.prev');
-  const next = document.querySelector('.next');
-  const dotsContainer = document.querySelector('.dots');
-  let slideIndex = 0;
-
-  slides.forEach((_, i) => {
-    const dot = document.createElement('span');
-    dot.classList.add('dot');
-    dot.addEventListener('click', () => showSlide(i));
-    dotsContainer.appendChild(dot);
-  });
-  const dots = document.querySelectorAll('.dot');
-  if(dots[0]) dots[0].classList.add('active');
-
-  function showSlide(n) {
-    slideIndex = (n + slides.length) % slides.length;
-    slides.forEach(s => s.classList.remove('active'));
-    dots.forEach(d => d.classList.remove('active'));
-    slides[slideIndex].classList.add('active');
-    dots[slideIndex].classList.add('active');
-  }
-
-  if(prev) prev.addEventListener('click', ()=>showSlide(slideIndex-1));
-  if(next) next.addEventListener('click', ()=>showSlide(slideIndex+1));
-
-  setInterval(()=>showSlide(slideIndex+1),5000);
-});
-
-
-// Hamburger toggle
-const hamburger = document.getElementById('hamburger');
-const navMenu = document.getElementById('nav-menu');
-hamburger.addEventListener('click', () => { navMenu.classList.toggle('show'); });
-
-// Ctrl + tiltás
-var isCtrl = false;
-document.onkeyup = function(e) { if(e.which==17) isCtrl=false; }
-document.onkeydown = function(e) {
-  if(e.which==17) isCtrl=true;
-  if(((e.which==85)||(e.which==65)||(e.which==88)||(e.which==67)||(e.which==86)||(e.which==123)||(e.which==83)) && isCtrl){
-    alert('nuh-uh'); return false;
-  }
-}
-
-// Right click tiltás
-document.addEventListener('contextmenu', e=>e.preventDefault());
-
-// Ctrl+Shift+Key tiltások
-function ctrlShiftKey(e,keyCode){ return e.ctrlKey && e.shiftKey && e.keyCode===keyCode.charCodeAt(0); }
-document.onkeydown=(e)=>{
-  if(e.keyCode===123 || ctrlShiftKey(e,'I') || ctrlShiftKey(e,'J') || ctrlShiftKey(e,'C') || (e.ctrlKey && e.keyCode==='U'.charCodeAt(0))){
-    alert('nuh-uh'); return false;
-  }
-}
-
-// Select tiltás
-document.onselectstart=()=>false;
-if(window.sidebar){ document.onmousedown=()=>false; document.onclick=()=>true; }
-
-// Canvas background
-const canvas=document.getElementById('bg-circles');
-const ctx=canvas.getContext('2d');
-let width,height;
-let layers=[];
-let mouseX=window.innerWidth/2, mouseY=window.innerHeight/2, scrollY=0;
-
-function Circle(layer){
-  this.x=Math.random()*width; this.baseY=Math.random()*height;
-  this.baseRadius=10+Math.random()*(layer===0?30:layer===1?40:60);
-  this.radius=this.baseRadius;
-  this.speedX=(Math.random()-0.5)*(layer===0?0.2:layer===1?0.4:0.7);
-  this.speedY=(Math.random()-0.5)*(layer===0?0.2:layer===1?0.4:0.7);
-  this.hue=180+Math.random()*60; this.layer=layer; this.parallaxX=0; this.parallaxY=0; this.pulseOffset=Math.random()*Math.PI*2; this.trail=[];
-}
-
-Circle.prototype.update=function(){
-  this.x+=this.speedX; this.baseY+=this.speedY;
-  if(this.x<-this.radius)this.x=width+this.radius;
-  if(this.x>width+this.radius)this.x=-this.radius;
-  if(this.baseY<-this.radius)this.baseY=height+this.radius;
-  if(this.baseY>height+this.radius)this.baseY=-this.radius;
-  const parallaxFactor=this.layer===0?0.01:this.layer===1?0.02:0.04;
-  this.parallaxX=(mouseX-width/2)*parallaxFactor;
-  this.parallaxY=(mouseY-height/2)*parallaxFactor+scrollY*parallaxFactor*2;
-  this.radius=this.baseRadius*(0.85+0.15*Math.sin(Date.now()*0.002+this.pulseOffset));
-  this.hue=180+60*Math.sin(Date.now()*0.001+this.pulseOffset);
-  this.trail.push({x:this.x+this.parallaxX,y:this.baseY+this.parallaxY,alpha:0.5,radius:this.radius,hue:this.hue});
-  if(this.trail.length>25)this.trail.shift();
-};
-
-Circle.prototype.draw=function(){
-  for(let i=0;i<this.trail.length;i++){
-    const t=this.trail[i]; ctx.beginPath();
-    ctx.arc(t.x,t.y,t.radius*(i/this.trail.length*0.8+0.2),0,Math.PI*2);
-    ctx.fillStyle=`hsla(${t.hue},80%,60%,${t.alpha*(i/this.trail.length)})`; ctx.fill();
-  }
-  ctx.beginPath();
-  const color=`hsl(${this.hue},80%,60%)`;
-  ctx.fillStyle=color; ctx.shadowColor=color; ctx.shadowBlur=30;
-  ctx.arc(this.x+this.parallaxX,this.baseY+this.parallaxY,this.radius,0,Math.PI*2); ctx.fill();
-};
-
-window.addEventListener('mousemove',e=>{mouseX=e.clientX; mouseY=e.clientY;});
-window.addEventListener('scroll',()=>{scrollY=window.scrollY;});
-
-function init(){ width=window.innerWidth;height=window.innerHeight;canvas.width=width;canvas.height=height;
-  layers=[[],[],[]]; for(let l=0;l<3;l++){ let count=l===0?10:l===1?15:20; for(let i=0;i<count;i++)layers[l].push(new Circle(l)); }
-}
-
-function animate(){ ctx.fillStyle='rgba(0,0,50,0.18)'; ctx.fillRect(0,0,width,height);
-  layers.forEach(layer=>layer.forEach(c=>{c.update();c.draw();})); requestAnimationFrame(animate);
-}
-window.addEventListener('resize',init); init(); animate();
-
-// Óra
-function updateClock(){ const now=new Date(); 
-  const h=String(now.getHours()).padStart(2,'0'); 
-  const m=String(now.getMinutes()).padStart(2,'0'); 
-  const s=String(now.getSeconds()).padStart(2,'0'); 
-  document.getElementById('real-time-clock').textContent=`${h}:${m}:${s}`; 
-}
-setInterval(updateClock,1000); updateClock();
-
-// Scroll animáció
-const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('show');});},{threshold:0.15});
-document.querySelectorAll("section, .member-card").forEach(el=>observer.observe(el));
-
-// Slideshow toggle modern
-const slideshowSection = document.querySelector('.slideshow-wrapper');
-slideshowSection.style.opacity = 0;
-slideshowSection.style.display = 'none';
-slideshowSection.style.transition = 'opacity 0.6s ease';
-
-const toggleBtn = document.getElementById('toggle-slideshow');
-toggleBtn.addEventListener('click', () => {
-  if(slideshowSection.style.display === 'none') {
-    slideshowSection.style.display = 'block';
-    requestAnimationFrame(() => { slideshowSection.style.opacity = 1; });
-  } else {
-    slideshowSection.style.opacity = 0;
-    slideshowSection.addEventListener('transitionend', () => {
-      slideshowSection.style.display = 'none';
-    }, { once: true });
-  }
-});
-
-
-</script>
-
+    <script src="script.js"></script>
 </body>
 </html>
-
-
