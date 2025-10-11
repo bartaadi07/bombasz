@@ -207,20 +207,74 @@ main {
 
 /* -------------------- Letöltés Gomb (ÚJ) -------------------- */
 /* -------------------- Letöltés Gomb (ÚJ) -------------------- */
+/* -------------------- Letöltés Gomb (ÚJ) -------------------- */
+/* -------------------- Letöltés Gomb (FRISSÍTVE) -------------------- */
+/* -------------------- Letöltés Gomb (VÉGLEGESÍTETT FRISSÍTÉS) -------------------- */
+/* -------------------- Letöltés Gomb (VÉGLEGESÍTETT FRISSÍTÉS) -------------------- */
+/* -------------------- Letöltés Gomb (VÉGLEGES, Flexbox Központozással) -------------------- */
+/* -------------------- Letöltés Gomb (VÉGLEGES, Flexbox Központozással) -------------------- */
 .download-button {
-    display: inline-block;
-    background-color: var(--main-blue); /* Kék háttér */
-    color: white; /* ⬅️ EZT MÓDOSÍTOTTAM: Fehér szöveg */
+    display: flex; /* 1. A gombot Flexbox konténerré tesszük */
+    flex-direction: column; /* 2. A tartalom oszlopban legyen (több soros szöveg kezelése) */
+    justify-content: center; /* 3. VERT. középre igazítás a gomb magasságához képest */
+    text-align: center; /* HORIZ. középre igazítás (ez már megvolt) */
+    
+    background-color: var(--main-blue);
+    color: white; 
     font-weight: 700;
     font-size: 1.3rem;
     padding: 15px 30px;
     border-radius: 8px;
-    margin-top: 30px;
+    
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 20px var(--main-blue-shadow);
     transition: all 0.3s ease;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3); /* Árnyék a jobb olvashatóságért a fehér szöveg alatt */
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+/* -------------------- Download Gombok Konténere (ÚJ, RESZPONZÍV) -------------------- */
+.download-buttons-container {
+    /* 1. Változás: A Grid Layout engedélyezése */
+    display: grid; 
+    
+    /* 2. Változás: Reszponzív oszlopsablon beállítása */
+    /* Annyi oszlop, amennyi elfér, a szélességet a tartalom határozza meg */
+    grid-template-columns: repeat(auto-fit, minmax(min-content, 1fr));
+    
+    /* Középre igazítás (horizontálisan) */
+    justify-items: center; 
+    
+    /* Vízszintes (oszlopköz) ÉS Függőleges (sorköz) távolság */
+    gap: 1.25rem 1.25rem; 
+    
+    width: 100%; 
+    max-width: 1200px; 
+    margin: 30px auto 0 auto; 
+    
+    /* Animáció */
     opacity: 0; 
     animation: fadeUp 1s ease forwards 2.0s;
+}
+
+/* 3. Változás: A gombok stílusa (a gombok magasságának dinamikus beállítása) */
+.download-buttons-container > a,
+.download-buttons-container > button {
+    /* Szélesség: Kitölti a Grid cellát (ami a legszélesebb gomb tartalmához igazodik) */
+    width: 100%; 
+    min-width: min-content; 
+    
+    /* 🟢 A FIX MAGASSÁG EL LETT TÁVOLÍTVA (pl. height: 3.5rem;)! 
+       Ehelyett PADDING-ot használunk, hogy a magasság dinamikus legyen. */
+    
+    /* Magasság: Függőleges kitöltés a dinamikus magasságért */
+    /* Fent/Lent: 0.75rem, Balra/Jobbra: 1.5rem */
+    padding: 0.75rem 1.5rem; 
+    
+    /* Szövegtördelés és igazítás beállításai */
+    display: block;        /* Biztosítja a text-align használatát és a teljes szélességet */
+    text-align: center;    /* A szöveg középre igazítása (vízszintesen) */
+    white-space: normal;   /* Engedélyezi, hogy a szöveg több sorba tördelődjön */
+    line-height: 1.2;      /* A sorköz beállítása */
+    
+    /*... egyéb gomb stílusok (szín, betűméret, stb.) ...*/
 }
 
 .download-button:hover {
