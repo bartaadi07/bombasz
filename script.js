@@ -65,7 +65,7 @@ if (hamburger && navMenu) {
 document.querySelectorAll('.member-toggle').forEach(toggle => {
     toggle.addEventListener('click', () => {
         const arrow = toggle.querySelector('.member-arrow');
-        const extra = toggle.nextElementSibling; 
+        const extra = toggle.nextElementSibling;
         extra.classList.toggle('show');
         arrow.classList.toggle('open');
     });
@@ -190,7 +190,7 @@ const observer = new IntersectionObserver(entries=>{
 document.querySelectorAll("section, .member-card").forEach(el=>observer.observe(el));
 
 // =========================================================
-// 💬 CHATBOT V4.0 - KULCSSZAVAS, API KULCS NÉLKÜLI LOGIKA
+// 💬 NÉV-NEM ELEMZŐ PROGRAM V1.0 (A CHATBOT HELYETT)
 // =========================================================
 
 const chatBtn = document.getElementById('toggle-chat');
@@ -206,6 +206,9 @@ chatBox.style.transform = 'translateY(20px)';
 chatBox.style.transition = 'all 0.4s ease';
 
 chatBtn.addEventListener('click', () => {
+    // Változtassuk meg a gomb szövegét a kontextusnak megfelelően
+    chatBtn.textContent = (chatBox.style.display === 'none' || chatBox.style.opacity === '0') ? 'Név Elemző Bezárása' : 'Chat';
+
     if (chatBox.style.display === 'none' || chatBox.style.opacity === '0') {
         chatBox.style.display = 'flex';
         setTimeout(() => { chatBox.style.opacity = '1'; chatBox.style.transform = 'translateY(0)'; }, 10);
@@ -216,62 +219,136 @@ chatBtn.addEventListener('click', () => {
     }
 });
 
-// 🤖 Szimulált Chatbot Logika (Kulcsszavakra épülő)
-const BOT_RESPONSES = {
-    "főoldal": "A főoldalon találod a cégünk logóját, a valós idejű órát és a SRT. Időzítő letöltési linkjét.",
-    "rólunk": "Cégünk piacvezető a kék gömbös hátterű weboldalak területén. Küldetésünk: Dedicated for you!",
-    "csapat": "A csapat tagjai: Barta Ádám (Fejlesztő), Gombos Bálint (Designer) és Beluscsák Zsolt (Fejlesztő).",
-    "kapcsolat": "Kérjük, vedd fel a kapcsolatot e-mailben a megadott címeken: bartaa@kkszki.hu, gombosb@kkszki.hu, beluscsakzs@kkszki.hu.",
-    "sr időzítő": "Az SRT. Időzítő egy hasznos szoftver, melyet a főoldalon tudsz letölteni a 'SRT. Időzítő letöltése' gombbal.",
-    "hello": "Szia! Miben segíthetek ma? Kérdezhetsz a 'Rólunk', 'Csapat' vagy 'SRT Időzítő' témákban.",
-    "szia": "Szia! Miben segíthetek ma? Kérdezhetsz a 'Rólunk', 'Csapat' vagy 'SRT Időzítő' témákban.",
-    "köszönöm": "Szívesen! Bármi másban segíthetek?",
-    // Alapértelmezett, ha nem talál találatot:
-    "default": "Sajnálom, erre a kérdésre még nem tudok válaszolni. Kérlek, próbáld meg másképp vagy válassz egyet a fő témák közül (pl. Rólunk, Csapat)."
-};
 
-function getBotResponse(message) {
-    const lowerCaseMsg = message.toLowerCase();
+// 🚺 Hungarian Name Classification Logic (Simplified) 🚹
+// FIGYELEM: Ez egy erősen leegyszerűsített lista, kizárólag a demó céljából.
+// =========================================================
+// 💬 NÉV-NEM ELEMZŐ PROGRAM V1.2 (Sokkal, sokkal több névvel)
+// =========================================================
+
+// 🚺 Hungarian Name Classification Logic (Highly Extended) 🚹
+const MALE_NAMES = [
+    // A leggyakoribbak és népszerűek
+    "bence", "levente", "máté", "dániel", "dominik", "noel", "dávid", 
+    "zalán", "oliver", "benedek", "marcell", "ádám", "bálint", "zsolt", 
+    "istván", "ferenc", "lászló", "gábor", "tamás", "kristóf", "norbert", 
+    "zoltán", "jános", "tibor", "andrás", "imre", "sándor", "márk", 
+    "szabolcs", "martin", "gergő", "attila", "péter", "ábel", "mihály", 
+    "szilárd", "róbert", "györgy", "barnabás", "emil", "endre", "erik", 
+    "fülöp", "gellért", "gyula", "henrik", "hubert", "kálmán", "kornél", 
+    "lőrinc", "márton", "nándor", "pál", "richárd", "roland", "soma", 
+    "viktor", "vilmos", "vendel", "zente", "zsombor", "milán", "krisztián", 
+    "patrik", "denis", "balázs", "csaba", "denes", "titusz", "tódor",
     
-    // Keresés az előre definiált kulcsszavakban
-    for (const key in BOT_RESPONSES) {
-        if (lowerCaseMsg.includes(key)) {
-            return BOT_RESPONSES[key];
-        }
+    // Történelmi és ritkább, de anyakönyvezhető
+    "árpád", "hunor", "magor", "anatol", "antal", "benő", "bernárd", 
+    "botond", "cameron", "cecil", "elemér", "enoch", "gáspár", "gelen", 
+    "ignác", "illés", "jeromos", "joel", "józsef", "kázmér", "keán", 
+    "lukács", "maximilián", "némó", "oszkár", "otis", "ottó", "reynold", 
+    "rókus", "rudi", "russel", "szeverin", "tenger", "tihamér", "titán", 
+    "veron", "virgil", "vladimir", "aladár", "béla", "jános", "kálmán", 
+    "soma", "szilveszter", "szebasztián", "albert", "carlos", "eder", 
+    "móric", "nicolas", "szervác", "valter", "vencel", "vince", "szemere",
+    "bódog", "tuzson"
+];
+
+const FEMALE_NAMES = [
+    // A leggyakoribbak és népszerűek
+    "hanna", "anna", "bogláka", "réka", "lilla", "luca", "fanni", 
+    "nóra", "zoé", "kata", "zsuzsa", "eva", "edit", "katalin", 
+    "viktória", "emese", "bea", "gréta", "kinga", "eszter", "vivien", 
+    "panna", "ilona", "zita", "dorina", "krisztina", "enikő", "judit",
+    "alexandra", "aliz", "anita", "babett", "betty", "borbála", "cézárina", 
+    "cintia", "csenge", "dorottya", "edina", "elena", "elizabet", "flóra", 
+    "franciska", "janka", "klaudia", "korina", "laura", "lívia", "matilda", 
+    "melinda", "rézi", "szandra", "szofi", "szonja", "tímea", "vera", 
+    "virág", "zsanett", "zille", "blanka", "adrienn", "alida", "mónika", 
+    "evelin", "szabina", "bernadett", "gerda", "margit", "zsófia",
+    
+    // Történelmi és ritkább, de anyakönyvezhető
+    "adél", "agáta", "alda", "amelia", "anabella", "angelika", "aranka", 
+    "auguszta", "bianka", "csilla", "dina", "elda", "elina", "felícia", 
+    "gloria", "hajnalka", "héda", "iris", "kamilla", "karolina", "kitti", 
+    "leila", "lenke", "liza", "lora", "margareta", "médea", "nadin", 
+    "nia", "ornella", "piroska", "ramóna", "sarolta", "szabrina", 
+    "szidónia", "szilvia", "színes", "titánia", "vanda", "vendelina", 
+    "viktória", "vilma", "yvett", "zelma", "zille", "zora", "zilé",
+    "auróra", "beatrix", "emma", "sára", "evelina", "dalma", "izabella",
+    "kinga", "mira", "tünde", "céline"
+];
+
+function determineGender(name) {
+    const lowerCaseName = name.toLowerCase().trim();
+
+    if (lowerCaseName.length < 2) {
+        return "Kérlek, adj meg egy érvényes nevet.";
     }
-    return BOT_RESPONSES["default"];
+
+    // A .includes() az egyszerű összehasonlítás a gyorsaság érdekében
+    if (MALE_NAMES.includes(lowerCaseName)) {
+        return `A(z) **${name}** név valószínűleg **FÉRFI** név. ♂️`;
+    }
+
+    if (FEMALE_NAMES.includes(lowerCaseName)) {
+        return `A(z) **${name}** név valószínűleg **NŐI** név. ♀️`;
+    }
+
+    return `Sajnos a(z) **${name}** nevet nem találom az alap listában. Nem megállapítható. 🤔`;
+}
+function determineGender(name) {
+    const lowerCaseName = name.toLowerCase().trim();
+
+    if (lowerCaseName.length < 2) {
+        return "Kérlek, adj meg egy érvényes nevet.";
+    }
+
+    if (MALE_NAMES.includes(lowerCaseName)) {
+        return `A(z) **${name}** név valószínűleg **FÉRFI** név. ♂️`;
+    }
+
+    if (FEMALE_NAMES.includes(lowerCaseName)) {
+        return `A(z) **${name}** név valószínűleg **NŐI** név. ♀️`;
+    }
+
+    return `Sajnos a(z) **${name}** nevet nem találom az alap listában. Nem megállapítható. 🤔`;
 }
 
 function appendMessage(message, className) {
     const msgElement = document.createElement('div');
     msgElement.className = className;
-    msgElement.textContent = message;
+    
+    // Markdown-szerű boldolás implementálása
+    msgElement.innerHTML = message.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
     chatMessages.appendChild(msgElement);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-function sendMessageToBot(message) {
+function processName() {
+    const name = chatInput.value.trim();
+    if (!name) return;
+
     // Felhasználó üzenete
-    appendMessage(message, 'user-msg');
+    appendMessage(name, 'user-msg');
     chatInput.value = '';
-    
+
     // Bot válasza - szimulálunk egy kis késleltetést a valós hatásért
-    const typingIndicator = appendMessage('...', 'bot-msg');
+    appendMessage('Elemzés folyamatban...', 'bot-msg');
 
     setTimeout(() => {
-        const botResponse = getBotResponse(message);
+        const result = determineGender(name);
+        
         // Töröljük a '...'
-        chatMessages.removeChild(chatMessages.lastElementChild); 
+        if (chatMessages.lastElementChild && chatMessages.lastElementChild.textContent === 'Elemzés folyamatban...') {
+            chatMessages.removeChild(chatMessages.lastElementChild);
+        }
         
         // Hozzáadjuk a valós választ
-        appendMessage(botResponse, 'bot-msg');
-    }, 500); 
+        appendMessage(result, 'bot-msg');
+    }, 500);
 }
 
-sendBtn.addEventListener('click', () => {
-    const msg = chatInput.value.trim();
-    if (msg) sendMessageToBot(msg);
-});
+sendBtn.addEventListener('click', processName);
 
 chatInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendBtn.click();
