@@ -1,0 +1,101 @@
+body {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 1.2rem;
+    background-color: #f9f9f9;
+    color: #222;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 1.2rem;
+}
+
+select {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 1.2rem;
+}
+
+p {
+    margin-bottom: 1.2rem;
+    text-align: justify;
+}
+
+mark {
+    background-color: yellow;
+    border-radius: 3px;
+    padding: 0 2px;
+}
+
+/* Könyvjelző gomb */
+#bookmark-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #0078d7;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 26px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: background-color 0.3s;
+}
+
+#bookmark-btn:hover {
+    background-color: #005fa3;
+}
+
+/* Értesítés (toast) */
+#toast {
+    visibility: hidden;
+    min-width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 12px;
+    position: fixed;
+    left: 50%;
+    bottom: 90px;
+    transform: translateX(-50%);
+    z-index: 1;
+    font-size: 16px;
+}
+
+#toast.show {
+    visibility: visible;
+    animation: fadein 0.4s, fadeout 0.4s 2.2s;
+}
+
+@keyframes fadein {
+    from { bottom: 60px; opacity: 0; }
+    to { bottom: 90px; opacity: 1; }
+}
+@keyframes fadeout {
+    from { bottom: 90px; opacity: 1; }
+    to { bottom: 60px; opacity: 0; }
+}
+
+/* Sötét mód */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #121212;
+        color: #eee;
+    }
+    mark {
+        background-color: #ffeb3b;
+        color: black;
+    }
+}
