@@ -1,36 +1,60 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-könyv olvasó – szöveg könyvjelzővel</title>
-    <link rel="stylesheet" href="konyv.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>E-könyv olvasó – felhő könyvjelzővel</title>
+  <link rel="stylesheet" href="konyv.css" />
 </head>
 <body>
-    <header>
-        <h1>E-könyv olvasó</h1>
-        <p><em>Válaszd ki a könyvet, és jelölj ki egy szót könyvjelzőként</em></p>
-    </header>
+  <div id="progress-bar"></div>
 
+  <header>
+    <h1>E-könyv olvasó</h1>
+    <p><em>Válaszd ki a könyvet, és jelölj ki egy szót könyvjelzőként</em></p>
+  </header>
+
+ 
+<!-- Ez legyen a body-ban, az auth-section előtt vagy után -->
+<button id="show-auth-btn">Bejelentkezés / Regisztráció</button>
+
+<!-- Ez legyen az auth-section belsejében, pl. a bejelentkezési form alatt -->
+<button id="close-auth-btn" title="Bezárás">Mégse</button>
+
+  <!-- Bejelentkezési űrlap, alapból rejtve -->
+  <section id="auth-section" style="display:none;">
+    <h2>Bejelentkezés / Regisztráció</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Jelszó" />
+    <button id="login-btn">Bejelentkezés</button>
+    <button id="register-btn">Regisztráció</button>
+    <button id="close-auth-btn" title="Bezárás">Mégse</button>
+    <p id="auth-message"></p>
+  </section>
+
+  <!-- Az alkalmazás fő része, alapból rejtve -->
+  <section id="app-section" style="display:none;">
     <select id="bookSelector">
-        <option value="book1">Resident Evil Code Veronica</option>
-        <option value="book2"> Dexter 1</option>
-        <option value="book3"> Dexter 2</option>
-        <option value="book4"> Dexter 3</option>
-        <option value="book5"> Dexter 4</option>
-        <option value="book6"> Dexter 5</option>
-        <option value="book7"> Dexter 6</option>
-        <option value="book8"> Dexter 7</option>
-        <option value="book9"> Dexter 8</option>
+      <option value="book1">Resident Evil Code Veronica</option>
+      <option value="book2">Dexter 1</option>
+      <option value="book3">Dexter 2</option>
+      <option value="book4">Dexter 3</option>
+      <option value="book5">Dexter 4</option>
+      <option value="book6">Dexter 5</option>
+      <option value="book7">Dexter 6</option>
+      <option value="book8">Dexter 7</option>
+      <option value="book9">Dexter 8</option>
     </select>
 
     <main id="book-content"></main>
-    
+
     <button id="bookmark-btn" title="Kijelölt szöveg mentése">🔖</button>
-    <div id="toast">Könyvjelző elmentve!</div>
-<!-- Könyvjelzőre ugrás gomb -->
-<button id="goto-bookmark-btn" title="Ugrás a könyvjelzőhöz">⤴️</button>
-<div id="toast">Könyvjelző mentve!</div>
-    <script src="konyv.js"></script>
+    <button id="goto-bookmark-btn" title="Ugrás a könyvjelzőhöz">⤴️</button>
+
+    <div id="toast">Könyvjelző mentve!</div>
+  </section>
+
+  <!-- Firebase SDK-k modern modul verzióban -->
+  <script type="module" src="konyv.js"></script>
 </body>
 </html>
