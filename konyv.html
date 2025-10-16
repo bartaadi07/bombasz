@@ -10,24 +10,22 @@
   <div id="progress-bar"></div>
 
   <header>
-    <h1>E-könyv olvasó</h1>
-    <p><em>Válaszd ki a könyvet, és jelölj ki egy szót könyvjelzőként</em></p>
   </header>
 
  
 <!-- Ez legyen a body-ban, az auth-section előtt vagy után -->
-<button id="show-auth-btn">Bejelentkezés / Regisztráció</button>
+<button id="show-auth-btn">Bejelentkezés</button>
 
 <!-- Ez legyen az auth-section belsejében, pl. a bejelentkezési form alatt -->
-<button id="close-auth-btn" title="Bezárás">Mégse</button>
+
 
   <!-- Bejelentkezési űrlap, alapból rejtve -->
   <section id="auth-section" style="display:none;">
-    <h2>Bejelentkezés / Regisztráció</h2>
+    <h2>Bejelentkezés</h2>
     <input type="email" id="email" placeholder="Email" />
     <input type="password" id="password" placeholder="Jelszó" />
     <button id="login-btn">Bejelentkezés</button>
-    <button id="register-btn">Regisztráció</button>
+    <!-- <button id="register-btn">Regisztráció</button> -->
     <button id="close-auth-btn" title="Bezárás">Mégse</button>
     <p id="auth-message"></p>
   </section>
