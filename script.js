@@ -239,7 +239,7 @@ const MALE_NAMES = [
     "lőrinc", "márton", "nándor", "pál", "richárd", "roland", "soma", 
     "viktor", "vilmos", "vendel", "zente", "zsombor", "milán", "krisztián", 
     "patrik", "denis", "balázs", "csaba", "denes", "titusz", "tódor", "rikárdó",
-    "armandó", "hgery08", "ronáldó"
+    "armandó", "hgery08", "ronáldó",
     
     // Történelmi és ritkább, de anyakönyvezhető
     "árpád", "hunor", "magor", "anatol", "antal", "benő", "bernárd", 
@@ -264,7 +264,7 @@ const FEMALE_NAMES = [
     "franciska", "janka", "klaudia", "korina", "laura", "lívia", "matilda", 
     "melinda", "rézi", "szandra", "szofi", "szonja", "tímea", "vera", 
     "virág", "zsanett", "zille", "blanka", "adrienn", "alida", "mónika", 
-    "evelin", "szabina", "bernadett", "gerda", "margit", "zsófia", "mercédesz"
+    "evelin", "szabina", "bernadett", "gerda", "margit", "zsófia", "mercédesz",
     
     // Történelmi és ritkább, de anyakönyvezhető
     "adél", "agáta", "alda", "amelia", "anabella", "angelika", "aranka", 
@@ -355,3 +355,4 @@ chatInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendBtn.click();
 
 });
+
