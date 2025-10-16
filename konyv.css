@@ -77,3 +77,18 @@ mark {
 
 @keyframes fadein { from { bottom: 60px; opacity: 0; } to { bottom: 90px; opacity: 1; } }
 @keyframes fadeout { from { bottom: 90px; opacity: 1; } to { bottom: 60px; opacity: 0; } }
+#auth-section {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  #login-btn {
+    cursor: pointer;
+  }
+  

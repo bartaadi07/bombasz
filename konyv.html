@@ -14,21 +14,17 @@
 
  
 <!-- Ez legyen a body-ban, az auth-section előtt vagy után -->
-<button id="show-auth-btn">Bejelentkezés</button>
-
-<!-- Ez legyen az auth-section belsejében, pl. a bejelentkezési form alatt -->
-
-
-  <!-- Bejelentkezési űrlap, alapból rejtve -->
-  <section id="auth-section" style="display:none;">
-    <h2>Bejelentkezés</h2>
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Jelszó" />
-    <button id="login-btn">Bejelentkezés</button>
-    <!-- <button id="register-btn">Regisztráció</button> -->
-    <button id="close-auth-btn" title="Bezárás">Mégse</button>
-    <p id="auth-message"></p>
+<section id="auth-section">
+    <div class="auth-box">
+  
+      <input type="email" id="email" placeholder="Email" /><br>
+      <input type="password" id="password" placeholder="Jelszó" /><br>
+  
+      <button id="login-btn">Bejelentkezés</button>
+      <p id="auth-message"></p>
+    </div>
   </section>
+  
 
   <!-- Az alkalmazás fő része, alapból rejtve -->
   <section id="app-section" style="display:none;">
