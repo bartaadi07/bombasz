@@ -9,27 +9,32 @@
 <body>
   <div id="progress-bar"></div>
 
-  <header>
-  </header>
+  <header></header>
 
- 
-<!-- Ez legyen a body-ban, az auth-section előtt vagy után -->
-<section id="auth-section">
+  <!-- BEJELENTKEZÉS -->
+  <section id="auth-section">
     <div class="auth-box">
-  
       <input type="email" id="email" placeholder="Email" /><br>
       <input type="password" id="password" placeholder="Jelszó" /><br>
-  
+
       <button id="login-btn">Bejelentkezés</button>
       <button id="reset-password-btn" style="display:none;">Jelszó visszaállítása</button>
-
       <p id="auth-message"></p>
     </div>
   </section>
-  
 
-  <!-- Az alkalmazás fő része, alapból rejtve -->
+  <!-- ALKALMAZÁS FŐ RÉSZE -->
   <section id="app-section" style="display:none;">
+
+    <!-- Felhasználó profil szerkesztése -->
+    <section id="profile-section">
+      <h3></h3>
+      <input type="text" id="displayNameInput" placeholder="Felhasználóneved:" />
+      <button id="updateDisplayNameBtn">Mentés</button>
+      <p id="profileMessage"></p>
+    </section>
+
+    <!-- Könyvválasztó -->
     <select id="bookSelector">
       <option value="book1">Resident Evil Code Veronica</option>
       <option value="book2">Dexter 1</option>
@@ -58,21 +63,26 @@
       <option value="book25">A gyűrűk ura I - A gyűrű szövetsége</option>
       <option value="book26">A gyűrűk ura II - A két torony</option>
       <option value="book27">A gyűrűk ura III - A király visszatér</option>
-
-
-
-
     </select>
-
+    <section id="chat-section">
+      <h3>💬 Közösségi chatfal</h3>
+      <div id="chat-box"></div>
+      <div id="chat-input-area">
+        <input type="text" id="chat-message" placeholder="Írj üzenetet..." />
+        <button id="send-message-btn">Küldés</button>
+      </div>
+    </section>
     <main id="book-content"></main>
 
     <button id="bookmark-btn" title="Kijelölt szöveg mentése">🔖</button>
     <button id="goto-bookmark-btn" title="Ugrás a könyvjelzőhöz">⤴️</button>
 
     <div id="toast">Könyvjelző mentve!</div>
-  </section>
 
-  <!-- Firebase SDK-k modern modul verzióban -->
+
+  <!-- CHAT JOBB OLDALT / MOBILON FELÜL -->
+  
+</section>
   <script type="module" src="konyv.js"></script>
 </body>
 </html>
