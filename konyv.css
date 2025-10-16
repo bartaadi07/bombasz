@@ -91,4 +91,8 @@ mark {
   #login-btn {
     cursor: pointer;
   }
+
+  #reset-password-btn{
+    cursor: pointer;
+  }
   
