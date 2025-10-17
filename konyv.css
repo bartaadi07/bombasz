@@ -267,4 +267,11 @@ mark {
   width: 30px;             /* kisebb szélesség */
   height: 30px;            /* kisebb magasság */
 }
-
+#cbzSelector {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 2rem;
+  background-color: #1e1e1e;
+  color: #eee;
+  border: 1px solid #555;
+}
