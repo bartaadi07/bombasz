@@ -243,3 +243,28 @@ mark {
 #comic-container {
   text-align: center;
 }
+/* Alapértelmezett (nem CBZ) */
+#controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* CBZ mód */
+.cbz-mode #controls {
+  flex-direction: column;  /* függőleges elrendezés */
+  position: fixed;
+  right: 15px;
+  bottom: 50px;
+  gap: 8px;
+}
+
+/* CBZ gombok */
+/* CBZ gombok kisebbre */
+.cbz-mode #controls button {
+  font-size: 12px;        /* kisebb betűméret */
+  padding: 4px 6px;       /* kisebb belső margó */
+  width: 30px;             /* kisebb szélesség */
+  height: 30px;            /* kisebb magasság */
+}
+
