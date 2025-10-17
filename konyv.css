@@ -234,3 +234,12 @@ mark {
   padding: 6px 12px;     /* kisebb padding */
   /* vagy egyéb finomítások */
 }
+#comic-container img {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+#comic-container {
+  text-align: center;
+}
