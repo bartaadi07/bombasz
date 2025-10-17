@@ -1,3 +1,8 @@
+#chat-box, #chat-box * {
+  white-space: pre-wrap;  /* sortörés engedélyezése */
+  word-break: break-word;  /* hosszú szavak törése */
+}
+
 body {
     font-family: "Segoe UI", Roboto, Arial, sans-serif;
     font-size: 18px;
@@ -151,7 +156,7 @@ mark {
   /* Jobb oldal: chat */
   #chat-section {
     width: 100%;
-    max-height: 250px;
+    max-height: 800px;
     overflow-y: auto;
     background-color: #1e1e1e;
     color: #eee;
@@ -161,7 +166,7 @@ mark {
   }
   
   #chat-box {
-    max-height: 150px;
+    max-height: 350px;
     overflow-y: auto;
     margin-bottom: 10px;
   }
