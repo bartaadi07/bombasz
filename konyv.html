@@ -27,6 +27,10 @@
   <section id="app-section" style="display:none;">
 
     <!-- Felhasználó profil szerkesztése -->
+    <section id="chat-section" style="flex: 1;">
+    <button id="editProfileBtn" style="flex: 1; max-width: 180px; height: 40px; cursor: pointer;">
+      Profil szerkesztése
+    </button></section>
     <section id="profile-section">
       <h3></h3>
       <input type="text" id="displayNameInput" placeholder="Felhasználóneved:" />
@@ -64,18 +68,28 @@
       <option value="book26">A gyűrűk ura II - A két torony</option>
       <option value="book27">A gyűrűk ura III - A király visszatér</option>
     </select>
-    <section id="chat-section">
-      <h3>💬 Közösségi chatfal</h3>
-      <div id="chat-box"></div>
-      <div id="chat-input-area">
-        <input type="text" id="chat-message" placeholder="Írj üzenetet..." />
-        <button id="send-message-btn">Küldés</button>
-      </div>
-    </section>
+        <!-- Profil szerkesztő gomb -->
+
+        <section id="profile-section" style="display:none; flex-direction: row; align-items: center; gap: 10px; margin-bottom: 15px;">
+          <input type="text" id="displayNameInput" placeholder="Felhasználóneved:" style="flex: 1; padding: 5px;"/>
+          <button id="updateDisplayNameBtn" style="height: 30px; cursor: pointer;">Mentés</button>
+          <button id="closeProfileBtn" style="height: 30px; cursor: pointer;">Mégse</button>
+          <p id="profileMessage" style="color: lightgreen; margin: 0 10px;"></p>
+        </section>
+      
+        <section id="chat-section" style="flex: 1;">
+          <h3>💬 Közösségi chatfal</h3>
+          <div id="chat-box"></div>
+          <div id="chat-input-area">
+            <input type="text" id="chat-message" placeholder="Írj üzenetet..." />
+            <button id="send-message-btn">Küldés</button>
+          </div>
+        </section>
     <main id="book-content"></main>
 
     <button id="bookmark-btn" title="Kijelölt szöveg mentése">🔖</button>
     <button id="goto-bookmark-btn" title="Ugrás a könyvjelzőhöz">⤴️</button>
+    <button id="scrollToTop-btn" title="Ugrás az oldal tetejére">⬆️</button>
 
     <div id="toast">Könyvjelző mentve!</div>
 

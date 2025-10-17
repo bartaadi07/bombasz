@@ -12,7 +12,15 @@ body {
 }
 
 header { text-align: center; margin-bottom: 1rem; }
-select { width: 100%; padding: 0.5rem; margin-bottom: 1rem; background-color: #1e1e1e; color: #eee; border: 1px solid #555; }
+select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 2rem; /* növeltem az alatti margót */
+  background-color: #1e1e1e;
+  color: #eee;
+  border: 1px solid #555;
+}
+
 
 /* Progress bar */
 #progress-bar {
@@ -32,6 +40,11 @@ mark {
     border-radius: 3px;
     padding: 0 2px;
 }
+#book-selector-section {
+  margin-bottom: 3rem; /* nagyobb távolság a profil szerkesztés szekció előtt */
+}
+
+
 
 /* Könyvjelző gombok */
 #bookmark-btn, #goto-bookmark-btn {
@@ -179,6 +192,40 @@ mark {
   #chat-input-area button:hover {
     background-color: #005fa3;
   }
-  #updateDisplayNameBtn{
+  #updateDisplayNameBtn {
+    margin-top: 2rem; /* vagy akár több */
     cursor: pointer;
-  }
+}
+
+  #scrollToTop-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 160px; /* a másik két gomb mellett, kicsit balra */
+    width: 60px;
+    height: 60px;
+    font-size: 26px;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    background-color: #f39c12; /* például narancssárga */
+    transition: background-color 0.3s ease;
+}
+
+#scrollToTop-btn:hover {
+    background-color: #d17c0a;
+}
+#profile-section {
+  display: none;
+  background-color: #222;
+  padding: 10px;
+  border-radius: 6px;
+  color: #eee;
+}
+#profile-edit-btn {
+  font-size: 14px;       /* kisebb betűméret */
+  font-weight: normal;   /* nem vastag */
+  padding: 6px 12px;     /* kisebb padding */
+  /* vagy egyéb finomítások */
+}
