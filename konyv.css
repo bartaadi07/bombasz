@@ -46,7 +46,12 @@ mark {
     padding: 0 2px;
 }
 #book-selector-section {
-  margin-bottom: 3rem; /* nagyobb távolság a profil szerkesztés szekció előtt */
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 2rem;
+  background-color: #1e1e1e;
+  color: #eee;
+  border: 1px solid #555;
 }
 
 
@@ -310,5 +315,13 @@ mark {
 
 .cbz-mode #scrollToTop-btn:hover {
   background-color: #8f1d1d;
+}
+#cbzPartSelector {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 2rem;
+  background-color: #1e1e1e;
+  color: #eee;
+  border: 1px solid #555;
 }
 
