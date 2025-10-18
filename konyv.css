@@ -65,10 +65,10 @@ mark {
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-#bookmark-btn { right: 20px; background-color: #0078d7; }
+#bookmark-btn { right: 20px; background-color: #585858; }
 #bookmark-btn:hover { background-color: #005fa3; }
 
-#goto-bookmark-btn { right: 90px; background-color: #28a745; }
+#goto-bookmark-btn { right: 90px; background-color: #585858; }
 #goto-bookmark-btn:hover { background-color: #1e7e34; }
 
 /* Toast */
@@ -214,12 +214,12 @@ mark {
     color: white;
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    background-color: #f39c12; /* például narancssárga */
+    background-color: #585858; /* például narancssárga */
     transition: background-color 0.3s ease;
 }
 
 #scrollToTop-btn:hover {
-    background-color: #d17c0a;
+    background-color: #ad1d1d;
 }
 #profile-section {
   display: none;
@@ -262,10 +262,10 @@ mark {
 /* CBZ gombok */
 /* CBZ gombok kisebbre */
 .cbz-mode #controls button {
-  font-size: 12px;        /* kisebb betűméret */
-  padding: 4px 6px;       /* kisebb belső margó */
-  width: 30px;             /* kisebb szélesség */
-  height: 30px;            /* kisebb magasság */
+  font-size: 6px;        /* kisebb betűméret */
+  padding: 2px 3px;       /* kisebb belső margó */
+  width: 15px;             /* kisebb szélesség */
+  height: 15px;            /* kisebb magasság */
 }
 #cbzSelector {
   width: 100%;
@@ -275,3 +275,40 @@ mark {
   color: #eee;
   border: 1px solid #555;
 }
+/* ✅ Ha CBZ módban vagy, csak a vissza az oldal tetejére gomb látszódjon */
+.cbz-mode #bookmark-btn,
+.cbz-mode #goto-bookmark-btn {
+  display: none !important;
+}
+
+.cbz-mode #scrollToTop-btn {
+  display: block !important;
+}
+/* ✅ CBZ módban csak a vissza az oldal tetejére gomb látszódjon */
+.cbz-mode #bookmark-btn,
+.cbz-mode #goto-bookmark-btn {
+  display: none !important;
+}
+
+/* ✅ CBZ módban a vissza az oldal tetejére gomb legyen teljesen jobb oldalon */
+.cbz-mode #scrollToTop-btn {
+  display: block !important;
+  position: fixed;
+  bottom: 20px;
+  right: 15px;        /* teljesen a jobb szélhez */
+  width: 60px;
+  height: 60px;
+  font-size: 26px;
+  border-radius: 50%;
+  background-color: #585858;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 100;       /* mindig látható maradjon */
+  transition: background-color 0.3s ease;
+}
+
+.cbz-mode #scrollToTop-btn:hover {
+  background-color: #8f1d1d;
+}
+
