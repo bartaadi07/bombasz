@@ -324,4 +324,9 @@ mark {
   color: #eee;
   border: 1px solid #555;
 }
-
+.chat-msg mark.mention {
+  background-color: #ff9800;  /* narancssárga */
+  color: #000;
+  padding: 0 3px;
+  border-radius: 4px;
+}
