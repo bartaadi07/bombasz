@@ -182,10 +182,19 @@
       <p><a href="mailto:gombosb@kkszki.hu">gombosb@kkszki.hu</a></p>
       <p><a href="mailto:beluscsakzs@kkszki.hu">beluscsakzs@kkszki.hu</a></p>
     </article>
+    <article id="tools" class="glass card">
+        <h2>Eszközök</h2>
+        <!-- <p class="muted">Slideshow és a Név AI panel.</p> -->
+        <div class="tool-actions">
+          <button id="toggle-slideshow" class="btn pill ghost">Slideshow</button>
+          <button id="toggle-chat" class="btn pill fill">Név&nbsp;AI</button>
+        </div>
+      </article>
+      
   </section>
 
   <!-- SLIDESHOW (meglévő markuppal, csak üveg stílus) -->
-  <section class="container glass slideshow">
+  <section class="container glass slideshow" hidden>
     <div class="slideshow-container">
       <div class="slide active"><img src="adamimg/unnamed (1) (1).jpg" alt="Slide 1"></div>
       <div class="slide"><img src="adamimg/140622-BLUE-LANDSCAPE-PC-HD.png" alt="Slide 2"></div>
@@ -205,8 +214,6 @@
       <button id="send-chat" class="btn pill fill">Elemzés</button>
     </div>
   </div>
-  <button id="toggle-slideshow" class="fab ghost">Slideshow</button>
-  <button id="toggle-chat" class="fab fill">Nev&nbsp;AI</button>
 
   <footer class="container footer">
     <p>&copy; 2025 UNCS. Minden jog fenntartva.</p>

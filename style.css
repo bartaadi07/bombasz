@@ -564,4 +564,51 @@ button,
 .side-nav a {
   cursor: pointer;
 }
- 
+/* Eszközök article elrendezés */
+.tool-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  
+  /* A tools article legyen teljes szélességű a gridben (ha span-2 van rajta) */
+  .grid .span-2{
+    grid-column: 1 / -1;
+  }
+  
+  /* Biztos pointer a gombokon (site-wide) */
+  button,
+  .btn,
+  .prev,
+  .next,
+  .dots .dot,
+  .side-nav a {
+    cursor: pointer;
+  }
+  /* Eszközök gombsor */
+.tool-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  
+  /* Gombokon mindenhol pointer (főoldal + chat) */
+  button,
+  .btn,
+  .prev,
+  .next,
+  .dots .dot,
+  .side-nav a { cursor: pointer; }
+  
+  /* Asztalin: a Contact és a Tools egy sorban, egymás mellett */
+  @media (min-width: 901px){
+    .grid{ grid-auto-flow: dense; }               /* töltsön vissza üres helyre is */
+    #contact{ grid-column: 1 / span 1; }          /* bal oszlop */
+    #tools  { grid-column: 2 / span 1; }          /* jobb oszlop */
+  }
+  
+  /* Mobilon a grid nálad úgyis 1 oszlop -> alatta lesz automatikusan */
+  
+  
+ /* hidden attribútum fallback */
+.slideshow[hidden] { display: none !important; }
