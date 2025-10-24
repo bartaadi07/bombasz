@@ -612,3 +612,51 @@ button,
   
  /* hidden attribútum fallback */
 .slideshow[hidden] { display: none !important; }
+/* === MOBILE FIX PACK (team + alsó dokk távolság) === */
+
+/* 1) A mobil dokk ne takarja a tartalmat */
+:root{ --dock-h: 72px; }              /* ha nagyobbak az ikonok, emeld */
+@media (max-width: 900px){
+  body{ padding-bottom: calc(var(--dock-h) + env(safe-area-inset-bottom, 0px)); }
+  .side-nav{
+    bottom: 12px; left: 50%; transform: translateX(-50%);
+  }
+}
+
+/* 2) Team: egy oszlop mobilon, normális tördelés */
+@media (max-width: 700px){
+  .team{ grid-template-columns: 1fr !important; gap: 12px; }
+
+  /* kártya: grid elrendezés, balra avatar, jobbra szöveg – ne legyen keskeny oszlop */
+  .member{
+    display: grid !important;
+    grid-template-columns: 56px 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+  }
+  .member img{ width:56px; height:56px; border-radius:12px; }
+  .member > div{ min-width: 0; }   /* engedje a tördelést */
+
+  /* név: NE kötőjelezze szét betűnként */
+  .member h3{
+    font-size: 1.02rem;
+    hyphens: none;
+    word-break: normal;
+    overflow-wrap: anywhere; /* hosszú nevek is elférnek */
+    line-height: 1.25;
+  }
+
+  /* szerep/leírás: lazább tördelés, olvashatóbb */
+  .member p{
+    font-size: .95rem;
+    hyphens: auto;            /* magyar szótagolás, de nem agresszíven */
+    word-break: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.35;
+    color: #C5D2F0;
+  }
+}
+
+/* 3) Biztonsági: a kártyák ne törjék felszabdalva a szöveget desktopon sem */
+.member h3, .member p{ overflow-wrap:anywhere; word-break:normal; }
