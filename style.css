@@ -237,7 +237,10 @@ main {
     
     /* 2. Változás: Reszponzív oszlopsablon beállítása */
     /* Annyi oszlop, amennyi elfér, a szélességet a tartalom határozza meg */
-    grid-template-columns: repeat(auto-fit, minmax(min-content, 1fr));
+    .download-buttons-container {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+      
     
     /* Középre igazítás (horizontálisan) */
     justify-items: center; 
@@ -833,4 +836,127 @@ footer .social-icons a:hover {
 .dot.active {
     background: var(--main-blue);
     transform: scale(1.2);
+}
+/* Letöltő kártya – gomb + kredit egyben */
+.download-card {
+    width: 100%;
+    display: grid;
+    gap: 10px;
+  }
+  
+  .download-card.external {
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(20, 30, 55, 0.60);
+    border: 1px solid rgba(49, 192, 223, 0.30);
+    box-shadow: 0 10px 24px rgba(20, 40, 80, 0.40), inset 0 0 0 1px rgba(255,255,255,0.02);
+    position: relative;
+  }
+  
+  /* Vékony fénycsík a bal oldalon */
+  .download-card.external::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--main-blue), transparent);
+    box-shadow: 0 0 12px var(--main-blue-shadow);
+    border-radius: 14px 0 0 14px;
+  }
+  
+  /* A kártyán belüli gomb legyen teljes szélességű */
+  .download-card .download-button {
+    width: 100%;
+  }
+  
+  /* A letöltő gombon belüli cím + alcím */
+/* Cím + alcím a gombon belül (a .download-button nálad már flex-column) */
+.dl-title { font-weight: 800; line-height: 1.1; }
+.dl-title i { margin-right: 8px; }
+.dl-sub   { font-size: 0.9rem; opacity: 0.9; margin-top: 4px; }
+
+/* Semmi extra háttér ehhez a gombhoz */
+.download-button.external { position: relative; } /* csak a layout miatt, nincs bg override */
+
+/* Külső közreműködő jelzés – átlátszó, vékony keretes „chip” */
+.dl-badge {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 4px 10px;             /* nagyobb */
+    font-size: 0.80rem;            /* nagyobb (0.75 → 0.95) */
+    font-weight: 800;              /* erősebb */
+    text-transform: uppercase;
+    letter-spacing: .6px;          /* picit szélesebb */
+    border: 2px solid currentColor;/* vastagabb keret */
+    border-radius: 9999px;
+    opacity: 1;                    /* teljesen látszódjon */
+    background: transparent;       /* továbbra sincs háttér */
+    line-height: 1;
+  }
+  
+/* A nav-ugrás ne takarjon a fix header */
+section { scroll-margin-top: 80px; }
+
+/* ─── Regisztráció űrlap ───────────────────────────────── */
+#register form { margin-top: 10px; }
+
+.form-row { margin-top: 12px; }
+.form-row.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.form-row label {
+  display: block;
+  margin-bottom: 6px;
+  color: #dbeafe;
+  font-weight: 600;
+}
+
+.form-row input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(49, 192, 223, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 1rem;
+  transition: box-shadow .2s ease, border-color .2s ease;
+}
+
+.form-row input::placeholder { color: rgba(219,234,254,.7); }
+
+.form-row input:focus {
+  outline: none;
+  border-color: var(--main-blue);
+  box-shadow: 0 0 0 3px rgba(49,192,223,.25);
+}
+
+.btn-primary {
+  margin-top: 16px;
+  background: var(--main-blue);
+  color: #0a0f1a;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,.45), 0 0 16px var(--main-blue-shadow);
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  background: var(--main-blue-light);
+  box-shadow: 0 10px 24px rgba(0,0,0,.55), 0 0 20px var(--main-blue-light);
+}
+
+.form-msg { margin-top: 10px; min-height: 1.25rem; }
+.form-msg.error { color: #ffb4b4; }
+.form-msg.success { color: #9be79b; }
+
+@media (max-width: 640px) {
+  .form-row.two-col { grid-template-columns: 1fr; }
 }

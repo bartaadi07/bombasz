@@ -38,6 +38,7 @@
             <a href="#contact">Kapcsolat</a>
             <a target="_blank" href="chat.html">Real Time Chat</a>
             <a target="_blank" href="konyv.html">Könyvek</a>
+            <a href="#register">Regisztráció</a>
 
             <a href="egyeb.html">‎  </a>
         </nav>
@@ -53,10 +54,27 @@
         <p class="tagline">Dedicated for you!</p>
 
         <div class="download-buttons-container">
-            <a href="Setup.exe" class="download-button" download>SRT. Időzítő letöltése (exe)</a>
-            <a href="bombaszchat.apk" class="download-button" download>BombaszChat letöltése (apk)</a>
+            <a href="Setup.exe" class="download-button" download>SRT. Időzítő (exe)</a>
+            <a href="bombaszchat.apk" class="download-button" download>BombaszChat (apk)</a>
+          
+            <!-- Javított link + kredit -->
 
-        </div>
+            <a href="downloader_app.py" class="download-button external" download>
+                <span class="dl-title"></i> Zene Letöltő (py)</span>
+                <span class="dl-sub">
+                  <br>
+                  <span class="dl-badge">Készítette: Hajdu Balázs (külső közreműködő)</span>
+                </span>
+              </a>
+
+              
+                  
+              
+
+              
+
+          </div>
+          
     </main>
 
     <!-- ===================== -->
@@ -109,9 +127,43 @@
         </div>
     </section>
 
+    <section id="register">
+        <h2>Regisztráció</h2>
+      
+        <form id="register-form" novalidate>
+          <div class="form-row">
+            <label for="regDisplayName">Megjelenő név</label>
+            <input type="text" id="regDisplayName" placeholder="Pl. bomboclat">
+          </div>
+      
+          <div class="form-row">
+            <label for="regEmail">E-mail</label>
+            <input type="email" id="regEmail" placeholder="valaki@pelda.hu" required>
+          </div>
+      
+          <div class="form-row two-col">
+            <div>
+              <label for="regPassword">Jelszó</label>
+              <input type="password" id="regPassword" minlength="6" placeholder="Legalább 6 karakter" required>
+            </div>
+            <div>
+              <label for="regPassword2">Jelszó újra</label>
+              <input type="password" id="regPassword2" minlength="6" required>
+            </div>
+          </div>
+      
+          <button type="submit" id="register-btn" class="btn-primary">
+            Fiók létrehozása
+          </button>
+      
+          <p id="register-msg" class="form-msg" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+      
     <!-- ===================== -->
     <!-- CONTACT SECTION -->
     <!-- ===================== -->
+
     <section id="contact">
         <h2>Kapcsolat</h2>
         <p><a href="mailto:bartaa@kkszki.hu" style="color: var(--main-blue);">bartaa@kkszki.hu</a></p>
@@ -167,6 +219,89 @@
     <!-- JAVASCRIPT -->
     <!-- ===================== -->
     <script src="script.js"></script>
+    <script type="module">
+        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { 
+          getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification 
+        } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+        import { 
+          getDatabase, ref, set, serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+      
+        // Ugyanaz a config, mint az aloldalon
+        const firebaseConfig = {
+          apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
+          authDomain: "konyv-93c63.firebaseapp.com",
+          projectId: "konyv-93c63",
+          storageBucket: "konyv-93c63.firebasestorage.app",
+          messagingSenderId: "349471560585",
+          appId: "1:349471560585:web:55c6e78499ebbca0540758",
+          measurementId: "G-NF07N36ETJ"
+        };
+      
+        // Ha már van app, azt használjuk
+        const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+      
+        const form = document.getElementById("register-form");
+        const msg  = document.getElementById("register-msg");
+      
+        function setMsg(text, type="") {
+          msg.textContent = text;
+          msg.className = "form-msg" + (type ? " " + type : "");
+        }
+      
+        form?.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          setMsg("");
+      
+          const displayName = document.getElementById("regDisplayName").value.trim();
+          const email       = document.getElementById("regEmail").value.trim();
+          const pass        = document.getElementById("regPassword").value;
+          const pass2       = document.getElementById("regPassword2").value;
+      
+          if (!email || !pass || !pass2) {
+            return setMsg("Kérlek, tölts ki minden mezőt!", "error");
+          }
+          if (pass !== pass2) {
+            return setMsg("A két jelszó nem egyezik.", "error");
+          }
+          if (pass.length < 6) {
+            return setMsg("A jelszó legalább 6 karakter legyen.", "error");
+          }
+      
+          try {
+            const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      
+            // Megjelenő név beállítása
+            if (displayName) {
+              await updateProfile(cred.user, { displayName });
+            }
+      
+            // Opcionális: felhasználó mentése a Realtime DB-be
+            await set(ref(db, "users/" + cred.user.uid), {
+              displayName: displayName || email.split("@")[0],
+              email,
+              createdAt: serverTimestamp()
+            });
+      
+            // Opcionális: verifikációs e-mail
+            try { await sendEmailVerification(cred.user); } catch (_) {}
+      
+            setMsg("✅ Sikeres regisztráció! Ellenőrizd az e-mailed a megerősítéshez.", "success");
+            form.reset();
+          } catch (err) {
+            let text = "Hiba történt a regisztráció során.";
+            if (err?.code === "auth/email-already-in-use") text = "Ez az e-mail már használatban van.";
+            if (err?.code === "auth/invalid-email")        text = "Érvénytelen e-mail cím.";
+            if (err?.code === "auth/weak-password")        text = "Gyenge jelszó (min. 6 karakter).";
+            setMsg("❌ " + text, "error");
+            console.error(err);
+          }
+        });
+      </script>
+      
 </body>
 
 </html>
