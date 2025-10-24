@@ -34,63 +34,7 @@ except Exception as e:
     print(e)
     exit() # Kilépés, ha a függőségek hiányoznak
 
-# --- ZENEI LISTA ---
-# (A hosszú zenelista változatlanul marad...)
-zenek = [
-    "bbno$ - gigolo", "bbno$ - yezzir", "Jake Banfield - Lasso", "Nessa Barrett - gaslight",
-    "Michael Bublé - Sway", "Dua Lipa - Love Again", "Everything But The Girl - Missing - Todd Terry Club Mix",
-    "Shakira - Chantaje (feat. Maluma)", "Jax Jones - Breathe", "Vikki Leigh - Ciao Adios",
-    "Dzsúdló - PRESSO", "RZMVS - Papírom", "Michael Jackson - Thriller", "Beton.Hofi - BE VAGOK ZÁRVA",
-    "Chase Atlantic - Slow Down", "Chase Atlantic - Swim", "Michael Jackson - Smooth Criminal - 2012 Remaster",
-    "Ariana Grande - Into You", "Ariana Grande - Dangerous Woman", "Britney Spears - Womanizer",
-    "Justine Skye - Collide (feat. Tyga)", "Starkad J - Nada De Nada - Original", "kavabanga Depo kolibri - Колибри",
-    "Ray Dalton - ALL WE GOT", "Király Viktor - deberugtam", "INNA - Cheeky", "INNA - No Help",
-    "MANDULA - BORDERLINE", "HENN - Pussycat", "Shawn Mendes - There's Nothing Holdin' Me Back",
-    "Iso Indies - Symphonies", "KKevin - RÓLAD SZÓL", "Chill Bump - Life Has Value", "DYSMANE - CHIVO FUNK (PR FUNK)",
-    "NF - The Search", "Young Maylay - San Andreas Theme Song", "The Weeknd - One Of The Girls (with JENNIE, Lily Rose Depp)",
-    "Beatjunkie Rato - Purple Haze", "RVNGE - JUDAS FUNK! - Sped up", "DaBaby - BOP", "SABINA - Дагестан",
-    "Lady Gaga - Die With A Smile", "HENN - Nekem ez a fless", "HENN - Madame", "Polson - Primero",
-    "Teddy Swims - The Door", "Tektony - Disturbia (Techno)", "HENN - Ki az a Henn?", "Pogány Induló - EGY/KETTŐ",
-    "GIMS - Hola Señorita", "Liam Payne - Strip That Down", "R.Dawe - Gipsy Destiny", "Rihanna - SOS",
-    "Jax Jones - You Don't Know Me", "L'Entourloop - Don't Turn The Bass Down", "Azahriah - Miafasz",
-    "Ice Cube - It's My Ego", "T. Danny - WOAH", "DESH - CHOCO MOMMY", "DESH - PANNONIA", "DESH - SUV",
-    "DESH - Strawberry", "DESH - Drill", "Bruno X Spacc - SENKI NEM SZÓL RÁNK", "Pogány Induló - Afro Beat",
-    "Follow The Flow - Plátói", "Mario - Szerelmem", "Azahriah - four moods 2", "NKS - Vegyetek jót ha tudtok",
-    "Sofi - Várom", "Ren - Hi Ren", "Azahriah - téveszmék", "Bruno X Spacc - Casa Música", "Azahriah - emulator",
-    "T. Danny - Tisztelet", "Pogány Induló - Gettó csirke", "T. Danny - SZÍVTIPRÓ", "Lacika - PESTIEK",
-    "Pogány Induló - Úgy Hiszem", "Pogány Induló - Mámor", "Pogány Induló - Kitartást", "Campbell - Would You (go to bed with me?)",
-    "KKevin - BANDANA", "DESH - Haramia", "DESH - MOKKA", "Lacika - Elítél engem a világ", "Békefi Viki - Mennyire legyek még",
-    "Sabrina Carpenter - Espresso", "Azahriah - yukata", "Jason Derulo - Slow Low", "Horváth Tamás & Raul - Őrizd Meg",
-    "Yung Filly - Tempted", "Bob Sinclar - World Hold On (Children Of The Sky) - FISHER Rework", "2Pac - Only God Can Judge Me (ft. Rappin' 4-Tay)",
-    "Filo - Hajnalok a gangon", "Szakács Gergő - Dolgom van", "Chunkz - Vibranium", "Beatjunkie Rato - Los Santos",
-    "Azahriah - Lóerő", "Dave - Sprinter", "Vasovski Live - Represent Cuba - RobxDan Remix", "Azahriah - Introvertált dal - LIVE",
-    "Azahriah - 3korty - LIVE", "Jax Jones - All Day And Night", "Azahriah - mariana.árok", "Azahriah - Miafasz - Acoustic, Live",
-    "INNA - My Crystal Nails", "USHER - Yeah! (feat. Lil Jon & Ludacris)", "Connor Price - Trendsetter",
-    "Killa Kyleon - Flashing Lights Freestyle Flow - Feat. Dre Day", "¥$ - VULTURES", "Shotgun Willy - Bombs Away",
-    "Azet - 9 Milly", "LXNGVX - Montagem Mysterious Game", "One Direction - Drag Me Down", "Azahriah - Miafasz - LIVE",
-    "Azahriah - Megmentő", "Coldplay - Adventure of a Lifetime", "The Rasmus - In the Shadows", "Ed Marquis - Don't Stop the Music",
-    "Mario - Dzsaljunk", "Mario - Gurulunk Tovább", "Mario - Elértem amit akartam", "Lil Baby - Pure Cocaine",
-    "DESH - Apály", "ICEDMANE - Taki Funk", "Roof Rats - Dale Pa Tra", "T. Danny - No Woman No Cry", "Bazsi - HENN (SANDELA)",
-    "Azahriah - delirium", "VZS - OREO", "DESH - Retro", "Pixa - Fiatalság Bolondság", "Elvis Presley - Heartbreak Hotel (First 'Stand-Up' Show) - Live",
-    "Taron Egerton - I'm Still Standing", "Clyde Carson - 2 Step", "Azahriah - press f - interlude", "Azahriah - Tisztán iszom",
-    "Azahriah - Okari", "Azahriah - four moods", "Azahriah - figyelj", "Azahriah - rút", "Azahriah - yesterday",
-    "DESH - Rampapapam", "Azahriah - Mind1", "Kanye West - Heartless", "L.L. Junior - Cigány-ügy", "Robin Hustin - Light It Up",
-    "DESH - Mulatozok - Intro", "VZS - Bambi", "EQRIC - New Rules", "Eminem - Lucky You (feat. Joyner Lucas)",
-    "Connor Price - Overnight", "Akon - Smack That", "Travis Scott - SICKO MODE", "Travis Scott - HIGHEST IN THE ROOM",
-    "2Pac - California Love (remix) (ft. Dr. Dre, Roger Troutman) - Remix", "2Pac - All Eyez On Me (ft. Big Syke)",
-    "2Pac - Ratha Be Ya Nigga (ft. Richie Rich)", "Travis Scott - goosebumps", "Eminem - Without Me",
-    "Eminem - The Real Slim Shady", "Eminem - Lose Yourself", "Jennifer Lopez - Let's Get Loud",
-    "Poor Man's Poison - Providence", "Lou Bliss - Killing Butterflies - DNMO Remix", "Elvis Presley - Hound Dog",
-    "Eminem - Godzilla (feat. Juice WRLD)", "KKevin - Csavargó", "KKevin - Csakaszesz", "Rauf & Faik - Вечера",
-    "DESH - Eldorádó", "DESH - How we do", "DESH - Elaludni", "Azahriah - bulbaba", "Azahriah - lost tiki",
-    "DESH - Honeymoon", "DESH - Pakisztáni/popo", "DESH - Walkin a street", "Azahriah - casa de papel",
-    "Azahriah - szosziazi", "Azahriah - 3korty", "DESH - Kukásautó '22", "DESH - Áthívhatsz", "DESH - Deshperado",
-    "DESH - Papa", "DESH - Malibu", "Nessa Barrett - gaslight", "Chase Atlantic - Friends", "The Neighbourhood - A Little Death",
-    "Tate McRae - Just Keep Watching (From F1® The Movie)", "TOMY - TOMY - King of RnB", "Cil - Bloodsucker",
-    "Britney Spears - Gimme More", "DESH - Strawberry", "2hollis - poster boy", "Pogány Induló - Mámor",
-    "Timbaland - The Way I Are", "will.i.am - Scream & Shout", "Fyex - In Uber (What Can I Do) (feat. Sean Coy)",
-    "Manuel - Nosztalgia", "Junior Caldera - Can't Fight This Feeling", "Nicki Minaj - Starships", "U96 - Club Bizarre"
-]
+
 
 
 class DownloaderApp(App):

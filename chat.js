@@ -256,3 +256,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
 }); 
 // 🚨 DOMContentLoaded ZÁRÓ BLOKK
+// === UI polish: auto-resize textarea + submit enterrel ===
+(function enhanceInput(){
+    const ta = document.getElementById("chat-message");
+    const btn = document.getElementById("send-message-btn");
+    if (!ta || !btn) return;
+  
+    const autoresize = () => {
+      ta.style.height = "auto";
+      ta.style.height = Math.min(ta.scrollHeight, 140) + "px";
+    };
+    ta.addEventListener("input", autoresize);
+    window.addEventListener("load", autoresize);
+  
+    // Enter = küldés, Shift+Enter = új sor
+    ta.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+  
+    // Form submit fallback
+    btn.closest("form")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      btn.click();
+    });
+  })();
+  

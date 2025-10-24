@@ -1,307 +1,372 @@
 <!DOCTYPE html>
 <html lang="hu">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>UNCS Főoldal</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UNCS</title>
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet" />
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-
-    <!-- Saját CSS -->
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="adamimg/favicon.ico">
+  <!-- Style -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/x-icon" href="adamimg/favicon.ico">
 </head>
-
 <body>
-    <!-- ===================== -->
-    <!-- CANVAS HÁTTÉR -->
-    <!-- ===================== -->
-    <canvas id="bg-circles"></canvas>
 
-    <!-- ===================== -->
-    <!-- HEADER -->
-    <!-- ===================== -->
-    <header>
-        <div class="logo">U N C S</div>
-        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-        <nav id="nav-menu">
-            <a href="#home">Főoldal</a>
-            <a href="#about">Rólunk</a>
-            <a href="#team">Csapat</a>
-            <a href="#contact">Kapcsolat</a>
-            <a target="_blank" href="chat.html">Real Time Chat</a>
-            <a target="_blank" href="konyv.html">Könyvek</a>
-            <a href="#register">Regisztráció</a>
+  <!-- A régi hátterek/canvas-ok nem kellenek -->
 
-            <a href="egyeb.html">‎  </a>
-        </nav>
-    </header>
 
-    <!-- ===================== -->
-    <!-- MAIN SECTION -->
-    <!-- ===================== -->
-    <main id="home">
-        <div class="logo-container"><img src="adamimg/unnamed (1) (1).jpg" alt="Cég logó" /></div>
-        <h1 class="company-name">U N C S</h1>
-        <div id="real-time-clock"></div>
-        <p class="tagline">Dedicated for you!</p>
+  <!-- AURORA háttér -->
+  <div class="aurora-bg">
+    <span class="blob blob-a"></span>
+    <span class="blob blob-b"></span>
+    <span class="blob blob-c"></span>
+    <span class="blob blob-d"></span>
+  </div>
 
-        <div class="download-buttons-container">
-            <a href="Setup.exe" class="download-button" download>SRT. Időzítő (exe)</a>
-            <a href="bombaszchat.apk" class="download-button" download>BombaszChat (apk)</a>
-          
-            <!-- Javított link + kredit -->
+  <!-- BAL IKONSÁV (mintaképes) -->
+  <aside class="side-nav">
+    <a href="#home"     class="active" title="Főoldal"><i class="fa-solid fa-house"></i></a>
+    <a href="#about"    title="Rólunk"><i class="fa-solid fa-circle-info"></i></a>
+    <a href="#team"     title="Csapat"><i class="fa-solid fa-users"></i></a>
+    <a href="#register" title="Regisztráció"><i class="fa-solid fa-user-plus"></i></a>
+    <a href="#contact"  title="Kapcsolat"><i class="fa-solid fa-envelope"></i></a>
+  
+    <!-- ÚJ: külső oldalak -->
+    <a href="chat.html"  target="_blank" title="Chat"><i class="fa-solid fa-comments"></i></a>
+    <a href="konyv.html" target="_blank" title="Könyvek"><i class="fa-solid fa-book"></i></a>
+  </aside>
+  
+  <!-- FENTI ÜVEG TOPBAR -->
 
-            <a href="downloader_app.py" class="download-button external" download>
-                <span class="dl-title"></i> Zene Letöltő (py)</span>
-                <span class="dl-sub">
-                  <br>
-                  <span class="dl-badge">Készítette: Hajdu Balázs (külső közreműködő)</span>
-                </span>
-              </a>
+  
 
-              
-                  
-              
+  <!-- FŐ GLASS KÁRTYA (Hero) -->
+  <main id="home" class="container">
+    <section class="glass hero">
+      <div class="hero-left">
+        <p class="eyebrow">we are the</p>
+        <h1 class="display">U N C S<br><span><div id="real-time-clock" class="clock"></div>
+        </span></h1>
+        <p class="lead">Dedicated for you!</p>
 
-              
-
-          </div>
-          
-    </main>
-
-    <!-- ===================== -->
-    <!-- ABOUT SECTION -->
-    <!-- ===================== -->
-    <section id="about">
-        <h2>Rólunk</h2>
-        <p>Mi vagyunk a piacvezetők a kék gömbös hátterű weboldalak terén.</p>
-    </section>
-
-    <!-- ===================== -->
-    <!-- TEAM SECTION -->
-    <!-- ===================== -->
-    <section id="team">
-        <h2>Csapat</h2>
-        <div class="team-grid">
-            <!-- Member Card 1 -->
-            <div class="member-card">
-                <div class="member-toggle">
-                    <div class="member-name">Barta Ádám</div>
-                    <div class="member-arrow">▼</div>
-                </div>
-                <div class="member-extra">
-                    <div class="member-role">Fejlesztő</div>
-                    <div class="member-description">Profi ChatGPT használó.</div>
-                </div>
-            </div>
-            <!-- Member Card 2 -->
-            <div class="member-card">
-                <div class="member-toggle">
-                    <div class="member-name">Gombos Bálint</div>
-                    <div class="member-arrow">▼</div>
-                </div>
-                <div class="member-extra">
-                    <div class="member-role">Designer</div>
-                    <div class="member-description">Grafikai tervezés és UI/UX szakértő.</div>
-                </div>
-            </div>
-            <!-- Member Card 3 -->
-            <div class="member-card">
-                <div class="member-toggle">
-                    <div class="member-name">Beluscsák Zsolt</div>
-                    <div class="member-arrow">▼</div>
-                </div>
-                <div class="member-extra">
-                    <div class="member-role">Fejlesztő</div>
-                    <div class="member-description">Frontend/Backend specialista.</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="register">
-        <h2>Regisztráció</h2>
-      
-        <form id="register-form" novalidate>
-          <div class="form-row">
-            <label for="regDisplayName">Megjelenő név</label>
-            <input type="text" id="regDisplayName" placeholder="Pl. bomboclat">
-          </div>
-      
-          <div class="form-row">
-            <label for="regEmail">E-mail</label>
-            <input type="email" id="regEmail" placeholder="valaki@pelda.hu" required>
-          </div>
-      
-          <div class="form-row two-col">
-            <div>
-              <label for="regPassword">Jelszó</label>
-              <input type="password" id="regPassword" minlength="6" placeholder="Legalább 6 karakter" required>
-            </div>
-            <div>
-              <label for="regPassword2">Jelszó újra</label>
-              <input type="password" id="regPassword2" minlength="6" required>
-            </div>
-          </div>
-      
-          <button type="submit" id="register-btn" class="btn-primary">
-            Fiók létrehozása
-          </button>
-      
-          <p id="register-msg" class="form-msg" role="status" aria-live="polite"></p>
-        </form>
-      </section>
-      
-    <!-- ===================== -->
-    <!-- CONTACT SECTION -->
-    <!-- ===================== -->
-
-    <section id="contact">
-        <h2>Kapcsolat</h2>
-        <p><a href="mailto:bartaa@kkszki.hu" style="color: var(--main-blue);">bartaa@kkszki.hu</a></p>
-        <p><a href="mailto:gombosb@kkszki.hu" style="color: var(--main-blue);">gombosb@kkszki.hu</a></p>
-        <p><a href="mailto:beluscsakzs@kkszki.hu" style="color: var(--main-blue);">beluscsakzs@kkszki.hu</a></p>
-    </section>
-
-    <!-- ===================== -->
-    <!-- SLIDESHOW SECTION -->
-    <!-- ===================== -->
-    <div class="slideshow-wrapper">
-        <div class="slideshow-container">
-            <div class="slide active"><img src="adamimg/unnamed (1) (1).jpg" alt="Slide 1"></div>
-            <div class="slide"><img src="adamimg/140622-BLUE-LANDSCAPE-PC-HD.png" alt="Slide 2"></div>
-            <div class="slide"><img src="adamimg/abstract-blue-wave-background-digital-art-4k-wallpaper-uhdpaper.com-486@0@f.jpg" alt="Slide 3"></div>
-            <a class="prev">&#10094;</a>
-            <a class="next">&#10095;</a>
-        </div>
-        <div class="dots"></div>
-    </div>
-
-    <!-- ===================== -->
-    <!-- CHAT BOX -->
-    <!-- ===================== -->
-    <div id="chat-box">
-        <header>Név - Nem Elemző</header>
-        <div id="chat-messages"></div>
-        <div id="chat-input-wrapper">
-            <input type="text" id="chat-input" placeholder="Írj be egy nevet (pl. Péter, Anna)..." />
-            <button id="send-chat">Elemzés</button>
-        </div>
-    </div>
-
-    <!-- ===================== -->
-    <!-- FOOTER -->
-    <!-- ===================== -->
-    <footer>
-        &copy; 2025 Cégünk. Minden jog fenntartva.
-        <div class="social-icons">
-            <a target="_blank" href="https://www.instagram.com/bartaadi/" aria-label="Instagram">
-                <i class="fa-brands fa-instagram"></i>
+        <div class="downloads">
+            <a href="Setup.exe" class="btn pill ghost" download>
+              <i class="fa-solid fa-download"></i> SRT. Időzítő (exe)
             </a>
+          
+            <a href="bombaszchat.apk" class="btn pill ghost" download>
+              <i class="fa-solid fa-mobile-screen"></i> BombaszChat (apk)
+            </a>
+          
+            <div class="btn-with-credit">
+              <a href="downloader_app.py" class="btn pill ghost" download>
+                <i class="fa-solid fa-music"></i> Zene Letöltő (py)
+              </a>
+              <span class="credit-badge">
+                
+                Külső Közreműködő:
+                <br>
+                Hajdu Balázs
+              </span>
+            </div>
+          </div>
+          
+
+      </div>
+
+      <div class="hero-right">
+        <div class="hero-art">
+          <img src="adamimg/unnamed (1) (1).jpg" alt="UNCS illusztráció">
+          <ul class="floating-icons">
+            <li><i class="fa-solid fa-cloud-arrow-down"></i></li>
+            <li><i class="fa-solid fa-photo-film"></i></li>
+            <li><i class="fa-solid fa-shapes"></i></li>
+            <li><i class="fa-solid fa-sliders"></i></li>
+          </ul>
         </div>
-    </footer>
+      </div>
+    </section>
+  </main>
 
-    <!-- ===================== -->
-    <!-- FIXED ACTION BUTTONS -->
-    <!-- ===================== -->
-    <button id="toggle-slideshow">Slideshow</button>
-    <button id="toggle-chat">Név AI</button>
+  <!-- SZEKCIÓ RÁCS – üvegkártyák -->
+  <section id="about" class="container grid">
+    <article class="glass card">
+      <h2>Rólunk</h2>
+      <p>Mi vagyunk a piacvezetők a könnyű, üvegfelületű webes UI-k terén.</p>
+    </article>
 
-    <!-- ===================== -->
-    <!-- JAVASCRIPT -->
-    <!-- ===================== -->
-    <script src="script.js"></script>
-    <script type="module">
-        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-        import { 
-          getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification 
-        } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-        import { 
-          getDatabase, ref, set, serverTimestamp 
-        } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+    <article id="team" class="glass card">
+      <h2>Csapat</h2>
+      <div class="team">
+        <div class="member">
+          <img src="https://dummyimage.com/160x160/ccd2ff/1a2034.png&text=BA" alt="Barta Ádám">
+          <div>
+            <h3>Barta Ádám</h3>
+            <p>Fejlesztő – Profi ChatGPT használó.</p>
+          </div>
+        </div>
+        <div class="member">
+          <img src="https://dummyimage.com/160x160/ccd2ff/1a2034.png&text=GB" alt="Gombos Bálint">
+          <div>
+            <h3>Gombos Bálint</h3>
+            <p>Designer – Grafikai tervezés és UI/UX.</p>
+          </div>
+        </div>
+        <div class="member">
+          <img src="https://dummyimage.com/160x160/ccd2ff/1a2034.png&text=BZ" alt="Beluscsák Zsolt">
+          <div>
+            <h3>Beluscsák Zsolt</h3>
+            <p>Fejlesztő – Frontend/Backend specialista.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+    <article id="login" class="glass card">
+        <h2>Bejelentkezés</h2>
       
-        // Ugyanaz a config, mint az aloldalon
-        const firebaseConfig = {
-          apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
-          authDomain: "konyv-93c63.firebaseapp.com",
-          projectId: "konyv-93c63",
-          storageBucket: "konyv-93c63.firebasestorage.app",
-          messagingSenderId: "349471560585",
-          appId: "1:349471560585:web:55c6e78499ebbca0540758",
-          measurementId: "G-NF07N36ETJ"
-        };
+       <form id="login-form" novalidate class="form">
+        
+            <label>
+              E-mail
+              <input type="email" id="loginEmail" placeholder="valaki@pelda.hu" required>
+            </label>
+            <label>
+              Jelszó
+              <input type="password" id="loginPassword" minlength="6" required>
+            </label>
+            <div class="auth-actions">
+              <label class="remember">
+                <input type="checkbox" id="loginRemember"> Emlékezz rám
+              </label>
+              <button type="button" id="reset-password" class="btn ghost pill">Elfelejtett jelszó?</button>
+            </div>
+            <button type="submit" id="login-btn" class="btn pill fill">Belépés</button>
+            
+            <p id="login-msg" class="form-msg" role="status" aria-live="polite"></p>
+          </form>
+          
+      </article>
       
-        // Ha már van app, azt használjuk
-        const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
-      
-        const form = document.getElementById("register-form");
-        const msg  = document.getElementById("register-msg");
-      
-        function setMsg(text, type="") {
-          msg.textContent = text;
-          msg.className = "form-msg" + (type ? " " + type : "");
+    <article id="register" class="glass card">
+      <h2>Regisztráció</h2>
+      <form id="register-form" novalidate class="form">
+        <label>
+          Megjelenő név
+          <input type="text" id="regDisplayName" placeholder="pl. bomboclat">
+        </label>
+        <label>
+          E-mail
+          <input type="email" id="regEmail" placeholder="valaki@pelda.hu" required>
+        </label>
+        <div class="two">
+          <label>
+            Jelszó
+            <input type="password" id="regPassword" minlength="6" placeholder="Legalább 6 karakter" required>
+          </label>
+          <label>
+            Jelszó újra
+            <input type="password" id="regPassword2" minlength="6" required>
+          </label>
+        </div>
+        <button type="submit" id="register-btn" class="btn pill fill">Fiók létrehozása</button>
+        <p id="register-msg" class="form-msg" role="status" aria-live="polite"></p>
+      </form>
+    </article>
+
+    <article id="contact" class="glass card">
+      <h2>Kapcsolat</h2>
+      <p><a href="mailto:bartaa@kkszki.hu">bartaa@kkszki.hu</a></p>
+      <p><a href="mailto:gombosb@kkszki.hu">gombosb@kkszki.hu</a></p>
+      <p><a href="mailto:beluscsakzs@kkszki.hu">beluscsakzs@kkszki.hu</a></p>
+    </article>
+  </section>
+
+  <!-- SLIDESHOW (meglévő markuppal, csak üveg stílus) -->
+  <section class="container glass slideshow">
+    <div class="slideshow-container">
+      <div class="slide active"><img src="adamimg/unnamed (1) (1).jpg" alt="Slide 1"></div>
+      <div class="slide"><img src="adamimg/140622-BLUE-LANDSCAPE-PC-HD.png" alt="Slide 2"></div>
+      <div class="slide"><img src="adamimg/abstract-blue-wave-background-digital-art-4k-wallpaper-uhdpaper.com-486@0@f.jpg" alt="Slide 3"></div>
+      <a class="prev">&#10094;</a>
+      <a class="next">&#10095;</a>
+    </div>
+    <div class="dots"></div>
+  </section>
+
+  <!-- CHAT DOBOZ + FIX GOMBOK: ID-k maradnak -->
+  <div id="chat-box" class="glass chatbox">
+    <header>Név – Nem Elemző</header>
+    <div id="chat-messages"></div>
+    <div id="chat-input-wrapper">
+      <input type="text" id="chat-input" placeholder="Írj be egy nevet (pl. Péter, Anna)…" />
+      <button id="send-chat" class="btn pill fill">Elemzés</button>
+    </div>
+  </div>
+  <button id="toggle-slideshow" class="fab ghost">Slideshow</button>
+  <button id="toggle-chat" class="fab fill">Nev&nbsp;AI</button>
+
+  <footer class="container footer">
+    <p>&copy; 2025 UNCS. Minden jog fenntartva.</p>
+    <div class="social">
+      <a target="_blank" href="https://www.instagram.com/bartaadi/" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+    </div>
+  </footer>
+  <!-- Firebase REG – VÁLTOZATLAN KÓD -->
+  <script type="module">
+    import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import {
+      getAuth, createUserWithEmailAndPassword, updateProfile,
+      sendEmailVerification, deleteUser,
+      setPersistence, browserLocalPersistence, browserSessionPersistence,
+      signInWithEmailAndPassword, sendPasswordResetEmail
+    } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+    import {
+      getDatabase, ref, set, get, runTransaction, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+  
+    // --- Firebase config ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
+      authDomain: "konyv-93c63.firebaseapp.com",
+      projectId: "konyv-93c63",
+      storageBucket: "konyv-93c63.firebasestorage.app",
+      messagingSenderId: "349471560585",
+      appId: "1:349471560585:web:55c6e78499ebbca0540758",
+      measurementId: "G-NF07N36ETJ"
+    };
+  
+    // --- App, Auth, DB ---
+    const app  = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getDatabase(app);
+  
+    // --- Segédek ---
+    const $ = (sel) => document.querySelector(sel);
+    function revealMsg(node, text, type=""){
+      if(!node) return;
+      node.textContent = text;
+      node.className = "form-msg" + (type ? " " + type : "");
+      node.style.display = "block";
+      try { node.scrollIntoView({ behavior: "smooth", block: "center" }); } catch(_){}
+    }
+    const normalizeUsername = (s="") =>
+      s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+       .toLowerCase().replace(/[^a-z0-9]+/g,"").slice(0,20);
+  
+    // ---------- REGISZTRÁCIÓ ----------
+    {
+      const form = $("#register-form");
+      const msg  = $("#register-msg");
+  
+      form?.addEventListener("submit", async (e) => {
+        e.preventDefault(); e.stopPropagation();
+        revealMsg(msg, "");
+  
+        const rawName = $("#regDisplayName").value.trim();
+        const email   = $("#regEmail").value.trim();
+        const pass    = $("#regPassword").value;
+        const pass2   = $("#regPassword2").value;
+  
+        const uname = normalizeUsername(rawName);
+        if(!rawName)                 return revealMsg(msg, "Adj meg egy felhasználónevet.", "error");
+        if(uname.length < 3)         return revealMsg(msg, "A felhasználónév túl rövid (min. 3 karakter, ékezet nélkül).", "error");
+        if(!email || !pass || !pass2)return revealMsg(msg, "Kérlek, tölts ki minden mezőt!", "error");
+        if(pass !== pass2)           return revealMsg(msg, "A két jelszó nem egyezik.", "error");
+        if(pass.length < 6)          return revealMsg(msg, "A jelszónak legalább 6 karakteresnek kell lennie.", "error");
+  
+        try{
+          const unameRef = ref(db, "usernames/" + uname);
+          const pre = await get(unameRef);
+          if(pre.exists()) return revealMsg(msg, "Ez a felhasználónév már foglalt. Válassz másikat.", "error");
+  
+          const cred = await createUserWithEmailAndPassword(auth, email, pass);
+  
+          const claim = await runTransaction(unameRef, (current) => {
+            if(current === null) return { uid: cred.user.uid, displayName: rawName };
+            return; // már foglalt
+          });
+          if(!claim.committed){
+            try { await deleteUser(cred.user); } catch(_){}
+            return revealMsg(msg, "Sajnálom, közben lefoglalták ezt a nevet. Válassz másikat!", "error");
+          }
+  
+          try { await updateProfile(cred.user, { displayName: rawName }); } catch(_){}
+  
+          await set(ref(db, "users/" + cred.user.uid), {
+            displayName: rawName,
+            username: uname,
+            email,
+            createdAt: serverTimestamp()
+          });
+  
+          try { await sendEmailVerification(cred.user); } catch(_){}
+  
+          revealMsg(msg, "✅ Sikeres regisztráció! Ellenőrizd az e-mailed a megerősítéshez.", "success");
+          form.reset();
+        }catch(err){
+          let text = "Hiba történt a regisztráció során.";
+          if (err?.code === "auth/email-already-in-use") text = "Ez az e-mail már használatban van.";
+          if (err?.code === "auth/invalid-email")        text = "Érvénytelen e-mail cím.";
+          if (err?.code === "auth/weak-password")        text = "Gyenge jelszó (min. 6 karakter).";
+          revealMsg(msg, "❌ " + text, "error");
+          console.error(err);
         }
-      
-        form?.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          setMsg("");
-      
-          const displayName = document.getElementById("regDisplayName").value.trim();
-          const email       = document.getElementById("regEmail").value.trim();
-          const pass        = document.getElementById("regPassword").value;
-          const pass2       = document.getElementById("regPassword2").value;
-      
-          if (!email || !pass || !pass2) {
-            return setMsg("Kérlek, tölts ki minden mezőt!", "error");
-          }
-          if (pass !== pass2) {
-            return setMsg("A két jelszó nem egyezik.", "error");
-          }
-          if (pass.length < 6) {
-            return setMsg("A jelszó legalább 6 karakter legyen.", "error");
-          }
-      
-          try {
-            const cred = await createUserWithEmailAndPassword(auth, email, pass);
-      
-            // Megjelenő név beállítása
-            if (displayName) {
-              await updateProfile(cred.user, { displayName });
-            }
-      
-            // Opcionális: felhasználó mentése a Realtime DB-be
-            await set(ref(db, "users/" + cred.user.uid), {
-              displayName: displayName || email.split("@")[0],
-              email,
-              createdAt: serverTimestamp()
-            });
-      
-            // Opcionális: verifikációs e-mail
-            try { await sendEmailVerification(cred.user); } catch (_) {}
-      
-            setMsg("✅ Sikeres regisztráció! Ellenőrizd az e-mailed a megerősítéshez.", "success");
-            form.reset();
-          } catch (err) {
-            let text = "Hiba történt a regisztráció során.";
-            if (err?.code === "auth/email-already-in-use") text = "Ez az e-mail már használatban van.";
-            if (err?.code === "auth/invalid-email")        text = "Érvénytelen e-mail cím.";
-            if (err?.code === "auth/weak-password")        text = "Gyenge jelszó (min. 6 karakter).";
-            setMsg("❌ " + text, "error");
-            console.error(err);
-          }
-        });
-      </script>
-      
+      });
+    }
+  
+    // ---------- BEJELENTKEZÉS + JELSZÓ RESET ----------
+    {
+      const form     = $("#login-form");
+      const msg      = $("#login-msg");
+      const resetBtn = $("#reset-password");
+  
+      form?.addEventListener("submit", async (e) => {
+        e.preventDefault(); e.stopPropagation();
+        revealMsg(msg, "");
+  
+        const email = $("#loginEmail").value.trim();
+        const pass  = $("#loginPassword").value;
+        const remember = $("#loginRemember")?.checked;
+  
+        if(!email || !pass) return revealMsg(msg, "Tölts ki minden mezőt!", "error");
+  
+        try{
+          await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+          const cred = await signInWithEmailAndPassword(auth, email, pass);
+          revealMsg(msg, "✅ Sikeres bejelentkezés! Üdv, " + (cred.user.displayName || cred.user.email) + ".", "success");
+          form.reset();
+        }catch(err){
+          let text = "Nem sikerült a bejelentkezés.";
+          if(err?.code === "auth/invalid-credential") text = "Hibás e-mail vagy jelszó.";
+          if(err?.code === "auth/user-not-found")     text = "Nincs ilyen felhasználó.";
+          if(err?.code === "auth/wrong-password")     text = "Hibás jelszó.";
+          if(err?.code === "auth/too-many-requests")  text = "Túl sok próbálkozás. Próbáld később.";
+          revealMsg(msg, "❌ " + text, "error");
+          console.error(err);
+        }
+      });
+  
+      resetBtn?.addEventListener("click", async () => {
+        const email = $("#loginEmail").value.trim();
+        if(!email) return revealMsg(msg, "Írd be az e-mail címed a visszaállításhoz.", "error");
+        try{
+          await sendPasswordResetEmail(auth, email);
+          revealMsg(msg, "📧 Küldtünk egy jelszó-visszaállító e-mailt.", "success");
+        }catch(err){
+          let text = "Nem sikerült elküldeni a visszaállító e-mailt.";
+          if(err?.code === "auth/user-not-found") text = "Nincs ilyen felhasználó.";
+          revealMsg(msg, "❌ " + text, "error");
+          console.error(err);
+        }
+      });
+    }
+  </script>
+  
+  <!-- Saját JS-ed -->
+  <script src="script.js"></script>
+  <!-- Ide visszateheted az eddigi Firebase modul scriptet VÁLTOZÁS NÉLKÜL -->
 </body>
-
 </html>

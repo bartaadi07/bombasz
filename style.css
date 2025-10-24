@@ -1,962 +1,567 @@
-/* Member card toggle kiegészítés */
-.member-toggle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
+/* =========================================================
+   UNCS — Aurora Glass (2025)
+   – Világos UI, nagy színes “blob” háttér
+   – Glassmorphism kártyák, pill gombok
+   – Reszponzív: mobilon 1 oszlop, bottom FAB-ok
+   ========================================================= */
+
+/* === Tokens === */
+:root{
+    --bg:#F1F3FF;              /* oldalfal */
+    --ink:#0E1225;             /* szöveg */
+    --ink-2:#2F3855;           /* tompa */
+    --line:rgba(20,25,50,.12); /* üveg keret */
+  
+    --glass:rgba(255,255,255,.45);
+    --blur:18px;
+  
+    --primary:#6B8BFF;         /* kék-lila */
+    --secondary:#22E4C6;       /* menta */
+    --accent:#FFC84D;          /* sárga highlight */
+  
+    --radius:22px;
+    --radius-sm:14px;
+  
+    --shadow:0 12px 28px rgba(21,27,56,.15);
+    --shadow-strong:0 18px 48px rgba(21,27,56,.22);
+  }
+  
+  /* === Base === */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    overflow-x:hidden;
+  }
+  
+  /* link/fókusz */
+  a{color:var(--primary);text-decoration:none}
+  a:focus-visible,button:focus-visible{outline:3px solid rgba(34,228,198,.5);outline-offset:2px}
+  
+  /* === Aurora háttér === */
+  .aurora-bg{position:fixed; inset:0; z-index:-1; overflow:hidden}
+  .blob{position:absolute; filter:blur(32px); opacity:.9}
+  .blob-a{width:44vw;height:44vw;left:-12vw;top:-8vw;background:radial-gradient(closest-side,#FF6BCD,transparent 70%)}
+  .blob-b{width:40vw;height:40vw;right:-8vw;top:-10vw;background:radial-gradient(closest-side,#7C5CFF,transparent 70%)}
+  .blob-c{width:42vw;height:42vw;right:-12vw;bottom:-12vw;background:radial-gradient(closest-side,#22E4C6,transparent 70%)}
+  .blob-d{width:36vw;height:36vw;left:-10vw;bottom:-8vw;background:radial-gradient(closest-side,#FFC84D,transparent 70%)}
+  
+  /* === Üveg alap === */
+  .glass{
+    background:var(--glass);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+  }
+  
+  /* === Topbar === */
+  .topbar{
+    position:sticky; top:14px; margin:14px auto; width:min(1200px,92vw);
+    display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:16px;
+    padding:12px 14px;
+  }
+  .topbar .brand{
+    font-weight:900; letter-spacing:.18em; padding:8px 10px; border-radius:12px;
+    background:linear-gradient(90deg,#ffffffaa,#ffffff66);
+  }
+  .topbar .top-links{display:flex; gap:12px; align-items:center}
+  .topbar .top-links a{
+    color:var(--ink-2); font-weight:800; font-size:.92rem; text-transform:uppercase; letter-spacing:.12em;
+    padding:8px 10px; border-radius:10px;
+  }
+  .topbar .top-links a:hover{background:#fff3}
+  .topbar .actions{display:flex; gap:10px; align-items:center}
+  .search{display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:12px; background:#fff6; border:1px solid var(--line)}
+  .search input{border:none; background:transparent; outline:none; color:var(--ink); width:190px}
+  
+  /* hamburger (mobil) */
+  .hamburger{display:none; position:absolute; right:10px; top:10px; width:36px; height:28px; background:transparent; border:0}
+  .hamburger span{display:block; height:3px; margin:6px 0; border-radius:2px; background:linear-gradient(90deg,var(--primary),var(--secondary))}
+  
+  /* === Side nav === */
+  .side-nav{
+    position:fixed; left:18px; top:50%; transform:translateY(-50%);
+    display:flex; flex-direction:column; gap:12px; z-index:3;
+    background:var(--glass); backdrop-filter: blur(12px); border:1px solid var(--line);
+    border-radius:18px; padding:10px;
+    box-shadow:var(--shadow);
+  }
+  .side-nav a{
+    width:42px; height:42px; display:grid; place-items:center;
+    color:var(--ink-2); background:#fff6; border-radius:12px; border:1px solid var(--line);
+  }
+  .side-nav a.active, .side-nav a:hover{
+    color:#000; background:linear-gradient(180deg,#fff,#f6f7ff);
+    border-color:#fff;
+  }
+  
+  /* === Hero === */
+  .container{width:min(1200px,92vw); margin-inline:auto}
+  .hero{
+    display:grid; grid-template-columns:1.1fr .9fr; gap:28px; padding:28px;
+  }
+  .eyebrow{font-weight:800; text-transform:uppercase; letter-spacing:.14em; color:var(--ink-2); margin-bottom:6px}
+  .display{font-size:clamp(2.2rem,6vw,3.8rem); line-height:1.1; font-weight:900}
+  .display span{background:linear-gradient(90deg,var(--primary),var(--secondary)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .lead{margin-top:10px; color:#334162; max-width:560px}
+  
+  .clock{margin-top:10px; font-weight:900; color:#223; opacity:.7}
+  
+  .downloads{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px}
+  .credit{display:block; color:#46527A; margin-top:4px}
+  
+  /* Hero art */
+  .hero-right{display:grid; place-items:center}
+  .hero-art{position:relative; aspect-ratio:1/1; width:min(440px, 80%); border-radius:28px; overflow:hidden;
+    background:linear-gradient(180deg,#ffffff80,#ffffff40); border:1px solid var(--line)}
+  .hero-art img{width:100%; height:100%; object-fit:cover}
+  .floating-icons{
+    position:absolute; inset:auto; left:auto; right:10px; top:10px; display:flex; gap:8px; list-style:none
+  }
+  .floating-icons li{
+    width:40px; height:40px; display:grid; place-items:center; color:#1b2242;
+    background:linear-gradient(180deg,#fff,#f4f6ff); border:1px solid var(--line); border-radius:12px;
+  }
+  
+  /* === Button rendszer === */
+  .btn{--in: #fff; --out: #fff0;
+    display:inline-flex; gap:8px; align-items:center; justify-content:center;
+    font-weight:900; border-radius:12px; padding:12px 16px; border:1px solid var(--line); color:var(--ink)
+  }
+  .btn.fill{
+    color:#0E1225; border:0;
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    box-shadow:var(--shadow-strong);
+  }
+  .btn.ghost{
+    background:linear-gradient(180deg,#ffffffcc,#ffffff55);
+  }
+  .btn.pill{border-radius:999px}
+  
+  /* === Grid szakaszok (About/Team/Register/Contact) === */
+  .grid{
+    display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; margin:26px auto;
+  }
+  .card{padding:22px}
+  .card h2{
+    display:flex; align-items:center; gap:10px; font-size:1.4rem; margin-bottom:10px
+  }
+  .card h2::before{
+    content:""; width:28px; height:6px; border-radius:6px;
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+  }
+  
+  /* Team */
+  .team{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px}
+  .member{display:flex; gap:12px; align-items:center; background:#fff6; border:1px solid var(--line); border-radius:14px; padding:10px}
+  .member img{width:56px;height:56px;border-radius:12px;object-fit:cover}
+  .member h3{font-size:1rem}
+  
+  /* Form */
+  .form{display:grid; gap:12px}
+  .form label{display:grid; gap:6px; font-weight:700; color:#2C3657}
+  .form input{
+    padding:12px 14px; border-radius:12px; border:1px solid var(--line);
+    background:linear-gradient(180deg,#ffffffd9,#ffffffb0); color:#0f1530
+  }
+  .form input::placeholder{color:#6B769B}
+  .form .two{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  .form .form-msg{min-height:1.1rem; font-weight:700}
+  
+  /* Slideshow */
+  .slideshow{padding:18px}
+  .slideshow-container{position:relative; padding-top:56.25%}
+  .slide{position:absolute; inset:0; opacity:0; transition:opacity .25s}
+  .slide.active{opacity:1}
+  .slide img{width:100%;height:100%;object-fit:cover;border-radius:14px}
+  .prev,.next{
+    position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+    width:44px;height:44px;border-radius:999px; display:grid;place-items:center; cursor:pointer;
+    color:#0E1225; background:linear-gradient(180deg,#fff,#f1f4ff); border:1px solid var(--line)
+  }
+  .prev{left:10px} .next{right:10px}
+  .dots{text-align:center; margin-top:10px}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:999px;background:#d7def7;margin:0 4px}
+  .dot.active{background:linear-gradient(90deg,var(--primary),var(--secondary))}
+  
+  /* Chatbox + FAB-ok */
+  .chatbox{position:fixed; right:18px; bottom:18px; width:min(360px,92vw); overflow:hidden}
+  .chatbox header{padding:.6rem .9rem; font-weight:900; background:linear-gradient(90deg,#ffffff99,#ffffff66); border-bottom:1px solid var(--line)}
+  #chat-messages{max-height:42vh; overflow:auto; padding:.6rem}
+  #chat-input-wrapper{display:flex; gap:.5rem; padding:.6rem; background:#fff6; border-top:1px solid var(--line)}
+  #chat-input{flex:1; padding:.6rem .8rem; border-radius:12px; border:1px solid var(--line); background:#fff}
+  .fab{
+    position:fixed; bottom:18px; z-index:5; padding:12px 16px; border-radius:999px; font-weight:900; border:0
+  }
+  .fab.fill{right:18px; background:linear-gradient(90deg,var(--primary),var(--secondary)); color:#0E1225; box-shadow:var(--shadow-strong)}
+  .fab.ghost{left:18px; background:#ffffffb0; border:1px solid var(--line)}
+  
+  /* Footer */
+  .footer{margin:30px auto 50px; text-align:center; color:#ffffff}
+  .footer .social{margin-top:8px}
+  .footer .social a{font-size:1.4rem; color:#ffffff}
+  
+  /* === Responsive === */
+  @media (max-width:1100px){
+    .hero{grid-template-columns:1fr; padding:22px}
+    .hero-right{order:-1}
+  }
+  @media (max-width:900px){
+    .grid{grid-template-columns:1fr}
+    .team{grid-template-columns:1fr 1fr}
+    .side-nav{display:none}
+  }
+  @media (max-width:600px){
+    .form .two{grid-template-columns:1fr}
+    .topbar{grid-template-columns:1fr auto; gap:10px}
+    .topbar .top-links{display:none}
+    .search input{width:120px}
+    .fab{bottom:12px}
+    .fab.fill{right:12px} .fab.ghost{left:12px}
+  }
+  /* ====== QUICK FIX PACK (Aurora Glass) ====== */
+
+/* 1) Világos cián oldalháttér */
+:root{ --bg:#EAFBFF; }
+
+/* 2) Hero-képen lebegő ikonok/gombok KI */
+.floating-icons{ display:none !important; }
+
+/* 3) FAB gombok biztosan kattinthatók minden réteg felett */
+.fab{ z-index: 9999; pointer-events:auto; }
+
+/* 4) Team kártyák: ne lógjon ki a szöveg, tördeljen */
+.team{ align-items:start; }
+.member{
+  align-items:flex-start; gap:12px;
+  padding:12px; min-height:auto;
+}
+.member img{ flex:0 0 56px; }
+.member > div{ flex:1 1 auto; min-width:0; }
+.member h3,.member p{
+  margin:0; line-height:1.35; word-break:break-word; overflow-wrap:anywhere;
+}
+.member p{ color:#2f3d66; }
+
+/* 5) Közreműködő badge a Zene Letöltő gombhoz */
+.btn-with-credit{ display:inline-flex; flex-direction:column; gap:6px; }
+.credit-badge{
+  align-self:flex-start;
+  padding:6px 10px;
+  border-radius:999px;
+  font-weight:800; font-size:.78rem;
+  color:#08313a;
+  background:linear-gradient(90deg,#CFF8FF,#8FF2FF);
+  border:1px solid rgba(15,155,175,.22);
+  box-shadow:0 6px 18px rgba(21,27,56,.15);
 }
 
-.member-arrow {
-    transition: transform 0.3s ease;
+/* (opcionális) a downloads sorban a gombok közti függőleges igazítás javítása */
+.downloads .btn{ vertical-align:middle; }
+/* Slideshow vezérlők — kattinthatóság + fókusz */
+.slideshow-container{ position:relative; }
+.prev,.next{ z-index: 5; }
+.dots .dot{
+  border:0; background:rgba(255,255,255,.38); width:12px; height:12px;
+  border-radius:50%; cursor:pointer; padding:0;
+}
+.dots .dot:focus-visible{ outline:2px solid var(--ring); }
+/* — Team szöveg: magyar szóelválasztás + bármilyen törés —
+   (a <html lang="hu"> már rendben van a markupban) */
+   .member h3,
+   .member p {
+     hyphens: auto;
+     overflow-wrap: anywhere;
+     word-break: normal;
+     line-height: 1.4;
+   }
+   
+   /* — FAB gombok mindig a tetején legyenek — */
+   .fab { z-index: 9999; pointer-events: auto; }
+   
+   /* — Slideshow vezérlők kattinthatók/fókuszolhatók — */
+   .slideshow-container { position: relative; }
+   .prev, .next { z-index: 5; }
+   .dots .dot {
+     border: 0;
+     width: 12px; height: 12px;
+     border-radius: 50%;
+     background: #d7def7;
+     cursor: pointer;
+   }
+   .dots .dot:focus-visible { outline: 2px solid rgba(34,228,198,.5); }
+   /* === PATCH: világos cián alap-háttér === */
+:root{ --bg:#DFFAFF; }              /* világos cián */
+body{ background:var(--bg) !important; }
+
+/* Aurora látszódjon, de ne legyen „fehér fátyol” érzés */
+.glass{ background:rgba(255,255,255,.38); } /* kicsit áttetszőbb */
+
+/* === PATCH: Név AI chat: ne nyúljon meg az alsó rész, kisebb input === */
+#chat-box.chatbox{
+  display:flex; flex-direction:column;
+  height:min(420px, 70vh);           /* fix, stabil dobozmagasság */
+  max-height:70vh;                   /* mobilon se feszítse túl */
+  box-sizing:border-box;
+}
+#chat-box.chatbox header{ flex:0 0 auto; }
+#chat-messages{
+  flex:1 1 auto; overflow:auto;      /* a válaszok itt görgetődnek */
+  padding:.6rem;
+}
+#chat-input-wrapper{
+  flex:0 0 auto; display:flex; align-items:center; gap:.5rem;
+  padding:.5rem .6rem; background:#fff6; border-top:1px solid var(--line);
+}
+#chat-input{
+  height:40px;                       /* kisebb, fix magasság */
+  line-height:40px;
+  padding:0 .8rem;
+  border-radius:12px; border:1px solid var(--line); background:#fff;
+  font-size:.95rem;
+}
+#send-chat{
+  height:40px; padding:0 14px; border-radius:999px;
 }
 
-.member-arrow.open {
-    transform: rotate(180deg);
+/* Team kártyák: kemény tördelés + kötőjelezés magyarul */
+.member h3, .member p{
+  margin:0; line-height:1.35;
+  overflow-wrap:anywhere; word-break:break-word; hyphens:auto;
 }
+/* ===== DARK THEME OVERRIDES (Aurora Glass – sötét) ===== */
 
-.member-extra {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease, opacity 0.4s ease;
-    opacity: 0;
-    margin-top: 6px;
-}
+/* Színtokenek – sötét */
+:root{
+    --bg:#0B1020;                 /* oldal háttér (mély, kékes) */
+    --ink:#E9F3FF;                /* fő szöveg */
+    --ink-2:#A9B7D8;              /* tompa szöveg */
+    --line:rgba(255,255,255,.08); /* üveg keret */
+    --glass:rgba(14,20,38,.55);   /* üvegréteg sötét háttéren */
+    --blur:16px;
+  
+    --primary:#6B8BFF;
+    --secondary:#22E4C6;
+    --accent:#FFC84D;
+  
+    --radius:22px;
+    --radius-sm:14px;
+  
+    --shadow:0 12px 28px rgba(0,0,0,.45);
+    --shadow-strong:0 18px 48px rgba(0,0,0,.55);
+  }
+  
+  /* Alap */
+  body{ background:var(--bg) !important; color:var(--ink); }
+  
+  /* Aurora blobok sötét háttérhez (élénkebb, de nem vakít) */
+  .aurora-bg{position:fixed; inset:0; z-index:-1; overflow:hidden}
+  .blob{position:absolute; filter:blur(36px); opacity:.75}
+  .blob-a{width:44vw;height:44vw;left:-12vw;top:-8vw;background:radial-gradient(closest-side,#6B8BFF,transparent 70%)}
+  .blob-b{width:40vw;height:40vw;right:-8vw;top:-10vw;background:radial-gradient(closest-side,#22E4C6,transparent 70%)}
+  .blob-c{width:42vw;height:42vw;right:-12vw;bottom:-12vw;background:radial-gradient(closest-side,#7C5CFF,transparent 70%)}
+  .blob-d{width:36vw;height:36vw;left:-10vw;bottom:-8vw;background:radial-gradient(closest-side,#FFC84D,transparent 70%)}
+  
+  /* Üveg felületek sötéten */
+  .glass{
+    background:var(--glass);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    color:var(--ink);
+  }
+  
+  /* Topbar */
+  .topbar{
+    position:sticky; top:14px; margin:14px auto; width:min(1200px,92vw);
+    display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:16px;
+    padding:12px 14px;
+  }
+  .topbar .brand{
+    font-weight:900; letter-spacing:.18em; padding:8px 10px; border-radius:12px;
+    background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
+    color:#fff;
+  }
+  
+  /* NAV linkek sötéten */
+  .topbar .top-links{display:flex; gap:12px; align-items:center}
+  .topbar .top-links a{
+    color:var(--ink-2); font-weight:800; font-size:.92rem; text-transform:uppercase; letter-spacing:.12em;
+    padding:8px 10px; border-radius:10px;
+  }
+  .topbar .top-links a:hover{ background:rgba(255,255,255,.06); color:#fff }
+  
+  /* Kereső teljesen off (ha bárhol bent maradt) */
+  .search{ display:none !important; }
+  
+  /* Akciógombok sötét stílusai */
+  .btn{ color:var(--ink); border:1px solid var(--line) }
+  .btn.ghost{ background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04)) }
+  .btn.fill{ color:#0E1225; background:linear-gradient(90deg,var(--primary),var(--secondary)); box-shadow:var(--shadow-strong) }
+  .btn.pill{ border-radius:999px }
+  
+  /* Oldalsó ikon sáv sötéten */
+  .side-nav{
+    background:rgba(14,20,38,.6); border:1px solid var(--line);
+  }
+  .side-nav a{ color:#C9D6F5; background:rgba(255,255,255,.04); border:1px solid var(--line) }
+  .side-nav a.active, .side-nav a:hover{
+    color:#0E1225; background:linear-gradient(180deg,#b9c6ff,#8fded4);
+    border-color:transparent;
+  }
+  
+  /* HERO */
+  .display span{background:linear-gradient(90deg,var(--primary),var(--secondary)); -webkit-background-clip:text; background-clip:text; color:transparent}
+  .lead{ color:#C5D2F0 }
+  .clock{ color:#9FB2E6 }
+  
+  /* Team / kártyák sötét szövegszínei és tördelés */
+  .card h2{ color:#fff }
+  .member{ background:rgba(255,255,255,.04); border:1px solid var(--line) }
+  .member h3{ color:#fff }
+  .member p{ color:#C5D2F0; overflow-wrap:anywhere; word-break:break-word; hyphens:auto }
+  
+  /* Form sötét */
+  .form label{ color:#CFE2FF }
+  .form input{
+    background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
+    border:1px solid var(--line); color:#EAF2FF;
+  }
+  .form input::placeholder{ color:#9FB2E6 }
+  
+  /* Slideshow sötét gombok */
+  .prev,.next{
+    color:#0E1225; background:linear-gradient(180deg,#cfe1ff,#b2f3e6); border:1px solid rgba(255,255,255,.2)
+  }
+  .dot{ background:rgba(255,255,255,.25) }
+  .dot.active{ background:linear-gradient(90deg,var(--primary),var(--secondary)) }
+  
+  /* Chatbox – sötét, fix alj, kisebb input (nem nyúlik) */
+  #chat-box.chatbox{
+    display:flex; flex-direction:column;
+    height:min(420px, 70vh); max-height:70vh; color:var(--ink);
+  }
+  #chat-box.chatbox header{
+    background:linear-gradient(90deg,rgba(255,255,255,.10),rgba(255,255,255,.06));
+    border-bottom:1px solid var(--line); color:#EAF2FF;
+  }
+  #chat-messages{ flex:1 1 auto; overflow:auto; }
+  #chat-input-wrapper{
+    flex:0 0 auto; display:flex; gap:.5rem; padding:.5rem .6rem;
+    background:rgba(255,255,255,.04); border-top:1px solid var(--line);
+  }
+  #chat-input{
+    height:40px; line-height:40px; padding:0 .8rem; font-size:.95rem;
+    border-radius:12px; border:1px solid var(--line);
+    background:#121a30; color:#EAF2FF;
+  }
+  #send-chat{ height:40px; padding:0 14px; border-radius:999px }
+  
+  /* FAB gombok sötéten és mindig felül */
+  .fab{ z-index:9999; }
+  .fab.ghost{ background:rgba(255,255,255,.08); color:#EAF2FF; border:1px solid var(--line) }
+  
+  /* ===== Mobil menü ===== */
+  .hamburger{
+    display:none; position:absolute; right:10px; top:10px; width:36px; height:28px;
+    background:transparent; border:0; z-index:10001;
+  }
+  .hamburger span{display:block; height:3px; margin:6px 0; border-radius:2px;
+    background:linear-gradient(90deg,var(--primary),var(--secondary))}
+  @media (max-width:900px){
+    .topbar{ grid-template-columns:auto 1fr auto }
+    .topbar .top-links{ 
+      display:none; position:absolute; right:14px; top:calc(100% + 8px);
+      flex-direction:column; gap:6px; padding:10px; width:min(80vw,260px);
+      background:rgba(14,20,38,.9); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow-strong);
+    }
+    .topbar .top-links.open{ display:flex; }
+    .hamburger{ display:block; }
+    .actions{ display:none; } /* mobilon helytakarékos */
+  }
+  
+  /* Extra biztos, hogy a régi fehér elemek ne üssenek el */
+  .topbar .top-links a, .btn, .member p, .form input, .chatbox, .glass { color:var(--ink); }
+  /* ===== NAV CLEANUP & MOBILE DOCK ===== */
 
-.member-extra.show {
-    max-height: 200px;
-    opacity: 1;
-}
-
-:root {
-    --main-blue: rgb(49, 192, 223);
-    --main-blue-light: rgba(49, 192, 223, 0.7);
-    --main-blue-shadow: rgba(49, 192, 223, 0.5);
-    --bg-dark: #0a0f1a;
-    --bg-gradient: linear-gradient(135deg, rgba(0, 0, 30, 0.8), rgba(0, 0, 0, 1));
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html, body {
-    height: 100%;
-    font-family: 'Poppins', sans-serif;
-    color: var(--main-blue);
-    overflow-x: hidden;
-    scroll-behavior: smooth;
-    background: var(--bg-gradient);
-    position: relative;
-}
-
-a {
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* -------------------- Canvas háttér -------------------- */
-#bg-circles {
+/* A header már csak a brandet tartalmazza */
+.topbar{
+    grid-template-columns: auto;
+    justify-content: start;
+  }
+  
+  /* Oldalsó üveg sáv (desktop) */
+  .side-nav{
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: -1;
-}
-
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: var(--bg-gradient);
-    z-index: -2;
-}
-
-/* -------------------- Header -------------------- */
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: rgba(5, 15, 40, 0.85);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 20px;
-    gap: 20px;
-    z-index: 9999;
-}
-
-header .logo {
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: var(--main-blue);
-    position: absolute;
-    left: 20px;
-}
-
-nav {
-    display: flex;
-    gap: 36px;
-}
-
-nav a {
-    color: var(--main-blue);
-    font-weight: 600;
-    font-size: 1.1rem;
-    padding: 6px 12px;
-    border-radius: 6px;
-    transition: all 0.35s ease;
-}
-
-nav a:hover {
-    background-color: var(--main-blue-light);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 0 10px var(--main-blue-shadow);
-}
-
-/* Hamburger mobilra */
-.hamburger {
-    display: none;
     flex-direction: column;
-    justify-content: space-between;
-    width: 28px;
-    height: 20px;
-    cursor: pointer;
-    position: absolute;
-    right: 20px;
-}
-
-.hamburger span {
-    display: block;
-    height: 3px;
-    background: var(--main-blue);
-    border-radius: 2px;
-}
-
-/* -------------------- Main Section -------------------- */
-main {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    position: relative;
-    z-index: 10;
-    padding: 0 20px;
-}
-
-.logo-container {
-    width: 90vw;
-    max-width: 640px;
-    aspect-ratio: 16/9;
-    background: #6fbddb;
-    border: 3px solid #6fbddb;
-    border-radius: 16px;
-    box-shadow: 0 0 40px var(--main-blue-light);
-    margin-bottom: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    animation: fadeInScale 1.6s ease forwards;
-}
-
-.logo-container img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-
-.company-name {
-    font-size: 3.5rem;
-    font-weight: 700;
-    color: var(--main-blue);
-    text-shadow: 0 0 16px var(--main-blue-light);
-    margin-bottom: 40px;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 0.8s;
-}
-
-#real-time-clock {
-    font-size: 5rem;
-    font-weight: 700;
-    color: #a5b8d1;
-    text-shadow: 0 0 24px var(--main-blue-light);
-    margin-bottom: 30px;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 1.2s;
-}
-
-.tagline {
-    font-size: 1.5rem;
-    color: #a5b8d1;
-    max-width: 480px;
-    line-height: 1.4;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 1.6s;
-}
-
-/* -------------------- Letöltés Gomb (ÚJ) -------------------- */
-/* -------------------- Letöltés Gomb (ÚJ) -------------------- */
-/* -------------------- Letöltés Gomb (ÚJ) -------------------- */
-/* -------------------- Letöltés Gomb (FRISSÍTVE) -------------------- */
-/* -------------------- Letöltés Gomb (VÉGLEGESÍTETT FRISSÍTÉS) -------------------- */
-/* -------------------- Letöltés Gomb (VÉGLEGESÍTETT FRISSÍTÉS) -------------------- */
-/* -------------------- Letöltés Gomb (VÉGLEGES, Flexbox Központozással) -------------------- */
-/* -------------------- Letöltés Gomb (VÉGLEGES, Flexbox Központozással) -------------------- */
-.download-button {
-    display: flex; /* 1. A gombot Flexbox konténerré tesszük */
-    flex-direction: column; /* 2. A tartalom oszlopban legyen (több soros szöveg kezelése) */
-    justify-content: center; /* 3. VERT. középre igazítás a gomb magasságához képest */
-    text-align: center; /* HORIZ. középre igazítás (ez már megvolt) */
-    
-    background-color: var(--main-blue);
-    color: white; 
-    font-weight: 700;
-    font-size: 1.3rem;
-    padding: 15px 30px;
-    border-radius: 8px;
-    
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 20px var(--main-blue-shadow);
-    transition: all 0.3s ease;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-}
-/* -------------------- Download Gombok Konténere (ÚJ, RESZPONZÍV) -------------------- */
-.download-buttons-container {
-    /* 1. Változás: A Grid Layout engedélyezése */
-    display: grid; 
-    
-    /* 2. Változás: Reszponzív oszlopsablon beállítása */
-    /* Annyi oszlop, amennyi elfér, a szélességet a tartalom határozza meg */
-    .download-buttons-container {
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      }
+    gap: 12px;
+    z-index: 9990;
+    background: rgba(14,20,38,.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 10px;
+    box-shadow: var(--shadow);
+  }
+  .side-nav a{
+    width: 42px; height: 42px; display: grid; place-items: center;
+    color: #C9D6F5; background: rgba(255,255,255,.04);
+    border: 1px solid var(--line); border-radius: 12px;
+  }
+  .side-nav a.active, .side-nav a:hover{
+    color:#0E1225;
+    background: linear-gradient(180deg,#b9c6ff,#8fded4);
+    border-color: transparent;
+  }
+  
+  /* Mobil: ne legyen elrejtve, alul vízszintes dokk legyen */
+  @media (max-width: 900px){
+    .side-nav{
+      top: auto; bottom: 12px; left: 50%; transform: translateX(-50%);
+      flex-direction: row; gap: 10px; padding: 10px 12px;
+      border-radius: 16px;
+    }
+    .side-nav a{ width: 44px; height: 44px; }
+  }
+/* Login kártya – kis segédstílusok */
+.auth-actions{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .remember{ display:flex; align-items:center; gap:8px; font-weight:700; color:#C9D6F5; }
+  #login-msg.form-msg.success{ color:#9be79b; }
+  #login-msg.form-msg.error{ color:#ffb4b4; }
+  .form .form-msg{
+    display:block;
+    margin-top:8px;
+    min-height:1.1rem;
+    font-weight:700;
+  }
+  .form .form-msg.success{ color:#9be79b; }
+  .form .form-msg.error{ color:#ffb4b4; }
       
-    
-    /* Középre igazítás (horizontálisan) */
-    justify-items: center; 
-    
-    /* Vízszintes (oszlopköz) ÉS Függőleges (sorköz) távolság */
-    gap: 1.25rem 1.25rem; 
-    
-    width: 100%; 
-    max-width: 1200px; 
-    margin: 30px auto 0 auto; 
-    
-    /* Animáció */
-    opacity: 0; 
-    animation: fadeUp 1s ease forwards 2.0s;
-}
-
-/* 3. Változás: A gombok stílusa (a gombok magasságának dinamikus beállítása) */
-.download-buttons-container > a,
-.download-buttons-container > button {
-    /* Szélesség: Kitölti a Grid cellát (ami a legszélesebb gomb tartalmához igazodik) */
-    width: 100%; 
-    min-width: min-content; 
-    
-    /* 🟢 A FIX MAGASSÁG EL LETT TÁVOLÍTVA (pl. height: 3.5rem;)! 
-       Ehelyett PADDING-ot használunk, hogy a magasság dinamikus legyen. */
-    
-    /* Magasság: Függőleges kitöltés a dinamikus magasságért */
-    /* Fent/Lent: 0.75rem, Balra/Jobbra: 1.5rem */
-    padding: 0.75rem 1.5rem; 
-    
-    /* Szövegtördelés és igazítás beállításai */
-    display: block;        /* Biztosítja a text-align használatát és a teljes szélességet */
-    text-align: center;    /* A szöveg középre igazítása (vízszintesen) */
-    white-space: normal;   /* Engedélyezi, hogy a szöveg több sorba tördelődjön */
-    line-height: 1.2;      /* A sorköz beállítása */
-    
-    /*... egyéb gomb stílusok (szín, betűméret, stb.) ...*/
-}
-
-.download-button:hover {
-    background-color: white;
-    color: var(--bg-dark); /* Hover esetén sötét szöveg a fehér gombon */
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 8px 25px var(--main-blue-light);
-}
-
-
-/* -------------------- Animációk -------------------- */
-@keyframes fadeInScale {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-@keyframes fadeUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* -------------------- Szekciók -------------------- */
-section {
-    max-width: 900px;
-    margin: 60px auto;
-    padding: 28px 32px;
-    background: rgba(30, 41, 59, 0.8);
-    backdrop-filter: blur(6px);
-    border-radius: 16px;
-    box-shadow: 0 12px 24px rgba(20, 40, 80, 0.7);
-    color: #dbeafe;
-    opacity: 0;
-    transform: translateY(40px);
-    transition: all 0.9s ease;
-}
-
-section.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-section h2 {
-    color: var(--main-blue);
-    font-size: 2.4rem;
-    margin-bottom: 18px;
-    text-shadow: 0 0 12px var(--main-blue-light);
-}
-
-section p {
-    font-size: 1.15rem;
-    line-height: 1.7;
-    color: #dbeafe;
-}
-
-.team-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 22px;
-    margin-top: 12px;
-}
-
-.member-card {
-    background: rgba(20, 30, 55, 0.7);
-    padding: 20px;
-    border-radius: 14px;
-    box-shadow: 0 6px 20px rgba(40, 60, 120, 0.65);
-    transition: transform 0.35s ease, box-shadow 0.35s ease, opacity 0.8s ease;
-    opacity: 0;
-}
-
-.member-card.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.member-card:hover {
-    transform: translateY(-12px) scale(1.03);
-    box-shadow: 0 16px 36px var(--main-blue-light);
-}
-
-.member-name {
-    font-weight: 700;
-    font-size: 1.3rem;
-    color: var(--main-blue);
-    margin-bottom: 6px;
-}
-
-.member-role {
-    font-style: italic;
-    color: rgba(49, 192, 223, 0.8);
-    margin-bottom: 12px;
-}
-
-.member-description {
-    font-size: 1.05rem;
-    color: #dbeafe;
-}
-
-/* -------------------- Footer -------------------- */
-footer {
-    background: rgba(5, 15, 40, 0.85);
-    color: var(--main-blue);
-    padding: 20px 10px 30px;
-    text-align: center;
-    font-size: 1rem;
-    box-shadow: inset 0 1px 3px var(--main-blue-shadow);
-}
-
-footer .social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-    margin-top: 12px;
-}
-
-footer .social-icons a {
-    color: var(--main-blue);
-    font-size: 1.6rem;
-    transition: all 0.3s ease;
-}
-
-footer .social-icons a:hover {
-    color: var(--main-blue-light);
-    transform: scale(1.2);
-}
-
-/* -------------------- Media Queries -------------------- */
-@media(max-width:768px) {
-    header {
-        justify-content: flex-start;
-    }
-
-    nav {
-        display: none;
-        flex-direction: column;
-        background: rgba(5, 15, 40, 0.95);
-        position: absolute;
-        top: 60px;
-        right: 0;
-        width: 200px;
-        padding: 20px;
-        gap: 16px;
-        border-radius: 0 0 0 12px;
-    }
-
-    nav.show {
-        display: flex;
-    }
-
-    .hamburger {
-        display: flex;
-    }
-}
-
-@media(max-width:480px) {
-    main {
-        padding: 0 15px;
-    }
-
-    .logo-container {
-        width: 240px;
-    }
-
-    .company-name {
-        font-size: 2.4rem;
-    }
-
-    .tagline {
-        font-size: 1.1rem;
-        max-width: 300px;
-    }
-    
-    .download-button {
-        font-size: 1.1rem;
-        padding: 12px 24px;
-    }
-
-    section {
-        margin: 40px 15px;
-        padding: 20px;
-    }
-
-    section h2 {
-        font-size: 1.8rem;
-    }
-}
-
-/* Slideshow CSS */
-.slideshow-wrapper {
-    width: 90%;
-    max-width: 900px;
-    margin: 60px auto;
-    position: relative;
-}
-
-.slideshow-container {
-    position: relative;
-    overflow: hidden;
-    border-radius: 16px;
-    /* Fix 16:9 arány */
-    padding-top: 56.25%;
-    /* 9/16*100% */
-}
-
-.slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-}
-
-.slide.active {
-    opacity: 1;
-    position: absolute;
-}
-
-.slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* ne torzuljon */
-    display: block;
-    border-radius: 16px;
-}
-
-.prev, .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.4);
-    color: white;
-    font-size: 24px;
-    padding: 12px;
-    border-radius: 50%;
-    user-select: none;
-    transition: background 0.3s ease;
-}
-
-.prev:hover, .next:hover {
-    background: rgba(0, 0, 0, 0.7);
-}
-
-.prev {
-    left: 10px;
-}
-
-.next {
-    right: 10px;
-}
-
-.dots {
-    text-align: center;
-    margin-top: 12px;
-}
-
-.dot {
-    cursor: pointer;
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    margin: 0 5px;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
-
-.dot.active {
-    background: var(--main-blue);
-    transform: scale(1.2);
-}
-/* ========================== */
-/* 💬 CHAT + SLIDESHOW GOMBOK */
-/* ========================== */
-
-/* ========================== */
-/* 💬 CHAT + SLIDESHOW GOMBOK */
-/* ========================== */
+ /* --- Pointer kurzor a kattintható elemekre (Főoldal) --- */
+button,
+.btn,
+.fab,
+.download-button,
+.member-toggle,
+.prev,
+.next,
+.dots .dot,
 #toggle-slideshow,
-#toggle-chat {
-    position: fixed;
-    bottom: 30px;
-    padding: 14px 22px;
-    font-size: 1rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 50px;
-    background: var(--main-blue);
-    color: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 10000;
-}
-
-#toggle-slideshow { left: 30px; }
-#toggle-chat { right: 30px; }
-
-#toggle-slideshow:hover,
-#toggle-chat:hover {
-    background: var(--main-blue-light);
-    transform: translateY(-3px);
-    box-shadow: 0 0 12px var(--main-blue-shadow);
-}
-
-/* ========================================== */
-/* 💬 CHAT ABLAK STÍLUSOK (RESZPONZÍV KIVITEL) */
-/* ========================================== */
-
-#chat-box {
-    display: flex;
-    position: fixed;
-    /* Csökkentett alsó távolság (rem-ben) */
-    bottom: 3rem; 
-    /* Reszponzív oldalsó távolság */
-    right: 3vw; 
-    /* Reszponzív szélesség (20rem az alap) */
-    width: clamp(200px, 20rem, 90vw); 
-    max-height: 80vh; /* Max. magasság a viewport 80%-a */
-    background: rgba(10, 20, 40, 0.95);
-    border: 0.125rem solid var(--main-blue-light); /* 2px -> rem */
-    border-radius: 1rem; /* 16px -> rem */
-    box-shadow: 0 0.5rem 1.8rem rgba(0, 0, 0, 0.6); /* 8px 30px -> rem */
-    overflow: hidden;
-    z-index: 10001;
-    flex-direction: column;
-    animation: fadeInUp 0.4s ease forwards;
-}
-
-#chat-box header {
-    background: var(--main-blue);
-    color: white;
-    padding: 0.6rem 1rem; /* 10px 16px -> rem */
-    font-weight: 700;
-    font-size: 1rem; 
-    text-align: center;
-}
-
-#chat-messages {
-    flex: 1;
-    padding: 0.6rem; 
-    overflow-y: auto;
-    font-size: 0.95rem; 
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem; 
-    min-height: 6.25rem; /* 100px -> rem */
-}
-
-/* KESKENY RESZPONZÍV INPUT RÉSZ */
-#chat-input-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem; /* 6px -> rem */
-    /* ULTRA KESKENY PADDING: 2px felül/alul -> 0.125rem */
-    padding: 0.125rem 0.5rem; 
-    background: rgba(255, 255, 255, 0.05);
-    /* Az 1px border maradhat fix, vagy átváltható */
-    border-top: 1px solid rgba(49, 192, 223, 0.2); 
-}
-
-#chat-input {
-    flex: 1;
-    /* KESKENY PADDING: 5px felül/alul -> 0.3rem */
-    padding: 0.3rem 0.75rem; 
-    border-radius: 1.25rem; /* 20px -> rem */
-    border: 1px solid rgba(255, 255, 255, 0.2); 
-    outline: none;
-    font-size: 0.9rem;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    transition: border-color 0.2s ease;
-}
-
-#chat-input:focus {
-    border-color: var(--main-blue);
-}
-
-#send-chat {
-    /* KESKENY PADDING: 5px felül/alul -> 0.3rem */
-    padding: 0.3rem 0.9rem; 
-    background: var(--main-blue);
-    border: none;
-    border-radius: 1.25rem; /* 20px -> rem */
-    color: white;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: all 0.25s ease;
-}
-
-#send-chat:hover { 
-    background: var(--main-blue-light); 
-}
-
-/* Chat üzenetek buborékok */
-.user-msg, .bot-msg {
-    padding: 0.5rem 0.75rem; /* 8px 12px -> rem */
-    font-size: 0.9rem;
-    border-radius: 1rem 1rem 0 1rem; /* Csak az user-msg kapja meg. */
-}
-
-.bot-msg {
-    border-radius: 1rem 1rem 1rem 0; /* A bot-msg is rem-ben */
-}
-
-/* A fő gombok reszponzívvá tétele (opcionális, de ajánlott) */
-#toggle-slideshow,
-#toggle-chat {
-    /* ... (a korábbi fix 30px-es értéket váltjuk át) */
-    bottom: 2rem; 
-    padding: 0.7rem 1rem; /* 14px 22px -> rem */
-    font-size: 1rem;
-    left: 2rem; /* a 30px helyett */
-}
-
-#toggle-chat { 
-    right: 2rem; /* a 30px helyett */
-    left: auto;
-}
-/* Media Query reszponzív egységekkel */
-@media(max-width: 768px) {
-    #chat-box {
-        /* A mobil nézetben a szélesség nagy része */
-        width: 90vw; 
-        /* Kis képernyőn középre, hogy ne érjenek össze a gombokkal */
-        left: 5vw; 
-        right: 5vw;
-        /* A gombok fölé helyezzük, hogy ne takarja el őket a bemeneti mező */
-        bottom: 5rem;
-    }
-}
-/* Animációk */
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeOutDown {
-    from { opacity: 1; transform: translateY(0); }
-    to { opacity: 0; transform: translateY(20px); }
-}
-
-@keyframes slideInRight {
-    from { transform: translateX(50px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes slideInLeft {
-    from { transform: translateX(-50px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-/* ========================== */
-/* 💳 Member card toggle javítás */
-.member-toggle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-}
-
-.member-arrow {
-    transition: transform 0.3s ease;
-}
-
-.member-arrow.open {
-    transform: rotate(180deg);
-}
-
-.member-extra {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease, opacity 0.4s ease, padding 0.4s ease;
-    opacity: 0;
-    margin-top: 0;
-    padding: 0 0;
-}
-
-.member-extra.show {
-    max-height: 250px; /* nagyobb ha több szöveg */
-    opacity: 1;
-    margin-top: 6px;
-    padding: 8px 0;
-}
-
-/* ========================== */
-/* Slideshow fix (arány + hover) */
-.slideshow-wrapper {
-    width: 90%;
-    max-width: 900px;
-    margin: 60px auto;
-    position: relative;
-    overflow: hidden;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-}
-
-.slide img {
-    border-radius: 16px;
-    object-fit: cover;
-}
-
-/* Prev/Next gombok */
-.prev, .next {
-    cursor: pointer;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    font-size: 24px;
-    padding: 12px;
-    border-radius: 50%;
-    user-select: none;
-    transition: all 0.3s ease;
-    z-index: 10;
-}
-
-.prev:hover, .next:hover { background: rgba(0,0,0,0.8); }
-
-/* Dots */
-.dots {
-    text-align: center;
-    margin-top: 12px;
-}
-
-.dot {
-    cursor: pointer;
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    margin: 0 5px;
-    background: rgba(255,255,255,0.5);
-    border-radius: 50%;
-    transition: all 0.3s ease;
-}
-
-.dot.active {
-    background: var(--main-blue);
-    transform: scale(1.2);
-}
-/* Letöltő kártya – gomb + kredit egyben */
-.download-card {
-    width: 100%;
-    display: grid;
-    gap: 10px;
-  }
-  
-  .download-card.external {
-    padding: 12px;
-    border-radius: 14px;
-    background: rgba(20, 30, 55, 0.60);
-    border: 1px solid rgba(49, 192, 223, 0.30);
-    box-shadow: 0 10px 24px rgba(20, 40, 80, 0.40), inset 0 0 0 1px rgba(255,255,255,0.02);
-    position: relative;
-  }
-  
-  /* Vékony fénycsík a bal oldalon */
-  .download-card.external::before {
-    content: "";
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 4px;
-    background: linear-gradient(180deg, var(--main-blue), transparent);
-    box-shadow: 0 0 12px var(--main-blue-shadow);
-    border-radius: 14px 0 0 14px;
-  }
-  
-  /* A kártyán belüli gomb legyen teljes szélességű */
-  .download-card .download-button {
-    width: 100%;
-  }
-  
-  /* A letöltő gombon belüli cím + alcím */
-/* Cím + alcím a gombon belül (a .download-button nálad már flex-column) */
-.dl-title { font-weight: 800; line-height: 1.1; }
-.dl-title i { margin-right: 8px; }
-.dl-sub   { font-size: 0.9rem; opacity: 0.9; margin-top: 4px; }
-
-/* Semmi extra háttér ehhez a gombhoz */
-.download-button.external { position: relative; } /* csak a layout miatt, nincs bg override */
-
-/* Külső közreműködő jelzés – átlátszó, vékony keretes „chip” */
-.dl-badge {
-    display: inline-block;
-    margin-left: 10px;
-    padding: 4px 10px;             /* nagyobb */
-    font-size: 0.80rem;            /* nagyobb (0.75 → 0.95) */
-    font-weight: 800;              /* erősebb */
-    text-transform: uppercase;
-    letter-spacing: .6px;          /* picit szélesebb */
-    border: 2px solid currentColor;/* vastagabb keret */
-    border-radius: 9999px;
-    opacity: 1;                    /* teljesen látszódjon */
-    background: transparent;       /* továbbra sincs háttér */
-    line-height: 1;
-  }
-  
-/* A nav-ugrás ne takarjon a fix header */
-section { scroll-margin-top: 80px; }
-
-/* ─── Regisztráció űrlap ───────────────────────────────── */
-#register form { margin-top: 10px; }
-
-.form-row { margin-top: 12px; }
-.form-row.two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.form-row label {
-  display: block;
-  margin-bottom: 6px;
-  color: #dbeafe;
-  font-weight: 600;
-}
-
-.form-row input {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(49, 192, 223, 0.4);
-  background: rgba(255, 255, 255, 0.06);
-  color: #fff;
-  font-size: 1rem;
-  transition: box-shadow .2s ease, border-color .2s ease;
-}
-
-.form-row input::placeholder { color: rgba(219,234,254,.7); }
-
-.form-row input:focus {
-  outline: none;
-  border-color: var(--main-blue);
-  box-shadow: 0 0 0 3px rgba(49,192,223,.25);
-}
-
-.btn-primary {
-  margin-top: 16px;
-  background: var(--main-blue);
-  color: #0a0f1a;
-  font-weight: 800;
-  font-size: 1.05rem;
-  padding: 12px 18px;
-  border: none;
-  border-radius: 10px;
+#toggle-chat,
+.side-nav a {
   cursor: pointer;
-  box-shadow: 0 6px 16px rgba(0,0,0,.45), 0 0 16px var(--main-blue-shadow);
-  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
 }
-
-.btn-primary:hover {
-  transform: translateY(-3px);
-  background: var(--main-blue-light);
-  box-shadow: 0 10px 24px rgba(0,0,0,.55), 0 0 20px var(--main-blue-light);
-}
-
-.form-msg { margin-top: 10px; min-height: 1.25rem; }
-.form-msg.error { color: #ffb4b4; }
-.form-msg.success { color: #9be79b; }
-
-@media (max-width: 640px) {
-  .form-row.two-col { grid-template-columns: 1fr; }
-}
+ 

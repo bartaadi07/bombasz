@@ -1,288 +1,297 @@
-/* GÖRGETŐSÁV ELREJTÉSE MOBILRA/DESIGNRA (minden böngészőhöz) */
+/* =========================================================
+   UNCS — Aurora Glass (Dark) – Chat
+   ========================================================= */
 
-/* Webkit böngészők (Chrome, Safari, Opera, Edge) */
-#chat-box::-webkit-scrollbar,
-body::-webkit-scrollbar {
-    display: none;
-    width: 0; /* Hogy ne foglaljon helyet */
-}
-
-/* Firefox */
-#chat-box {
-    scrollbar-width: none; /* Firefox */
-}
-body {
-    scrollbar-width: none; /* Firefox */
-}
-
-
-/* ÁLTALÁNOS STÍLUSOK (Sötét téma) */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #0d0d0d;
-    color: #f1f1f1;
-    margin: 0;
-    padding: 0;
-    /* Alapértelmezett görgetés: a tartalom növekedésével jön létre */
-}
-
-/* 🔑 BEJELENTKEZÉSI SZEKCIÓ */
-#auth-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #1a1a1a;
-    box-sizing: border-box;
-    padding: 20px;
-}
-
-.auth-box {
-    background-color: #2c2c2c;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-}
-
-#auth-section input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #444;
-    border-radius: 6px;
-    background-color: #3e3e3e;
-    color: #f1f1f1;
-    box-sizing: border-box;
-}
-
-#auth-section button {
-    padding: 10px 20px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    background-color: #0078d7;
-    color: white;
-    transition: background-color 0.2s;
-}
-
-#auth-section button:hover {
-    background-color: #005bb5;
-}
-
-#auth-message {
-    color: #ff4d4d;
-    min-height: 20px;
-}
-
-/* 🌐 CHAT ALKALMAZÁS SZEKCIÓ */
-#app-section {
-    /* Ezt a JS fogja bekapcsolni: */
-    display: none; 
-    
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    background-color: #121212;
-    padding: 10px;
-    box-sizing: border-box;
-}
-
-#chat-container {
-    width: 100%;
-    max-width: 800px;
-    background-color: #1a1a1a;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+/* === Tokens (dark) === */
+:root{
+    --bg:#0B1020;
+    --ink:#E9F3FF;
+    --ink-2:#A9B7D8;
+    --line:rgba(255,255,255,.08);
+  
+    --glass:rgba(14,20,38,.55);
+    --blur:16px;
+  
+    --primary:#6B8BFF;
+    --secondary:#22E4C6;
+    --accent:#FFC84D;
+  
+    --radius:22px;
+    --radius-sm:14px;
+  
+    --shadow:0 12px 28px rgba(0,0,0,.45);
+    --shadow-strong:0 18px 48px rgba(0,0,0,.55);
+  }
+  
+  /* === Base === */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    overflow-x:hidden;
+  }
+  
+  a{color:var(--secondary);text-decoration:none}
+  button, input, textarea{font:inherit; color:inherit}
+  
+  /* Konténer, középre igazítás */
+  .container{
+    width:min(1100px,92vw);
+    margin-inline:auto;
+    padding:18px;
+  }
+  
+  /* === Aurora háttér === */
+  .aurora-bg{position:fixed; inset:0; z-index:-1; overflow:hidden}
+  .blob{position:absolute; filter:blur(36px); opacity:.75}
+  .blob-a{width:44vw;height:44vw;left:-12vw;top:-8vw;background:radial-gradient(closest-side,#6B8BFF,transparent 70%)}
+  .blob-b{width:40vw;height:40vw;right:-8vw;top:-10vw;background:radial-gradient(closest-side,#22E4C6,transparent 70%)}
+  .blob-c{width:42vw;height:42vw;right:-12vw;bottom:-12vw;background:radial-gradient(closest-side,#7C5CFF,transparent 70%)}
+  .blob-d{width:36vw;height:36vw;left:-10vw;bottom:-8vw;background:radial-gradient(closest-side,#FFC84D,transparent 70%)}
+  
+  /* === Glass alap === */
+  .glass{
+    background:var(--glass);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+  }
+  
+  /* === Auth doboz === */
+  #auth-section{
+    min-height:100dvh;
+    display:grid; place-items:center;
+  }
+  .auth-box{
+    width:min(520px, 96vw);
+    padding:22px;
+  }
+  .brand{
+    font-weight:900; letter-spacing:.18em; color:#fff;
+    display:inline-block; padding:8px 10px; border-radius:12px;
+    background:linear-gradient(90deg,rgba(255,255,255,.10),rgba(255,255,255,.06));
+    margin-bottom:10px;
+  }
+  .muted{ color:var(--ink-2); margin-bottom:6px }
+  
+  .field{ display:grid; gap:6px; margin-top:10px }
+  .field span{ font-weight:700; color:#CFE2FF }
+  .field input{
+    padding:12px 14px; border-radius:12px; border:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
+    color:#EAF2FF;
+  }
+  .row{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap }
+  
+  /* form üzenet */
+  .form-msg{ min-height:1.1rem; font-weight:700; margin-top:6px }
+  .form-msg.error{ color:#ffb4b4 }
+  .form-msg.success{ color:#9be79b }
+  
+  /* === Gomb rendszer === */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:12px 16px; border-radius:12px; border:1px solid var(--line);
+    font-weight:900; color:var(--ink);
+  }
+  .btn.pill{ border-radius:999px }
+  .btn.ghost{ background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04)) }
+  .btn.fill{
+    color:#0E1225; border:0;
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    box-shadow:var(--shadow-strong);
+  }
+  
+  /* === Chat app === */
+  /* Középre tett, reszponzív héj – a teljes nézetmagasságon belül */
+#app-section{
+    height: 100dvh;                 /* teljes nézetmagasság */
+    display: grid;
+    place-items: center;            /* középre */
+    padding: 18px;
+    overflow: hidden;               /* ne nőjön túl a viewporton */
+  }
+  
+  /* Központi chatkártya: szélesség reszponzív, magasság FIX/CLAMP – csak belül scrollozunk */
+  #chat-container{
+    width: min(980px, 96vw);
+    height: clamp(560px, 80dvh, 820px);  /* stabil magasság */
     display: flex;
     flex-direction: column;
-    height: 98vh; /* Fix magasság a görgetéshez */
-    padding: 15px;
-    box-sizing: border-box;
-}
-
-/* 💬 GÖRGETHETŐ ÜZENETEK DOBOZA */
-#chat-box {
-    flex-grow: 1; 
-    overflow-y: auto; /* Csak ez a doboz görgethető! */
-    padding: 10px; 
-    margin-bottom: 5px;
+    overflow: hidden;                    /* külső görgetés tiltva */
+  }
+  
+  /* Görgethető üzenőfal */
+  #chat-box.messages,
+  #chat-box{
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 14px 16px;
     display: flex;
     flex-direction: column;
-}
-
-/* CHAT BEVITELI MEZŐ ÉS KÜLDÉS GOMB (FIX LÁBLÉC) */
-
-.chat-input-container {
-    /* 🟢 KULCS: FIX LÁBLÉC */
-    margin-top: auto; 
-    padding-top: 10px;
-    border-top: 1px solid #3e3e3e;
+    gap: 10px;
+  }
+  
+  /* Alsó beviteli sáv fix magassággal – nem növi túl a kártyát */
+  .chat-input,
+  .chat-input-container{
+    flex: 0 0 auto;
     display: flex;
     gap: 10px;
     align-items: flex-end;
-}
-
-#chat-message {
-    flex-grow: 1;
-    padding: 10px;
-    border: 1px solid #444;
-    border-radius: 15px; 
-    background-color: #2c2c2c;
-    color: #f1f1f1;
-    resize: none; 
+    padding: 12px;
+    border-top: 1px solid var(--line, rgba(255,255,255,.08));
+    background: rgba(255,255,255,.04);
+  }
+  
+  /* Textarea – kicsi alap, limitált auto-növekedés */
+  #chat-message{
+    flex: 1 1 auto;
     min-height: 40px;
-    max-height: 100px;
-    box-sizing: border-box;
+    max-height: 120px;     /* SOHA nem nyúljon 3–4 sornál tovább */
+    resize: none;          /* a user ne húzza túl */
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--line, rgba(255,255,255,.08));
+    background: #121a30;
+    color: #EAF2FF;
+  }
+  
+  /* Küldés gomb – kerek ikon */
+  #send-message-btn,
+  .btn-icon{
+    width: 44px; height: 44px;
+    border-radius: 999px;
+    border: 0; cursor: pointer;
+    display: grid; place-items: center;
+    color: #0E1225;
+    background: linear-gradient(90deg,#6B8BFF,#22E4C6);
+  }
+  
+  /* Üzenetbubik – NINCS float, csak önigazítás, így nem borítják a magasságot */
+  .chat-msg{
+    max-width: min(75%, 680px);
+    padding: 10px 14px;
+    border-radius: 16px;
+    border: 1px solid var(--line, rgba(255,255,255,.08));
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
+  }
+  .chat-msg.other{
+    align-self: flex-start;
+    background: rgba(255,255,255,.04);
+    border-bottom-left-radius: 6px;
+  }
+  .chat-msg.self{
+    align-self: flex-end;
+    color: #0E1225;
+    background: linear-gradient(90deg,#6B8BFF,#22E4C6);
+    border: 0;
+    border-bottom-right-radius: 6px;
+  }
+  .chat-msg .chat-meta{
+    display:block; font-size:.75rem; opacity:.85; text-align:right; margin-top:4px;
+  }
+  
+  /* Mobil finomítás */
+  @media (max-width:700px){
+    #chat-container{ height: clamp(520px, 84dvh, 760px); }
+    .chat-msg{ max-width: 90%; }
+  }
+  /* ===== Mobile fullscreen fill (phones & small tablets) ===== */
+@media (max-width: 900px){
+    /* Auth nézet is teljes magasságon */
+    #auth-section{
+      min-height: 100svh;
+      padding: 12px;
+    }
+    @supports (height: 100dvh){
+      #auth-section{ min-height: 100dvh; }
+    }
+  
+    /* App héj: teljes magasság + safe-area */
+    #app-section{
+      height: 100svh;
+      padding: 0;
+      overflow: hidden;                 /* ne legyen külső scroll */
+      overscroll-behavior: contain;
+      padding-left:  max(0px, env(safe-area-inset-left));
+      padding-right: max(0px, env(safe-area-inset-right));
+      padding-bottom:max(0px, env(safe-area-inset-bottom));
+    }
+    @supports (height: 100dvh){
+      #app-section{ height: 100dvh; }
+    }
+  
+    /* Chat kártya: teljes szélesség/magasság, kerekítések nélkül */
+    #chat-container{
+      width: 100vw;
+      height: 100%;
+      border-radius: 0;
+      border-left: 0;
+      border-right: 0;
+    }
+  
+    /* Üzenetlista és input: safe-area tudatos paddings */
+    #chat-box{
+      padding: 14px 14px calc(14px + env(safe-area-inset-bottom));
+    }
+    .chat-input-container{
+      padding: 12px 12px calc(12px + env(safe-area-inset-bottom));
+    }
+  
+    /* Buborékok kicsit szélesebben férjenek el */
+    .chat-msg{ max-width: 90%; }
+  }
+  
+  /* (opcionális, ha a háttér valaha kattintást fogna) */
+  .aurora-bg{ pointer-events: none; }
+  /* ===== Scrollbar off, scroll marad ===== */
+
+/* Üzenetlista */
+#chat-box,
+#chat-box.messages{
+  -ms-overflow-style: none;     /* IE/Edge régi */
+  scrollbar-width: none;        /* Firefox */
+  -webkit-overflow-scrolling: touch; /* iOS lendületes scroll */
+}
+#chat-box::-webkit-scrollbar,
+#chat-box.messages::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+  display: none;                /* WebKit */
 }
 
-#send-message-btn {
-    background-color: #0078d7; 
-    color: white;
-    border: none;
-    border-radius: 50%; 
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-size: 1.2em;
-    transition: background-color 0.2s;
+/* Szövegmező (textarea) */
+#chat-message{
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+#chat-message::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+  display: none;
 }
 
-#send-message-btn:hover {
-    background-color: #005bb5;
+/* (opcionális) Globálisan is eltüntetheted, ha sehol nem kell látni:
+body{
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-
-/* 💬 BUBORÉK STÍLUS ÉS ELRENDEZÉS */
-.chat-msg {
-    max-width: 80%;
-    margin-bottom: 12px;
-    padding: 10px 15px;
-    border-radius: 18px;
-    clear: both; 
-    word-wrap: break-word; 
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+body::-webkit-scrollbar{ display:none; }
+*/
+/* --- Pointer kurzor a kattintható elemekre (Chat) --- */
+button,
+.btn,
+.btn-icon,
+#send-message-btn,
+.chat-input-container button,
+.dots .dot {
+  cursor: pointer;
 }
-
-/* 🟢 SAJÁT ÜZENET (self) -> JOBB OLDAL */
-.chat-msg.self {
-    background-color: #0078d7; 
-    color: white;
-    float: right;
-    margin-left: auto; 
-    border-bottom-right-radius: 4px; 
-}
-
-/* ⚫ MÁSOK ÜZENETE (other) -> BAL OLDAL */
-.chat-msg.other {
-    background-color: #3e3e3e; 
-    color: #f1f1f1;
-    float: left;
-    margin-right: auto;
-    border-bottom-left-radius: 4px; 
-}
-
-/* Törlés a lebegő elemek után */
-#chat-box::after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-/* Név, Említés és Meta adatok */
-.chat-msg.other strong {
-    color: #61afef; 
-    font-weight: 600;
-    margin-right: 5px;
-}
-
-.chat-meta {
-    display: block;
-    margin-top: 5px;
-    font-size: 0.75em;
-    opacity: 0.8;
-    text-align: right; 
-}
-
-.mention {
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-weight: bold;
-    background-color: #ff9800; 
-    color: #2c2c2c;
-}
-
-/* PROFIL SZERKESZTÉS (Hogy lebegjen a chat felett) */
-#profile-section {
-    position: absolute; 
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #2c2c2c;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.9);
-    z-index: 100;
-    max-width: 300px;
-    width: 100%;
-    text-align: center;
-    flex-direction: column;
-    gap: 10px;
-}
-
-#profile-section input {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    box-sizing: border-box;
-    border: 1px solid #444;
-    background-color: #3e3e3e;
-    color: #f1f1f1;
-    border-radius: 4px;
-}
-
-#profile-section button {
-    padding: 8px 15px;
-    border: none;
-    background-color: #0078d7;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-    margin-top: 10px;
-}
-
-
-/* TOAST ÜZENETEK */
-#toast {
-    visibility: hidden;
-    min-width: 250px;
-    margin-left: -125px;
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    border-radius: 2px;
-    padding: 16px;
-    position: fixed;
-    z-index: 9999;
-    left: 50%;
-    bottom: 30px;
-    font-size: 17px;
-}
-
-#toast.show {
-    visibility: visible;
-    -webkit-animation: fadein 0.5s, fadeout 0.5s 2s;
-    animation: fadein 0.5s, fadeout 0.5s 2s;
-}
-
-@-webkit-keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
-@keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
-@-webkit-keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
-@keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
