@@ -13,6 +13,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Generate manifest.json for each volume
         shell: python
@@ -50,13 +52,20 @@ jobs:
                   print('wrote', out)
 
       - name: Commit and push manifests
+        shell: bash
         run: |
+          set -e
           if git status --porcelain | grep -q 'zip/.*manifest.json'; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add zip/**/manifest.json
-            git commit -m "chore: auto-generate manifests"
-            git push
+            if git diff --staged --quiet; then
+              echo "No changes to commit."
+            else
+              git commit -m "chore: auto-generate manifests"
+              git pull --rebase
+              git push
+            fi
           else
             echo "No changes to commit."
-
+          fi
