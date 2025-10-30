@@ -58,5 +58,5 @@ jobs:
             git commit -m "chore: auto-generate manifests"
             git push
           else
-            echo "No changes to coommit."
+            echo "No changes to commit."
 
