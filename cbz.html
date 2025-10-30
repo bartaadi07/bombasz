@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>cbz</title>
+  <title>Képregény olvasó — kötetválasztó + elrejthető menü</title>
   <style>
     :root { --bg:#0e0f11; --fg:#e8e8e8; --muted:#9aa0a6; --accent:#7c3aed; }
     * { box-sizing: border-box; }
@@ -18,6 +18,8 @@
     .chip { background:#1a1c1f; border:1px solid rgba(255,255,255,.16); padding:6px 10px; border-radius:8px; }
     select { background:#1a1c1f; color:var(--fg); border:1px solid rgba(255,255,255,.18); padding:7px 10px; border-radius:8px; }
     #status { margin-left:auto; color:var(--muted); font-size:14px; }
+    button.chip { cursor: pointer; }
+    button.chip:hover { border-color: var(--accent); }
 
     /* Menü toggle gomb (mindig látszik) */
     #menuToggle {
@@ -33,6 +35,18 @@
     footer { text-align:center; color:var(--muted); padding:24px 12px; font-size:14px; }
     kbd { background:#1a1c1f; border:1px solid rgba(255,255,255,.15); border-bottom-color:rgba(255,255,255,.25); padding:2px 6px; border-radius:6px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
     .err { opacity:.85; font-size:.9em; }
+
+    /* Tetejére gomb: NINCS fekete háttér */
+    #toTopBtn {
+      background: transparent !important;
+      border: 1px solid rgba(255,255,255,.22);
+      padding:6px 10px;
+      border-radius:8px;
+    }
+    #toTopBtn:hover { border-color: var(--accent); }
+
+    /* Számláló elrejtése */
+    #status { display: none !important; }
   </style>
 </head>
 <body>
@@ -41,14 +55,17 @@
 
   <header id="topbar">
     <div class="container controls">
-      <!-- kötetválasztó csak -->
       <div style="display:flex; gap:8px; align-items:center;">
-        
         <select id="volSelect" title="Kötet kiválasztása"></select>
       </div>
 
-      <!-- oldalak száma -->
       <span id="status">0 / 0</span>
+
+      <!-- Tetejére gomb -->
+      <button id="toTopBtn" class="chip" type="button"
+              title="Ugrás az oldal tetejére" aria-label="Ugrás az oldal tetejére">
+        ⬆︎
+      </button>
     </div>
   </header>
 
@@ -56,7 +73,11 @@
     <div id="pages"></div>
   </main>
 
-  
+  <footer>
+    Tipp: <kbd>J</kbd>/<kbd>K</kbd> görgetés, <kbd>Home</kbd>/<kbd>End</kbd> eleje/vége.  
+    Menü elrejt/hoz: <kbd>M</kbd> vagy a jobb felső gomb.
+  </footer>
+
   <script>
     // ===== KONFIG =====
     const VOLUME_ROOT = './zip';
@@ -75,6 +96,7 @@
       const volSelect = document.getElementById('volSelect');
       const topbar    = document.getElementById('topbar');
       const menuBtn   = document.getElementById('menuToggle');
+      const toTopBtn  = document.getElementById('toTopBtn');
 
       let currentBaseUrl = null;
       let knownList = [];     // pontos fájllista a mappából
@@ -218,6 +240,11 @@
         setMenuHidden(!hidden);
       });
 
+      // Tetejére gomb
+      toTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
       // Hotkeys
       window.addEventListener('keydown', (e) => {
         const t = e.target;
@@ -239,4 +266,3 @@
   </script>
 </body>
 </html>
-
