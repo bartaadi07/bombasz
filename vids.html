@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bombasz Vids – Auth + Profile</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #111;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+/* LOGIN FORM */
+#login-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(16px);
+    border-radius: 16px;
+    padding: 40px;
+    width: 90%; 
+    max-width: 380px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+}
+#login-container h2 { text-align:center; font-weight:700; font-size:1.8rem; margin-bottom:10px; }
+#login-container label { display:flex; flex-direction:column; font-size:0.9rem; }
+#login-container input {
+    padding:10px;
+    border-radius:8px;
+    border:none;
+    background: rgba(255,255,255,0.1);
+    color:#fff;
+    margin-top:6px;
+    transition: all 0.3s;
+}
+#login-container input:focus { background: rgba(255,255,255,0.2); outline:none; }
+.btn { padding:10px 15px; border-radius:20px; border:none; font-weight:600; cursor:pointer; transition: all 0.3s; }
+.btn.fill { background:#ff0000; color:#fff; }
+.btn.fill:hover { background:#cc0000; transform: scale(1.05); }
+.form-msg { font-size:0.85rem; min-height:20px; }
+.form-msg.error { color:#ff4c4c; }
+.form-msg.success { color:#4cff7f; }
+
+/* APP */
+#app { display:none; flex-direction:column; height:100vh; width:100vw; }
+header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 30px; 
+    background:#111;
+    box-shadow:0 4px 20px rgba(0,0,0,0.5);
+    position:relative;
+}
+header h1 { margin:0; font-size:1.5rem; cursor:pointer; user-select:none; } 
+#profile-btn { background:none; border:none; color:#fff; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; position:relative; }
+#profile-dropdown {
+    display: none;
+    position: absolute;
+    right: 30px;
+    top: 50px;
+    background: #222;
+    border-radius: 12px;
+    padding: 15px;
+    width: max-content;
+    min-width: 150px;
+    max-width: 90vw;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+    z-index: 100;
+}
+#profile-dropdown p span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#logout-btn { background:#ff0000; border:none; color:#fff; padding:8px; border-radius:50%; cursor:pointer; transition:all 0.3s; }
+#logout-btn:hover { background:#cc0000; transform:scale(1.1); }
+
+/* Search */
+#search-container { position:relative; }
+#search-input {
+    position:absolute;
+    right:0;
+    top:-5px;
+    width:0;
+    padding:5px 10px;
+    border:none;
+    border-radius:8px;
+    transition: all 0.3s;
+    opacity:0;
+    background: rgba(255,255,255,0.1);
+    color:#fff;
+}
+#search-container.active #search-input { width:200px; opacity:1; }
+
+/* MAIN PAGE */
+.main-page {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:flex-start;
+    gap:20px; 
+    padding:40px; /* Visszaállítva 40px-re a nagyobb asztali térköz érdekében */
+    flex:1;
+    overflow-y:auto;
+}
+.series-card {
+    width:180px; /* VISSZAÁLLÍTVA AZ EREDETI, NAGY MÉRETRE */
+    cursor:pointer;
+    transition:all 0.2s;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+.series-card:hover { transform:scale(1.05); }
+.series-card img {
+    width:100%;
+    aspect-ratio: 2/3;
+    object-fit:cover;
+    display:block;
+}
+.series-title {
+    width:100%;
+    overflow:hidden;
+    white-space:nowrap;
+    box-sizing:border-box;
+    text-align:center;
+    margin-top:5px;
+    font-size:0.9rem;
+}
+.series-title span {
+    display:inline-block;
+    padding-left:100%;
+    animation: scrollText 10s linear infinite;
+}
+@keyframes scrollText {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+}
+
+/* SERIES PAGE */
+.series-page {
+    display:none;
+    flex:1;
+    height:100%;
+    flex-direction: row; 
+}
+.sidebar {
+    width:240px;
+    background:#222;
+    padding:20px;
+    box-sizing:border-box;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    overflow-y:auto;
+    order: 0;
+}
+.sidebar h2 { margin:0 0 10px 0; text-align:center; font-size:20px; }
+.video-card { background:#333; border-radius:8px; cursor:pointer; transition:all 0.2s; border:2px solid transparent; padding:10px; text-align:center; font-size:14px; }
+.video-card.active { border-color:#ff0000; }
+.video-card:hover { transform:scale(1.03); border-color:#ff4c4c; }
+.video-container {
+    flex:1;
+    display:flex;
+    padding:20px;
+    box-sizing:border-box;
+    order: 1;
+}
+.video-container iframe { width:100%; height:100%; border:0; border-radius:12px; }
+
+.back-button { background:#ff0000; color:#fff; border:none; padding:10px 15px; border-radius:8px; cursor:pointer; margin-bottom:15px; transition:all 0.3s; }
+.back-button:hover { transform:scale(1.05); }
+
+/* ************************************** */
+/* MOBIL RESZPONZIVITÁS */
+/* ************************************** */
+@media(max-width:768px){
+    /* HEADER */
+    header { padding: 10px 15px; } 
+    header h1 { font-size: 1.3rem; }
+    #profile-btn { font-size:0.9rem; }
+    #profile-btn span { display: none; }
+    #profile-dropdown { top: 42px; padding: 10px; right: 15px; }
+
+    /* SEARCH */
+    #search-container.active #search-input { width:140px; } 
+
+    /* MAIN PAGE */
+    .main-page { 
+        padding: 20px; 
+        gap: 15px;
+    }
+    .series-card { 
+        width: 140px; /* NAGYOBB KÁRTYÁK MOBILON */
+    }
+    .series-title { font-size: 0.85rem; }
+
+
+    /* SERIES PAGE (MOBIL) */
+    .series-page {
+        flex-direction: column; 
+        overflow-y: auto; 
+    }
+    .sidebar {
+        width: 100%; 
+        height: auto;
+        max-height: 250px; 
+        padding: 15px;
+        order: 1; 
+    }
+    .video-container {
+        height: 220px; /* Kicsit nagyobb videó magasság mobil nézetben */
+        padding: 15px;
+        order: 0; 
+    }
+    .sidebar h2 { margin-bottom: 5px; font-size: 1.2rem; }
+    .video-card { font-size: 12px; padding: 8px; }
+    
+}
+
+/* Kisebb mobilok */
+@media(max-width:480px){
+    .series-card { 
+        width: 120px; /* Kisebb, de még mindig jól látható */
+        margin: 0 auto; 
+    }
+    .series-title { font-size: 0.8rem; }
+    #login-container { padding: 30px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN FORM -->
+<div id="login-container">
+    <h2>Belépés</h2>
+    <form id="login-form" novalidate>
+        <label>E-mail
+            <input type="email" id="loginEmail" required>
+        </label>
+        <label>Jelszó
+            <input type="password" id="loginPassword" minlength="6" required>
+        </label>
+        <button type="submit" class="btn fill">Belépés</button>
+        <p id="login-msg" class="form-msg" role="status" aria-live="polite"></p>
+    </form>
+</div>
+
+<!-- APP -->
+<div id="app">
+<header>
+    <h1 id="home-btn">Bombasz Vids</h1>
+    <div style="display:flex; align-items:center; gap:10px; position:relative;">
+        <div id="search-container">
+            <input type="text" id="search-input" placeholder="Keresés...">
+        </div>
+        <button id="search-btn" style="background:none; border:none; cursor:pointer; color:#fff; display:flex; align-items:center; justify-content:center; width:32px; height:32px;">
+            <!-- SVG kereső ikon -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </button>
+        <button id="profile-btn"><i class="fa-solid fa-user"></i> <span id="username-display"></span></button>
+        <div id="profile-dropdown">
+            <p><strong>Felhasználónév:</strong> <span id="profile-name"></span></p>
+            <p><strong>E-mail:</strong> <span id="profile-email"></span></p>
+            <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+    </div>
+</header>
+
+
+<div class="main-page" id="mainPage">
+    <!-- Példa sorozat kártya -->
+    <div class="series-card" data-series="chainsaw">
+        <img src="reze.png" alt="Chainsaw Man">
+        <div class="series-title"><span>Chainsaw Man - The Movie: Reze Arc</span></div>
+    </div>
+</div>
+
+<div class="series-page" id="seriesPage">
+    <div class="sidebar">
+        <h2 id="seriesTitle">Sorozat</h2>
+        <div id="videoList"></div>
+    </div>
+    <div class="video-container">
+        <iframe id="videaPlayer" src="//videa.hu/player?v=v6M7cvPLfDJsCaAj" allowfullscreen webkitallowfullscreen mozallowfullscreen frameborder="0"></iframe>
+    </div>
+</div>
+</div>
+
+<script type="module">
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+// Firebase config
+const firebaseConfig = {
+    apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
+    authDomain: "konyv-93c63.firebaseapp.com",
+    projectId: "konyv-93c63",
+    storageBucket: "konyv-93c63.firebasestorage.app",
+    messagingSenderId: "349471560585",
+    appId: "1:349471560585:web:55c6e78499ebbca0540758"
+};
+
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const loginForm = document.getElementById("login-form");
+const loginMsg = document.getElementById("login-msg");
+const loginContainer = document.getElementById("login-container");
+const appContainer = document.getElementById("app");
+const logoutBtn = document.getElementById("logout-btn");
+const profileBtn = document.getElementById("profile-btn");
+const profileDropdown = document.getElementById("profile-dropdown");
+const usernameDisplay = document.getElementById("username-display");
+const profileName = document.getElementById("profile-name");
+const profileEmail = document.getElementById("profile-email");
+const homeBtn = document.getElementById('home-btn');
+
+const searchBtn = document.getElementById('search-btn');
+const searchContainer = document.getElementById('search-container');
+const searchInput = document.getElementById('search-input');
+const mainPage = document.getElementById('mainPage');
+const seriesPage = document.getElementById('seriesPage');
+const videoList = document.getElementById('videoList');
+const seriesTitle = document.getElementById('seriesTitle');
+const player = document.getElementById('videaPlayer');
+
+const seriesData = {
+    "chainsaw": { title:"Chainsaw Man - The Movie: Reze Arc", videos:[{title:"1. rész", src:"//videa.hu/player?v=v6M7cvPLfDJsCaAj"}] },
+    "naruto": { title:"Naruto Shippuden", videos:[{title:"1. rész", src:"//videa.hu/player?v=v6M7cvPLfDJsCaAj"}] }
+};
+
+// Üzenetek
+function revealMsg(node, text, type="") { if(!node) return; node.textContent = text; node.className = "form-msg" + (type ? " " + type : ""); }
+
+// Login
+loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    revealMsg(loginMsg,"");
+    const email = document.getElementById("loginEmail").value.trim();
+    const pass = document.getElementById("loginPassword").value;
+    if(!email||!pass) return revealMsg(loginMsg,"Tölts ki minden mezőt!","error");
+    try {
+        await setPersistence(auth, browserLocalPersistence);
+        await signInWithEmailAndPassword(auth,email,pass);
+    } catch(err){
+        revealMsg(loginMsg,"❌ Hibás e-mail vagy jelszó.","error");
+        console.error(err);
+    }
+});
+
+// Logout
+logoutBtn.addEventListener("click", async ()=>{ await signOut(auth); });
+
+// Profile dropdown toggle
+profileBtn.addEventListener("click", ()=>{ profileDropdown.style.display = profileDropdown.style.display==="block"?"none":"block"; });
+
+// Auth state
+onAuthStateChanged(auth,(user)=>{
+    if(user){
+        loginContainer.style.display="none";
+        appContainer.style.display="flex";
+        usernameDisplay.textContent=user.displayName||user.email;
+        profileName.textContent=user.displayName||user.email;
+        profileEmail.textContent=user.email;
+    } else {
+        loginContainer.style.display="flex";
+        appContainer.style.display="none";
+        profileDropdown.style.display="none";
+    }
+});
+
+// Series card click
+document.querySelectorAll('.series-card').forEach(card=>{
+    card.addEventListener('click',()=>{
+        const seriesKey=card.getAttribute('data-series');
+        loadSeries(seriesKey);
+        mainPage.style.display='none';
+        seriesPage.style.display='flex';
+    });
+});
+
+// Home click
+homeBtn.addEventListener('click', ()=>{
+    seriesPage.style.display='none';
+    mainPage.style.display='flex';
+    if(seriesData["chainsaw"] && seriesData["chainsaw"].videos[0]) player.src = seriesData["chainsaw"].videos[0].src;
+    videoList.innerHTML = '';
+});
+
+// Load series
+function loadSeries(seriesKey){
+    const series=seriesData[seriesKey];
+    seriesTitle.textContent=series.title;
+    videoList.innerHTML="";
+    series.videos.forEach((vid,index)=>{
+        const card=document.createElement('div');
+        card.classList.add('video-card');
+        if(index===0) card.classList.add('active');
+        card.textContent=vid.title;
+        card.setAttribute('data-src',vid.src);
+        videoList.appendChild(card);
+        card.addEventListener('click',()=>{
+            player.src=vid.src;
+            document.querySelectorAll('.video-card').forEach(c=>c.classList.remove('active'));
+            card.classList.add('active');
+        });
+    });
+    player.src=series.videos[0].src;
+}
+
+// Search toggle
+searchBtn.addEventListener('click',()=>{
+    searchContainer.classList.toggle('active');
+    if(searchContainer.classList.contains('active')) searchInput.focus();
+});
+
+// Search functionality
+searchInput.addEventListener('input', ()=>{
+    const query = searchInput.value.toLowerCase();
+    document.querySelectorAll('.series-card').forEach(card=>{
+        const title = card.querySelector('.series-title span').textContent.toLowerCase();
+        card.style.display = title.includes(query) ? 'flex' : 'none';
+    });
+});
+
+// 🔒 DevTools és mentés tiltás
+document.addEventListener('keydown', function(e) {
+    if (e.key === "F12") e.preventDefault();
+    if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "C")) e.preventDefault();
+    if (e.ctrlKey && (e.key === "u" || e.key === "s")) e.preventDefault();
+});
+</script>
+</body>
+</html>
