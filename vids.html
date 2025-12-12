@@ -6,7 +6,25 @@
 <title>Bombasz Vids</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+ <link rel="icon" type="image/x-icon" href="/favicon.ico?v=1.1">
 <style>
+    /* PROGRESS BAR STÍLUSOK */
+.progress-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin-top: 5px;
+    overflow: hidden; /* Fontos, hogy a sáv lekerekített legyen */
+}
+
+.progress-bar {
+    height: 100%;
+    background: #ff0000; /* Vörös akcentus szín */
+    width: 0; /* Alapértelmezett, amit JS állít be */
+    transition: width 0.3s ease-out; /* Animáció a sáv növekedéséhez */
+    border-radius: 3px;
+}
 body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
@@ -405,6 +423,9 @@ header h1 { margin:0; font-size:1.5rem; cursor:pointer; user-select:none; }
 <script type="module">
 import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+// >>> ÚJ IMPORT A REALTIME DATABASE-hez <<<
+import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
 
 // Firebase config
 const firebaseConfig = {
@@ -418,6 +439,9 @@ const firebaseConfig = {
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
+// >>> ÚJ DATABASE VÁLTOZÓ <<<
+const db = getDatabase(app); 
+
 
 const loginForm = document.getElementById("login-form");
 const loginMsg = document.getElementById("login-msg");
@@ -439,7 +463,7 @@ const mainPage = document.getElementById('mainPage');
 const seriesPage = document.getElementById('seriesPage');
 const videoList = document.getElementById('videoList');
 const seriesTitle = document.getElementById('seriesTitle');
-const backBtn = document.getElementById('back-btn'); // ÚJ VÁLTOZÓ
+const backBtn = document.getElementById('back-btn');
 
 const seriesData = {
     // RÉGI CHINSAW MAN (FILM) - Megváltoztatott kulcs: chainsaw-movie
@@ -509,26 +533,26 @@ const seriesData = {
     },
     // ... seriesData meglévő adatok után
 
-    "record-of-ragnarok-s3": { 
-        title:"Record of Ragnarok: Season 3", 
-        videos:[
-            {title:"01. rész", src:"//videa.hu/player?v=fg5MMPRNCX0ArOrR", type: 'videa'},
-            {title:"02. rész", src:"//videa.hu/player?v=ZDf2cP8SmAXsEKrU", type: 'videa'},
-            {title:"03. rész", src:"//videa.hu/player?v=CHUtrQYTZQgl6T2j", type: 'videa'},
-            {title:"04. rész", src:"//videa.hu/player?v=QogXviAtwW63DrJE", type: 'videa'},
-            {title:"05. rész", src:"//videa.hu/player?v=eJZqfRGV1qrmYVh3", type: 'videa'},
-            {title:"06. rész", src:"//videa.hu/player?v=T8R4Y0FCfUV0TOG6", type: 'videa'},
-            {title:"07. rész", src:"//videa.hu/player?v=fTxYD90gq6lKy8Ud", type: 'videa'},
-            {title:"08. rész", src:"//videa.hu/player?v=Rt3codXW3Fuo7oc4", type: 'videa'},
-            {title:"09. rész", src:"//videa.hu/player?v=VxeSoFo0dKL3Hccf", type: 'videa'},
-            {title:"10. rész", src:"//videa.hu/player?v=rEDfQlR8loKDN9qn", type: 'videa'},
-            {title:"11. rész", src:"//videa.hu/player?v=I2zmWVBtqu6w0obg", type: 'videa'},
-            {title:"12. rész", src:"//videa.hu/player?v=7Jtoc1SjPAK0ery9", type: 'videa'},
-            {title:"13. rész", src:"//videa.hu/player?v=GzkmQWEW6MrNYDZq", type: 'videa'},
-            {title:"14. rész", src:"//videa.hu/player?v=uJD5594gZbZq5q40", type: 'videa'},
-            {title:"15. rész", src:"//videa.hu/player?v=vibakbKKhkPZX3Y9", type: 'videa'}
-        ] 
-    }
+    "record-of-ragnarok-s3": { 
+        title:"Record of Ragnarok: Season 3", 
+        videos:[
+            {title:"01. rész", src:"//videa.hu/player?v=fg5MMPRNCX0ArOrR", type: 'videa'},
+            {title:"02. rész", src:"//videa.hu/player?v=ZDf2cP8SmAXsEKrU", type: 'videa'},
+            {title:"03. rész", src:"//videa.hu/player?v=CHUtrQYTZQgl6T2j", type: 'videa'},
+            {title:"04. rész", src:"//videa.hu/player?v=QogXviAtwW63DrJE", type: 'videa'},
+            {title:"05. rész", src:"//videa.hu/player?v=eJZqfRGV1qrmYVh3", type: 'videa'},
+            {title:"06. rész", src:"//videa.hu/player?v=T8R4Y0FCfUV0TOG6", type: 'videa'},
+            {title:"07. rész", src:"//videa.hu/player?v=fTxYD90gq6lKy8Ud", type: 'videa'},
+            {title:"08. rész", src:"//videa.hu/player?v=Rt3codXW3Fuo7oc4", type: 'videa'},
+            {title:"09. rész", src:"//videa.hu/player?v=VxeSoFo0dKL3Hccf", type: 'videa'},
+            {title:"10. rész", src:"//videa.hu/player?v=rEDfQlR8loKDN9qn", type: 'videa'},
+            {title:"11. rész", src:"//videa.hu/player?v=I2zmWVBtqu6w0obg", type: 'videa'},
+            {title:"12. rész", src:"//videa.hu/player?v=7Jtoc1SjPAK0ery9", type: 'videa'},
+            {title:"13. rész", src:"//videa.hu/player?v=GzkmQWEW6MrNYDZq", type: 'videa'},
+            {title:"14. rész", src:"//videa.hu/player?v=uJD5594gZbZq5q40", type: 'videa'},
+            {title:"15. rész", src:"//videa.hu/player?v=vibakbKKhkPZX3Y9", type: 'videa'}
+        ] 
+    }
 };
 
 // Üzenetek
@@ -546,6 +570,43 @@ function checkTitleOverflow(){
         }
     });
 }
+
+// >>> PROGRESS FÜGGVÉNYEK (ÚJ) <<<
+
+// Adatok mentése a Firebase Realtime Database-be
+async function saveProgress(seriesKey, videoIndex) {
+    const user = auth.currentUser;
+    if (!user) return; 
+    
+    // A Realtime Database path: progress/{uid}/{seriesKey}
+    const progressRef = ref(db, `progress/${user.uid}/${seriesKey}`); 
+    try {
+        await set(progressRef, videoIndex);
+        // console.log(`Progress saved: ${seriesKey} - index ${videoIndex}`);
+    } catch(error) {
+        console.error("Hiba a progress mentésekor:", error);
+    }
+}
+
+// Adatok betöltése a Firebase Realtime Database-ből
+async function loadProgress(seriesKey) {
+    const user = auth.currentUser;
+    if (!user) return 0; // Ha nincs bejelentkezve, kezdje az első résszel
+    
+    const dbRef = ref(db);
+    try {
+        const snapshot = await get(child(dbRef, `progress/${user.uid}/${seriesKey}`));
+        if (snapshot.exists()) {
+            return snapshot.val(); // Visszaadja a mentett indexet
+        } else {
+            return 0; // Visszaadja az első részt (index 0)
+        }
+    } catch(error) {
+        console.error("Hiba a progress betöltésekor:", error);
+        return 0; 
+    }
+}
+
 
 // Login
 loginForm.addEventListener("submit", async (e) => {
@@ -574,9 +635,11 @@ onAuthStateChanged(auth,(user)=>{
     if(user){
         loginContainer.style.display="none";
         appContainer.style.display="flex";
-        usernameDisplay.textContent=user.displayName||user.email;
-        profileName.textContent=user.displayName||user.email;
-        profileEmail.textContent=user.email;
+        // Felhasználónév vágása @ előtt, ha nincs displayName
+        const displayId = user.displayName || user.email.split('@')[0];
+        usernameDisplay.textContent = displayId;
+        profileName.textContent = displayId;
+        profileEmail.textContent = user.email;
         
         // Ellenőrizzük az animációkat a bejelentkezés után
         setTimeout(checkTitleOverflow, 500); 
@@ -588,35 +651,44 @@ onAuthStateChanged(auth,(user)=>{
     }
 });
 
-// Series card click
+// Series card click - FRISSÍTVE: async, await-tel hívja a loadSeries-t
 document.querySelectorAll('.series-card').forEach(card=>{
-    card.addEventListener('click',()=>{
+    card.addEventListener('click', async ()=>{
         const seriesKey=card.getAttribute('data-series');
-        loadSeries(seriesKey);
+        await loadSeries(seriesKey); // VÁRJUK MEG, MÍG A PROGRESS BETÖLT
         mainPage.style.display='none';
         seriesPage.style.display='flex';
     });
 });
 
-// Home click (Felső logó gomb)
+// Home click (Felső logó gomb) - FRISSÍTVE: kereső megjelenítése
 homeBtn.addEventListener('click', ()=>{
     seriesPage.style.display='none';
     mainPage.style.display='flex';
-    // FIX: Alaphelyzetbe állítás
-    document.querySelector('.video-container').innerHTML = '';
-    videoList.innerHTML = '';
+    
+    // >>> Visszaállítás a főoldalra <<<
+    searchBtn.style.display = 'flex'; // Kereső gomb újra megjelenítése
+    searchContainer.classList.remove('active');
     searchInput.value = '';
     document.querySelectorAll('.series-card').forEach(card => card.style.display = 'flex');
 
+    // FIX: Alaphelyzetbe állítás a főoldalra váltáskor
+    document.querySelector('.video-container').innerHTML = '';
+    videoList.innerHTML = '';
+    
     // Ellenőrizzük az animációkat
     setTimeout(checkTitleOverflow, 100);
 });
 
-// Vissza gomb funkció (ÚJ)
+// Vissza gomb funkció (ÚJ) - FRISSÍTVE: kereső megjelenítése
 backBtn.addEventListener('click', () => {
     // Vissza a főoldalra
     seriesPage.style.display = 'none';
     mainPage.style.display = 'flex';
+    
+    // >>> Visszaállítás a főoldalra <<<
+    searchBtn.style.display = 'flex'; // Kereső gomb újra megjelenítése
+    searchContainer.classList.remove('active');
     
     // Tisztítsuk ki az aktuális lejátszót és a videólistát
     document.querySelector('.video-container').innerHTML = '';
@@ -657,40 +729,52 @@ function updatePlayer(src, type){
     videoContainer.appendChild(iframe);
 }
 
-// Load series
-function loadSeries(seriesKey){
+// Load series - FRISSÍTVE: Progress betöltés és kereső elrejtés
+async function loadSeries(seriesKey){ // <<< MEGJEGYZÉS: ASYNC kell
     const series=seriesData[seriesKey];
     if (!series) {
         console.error(`Sorozat nem található ezzel a kulccsal: ${seriesKey}`);
         return;
     }
 
+    // 1. Kereső elrejtése a sorozatoldalon
+    searchContainer.classList.remove('active'); // Bezárja, ha nyitva volt
+    searchBtn.style.display = 'none'; // Elrejti a kereső gombot
+    
     seriesTitle.textContent=series.title;
     videoList.innerHTML="";
     
-    // Alapértelmezett lejátszás az első résszel
+    // >>> 2. Progress betöltése <<<
+    const lastWatchedIndex = await loadProgress(seriesKey);
+    const initialIndex = Math.min(lastWatchedIndex, series.videos.length - 1); // Ellenőrzés
+    
+    // 3. Alapértelmezett lejátszás a mentett résszel
     if (series.videos.length > 0) {
-        updatePlayer(series.videos[0].src, series.videos[0].type);
+        updatePlayer(series.videos[initialIndex].src, series.videos[initialIndex].type);
     }
 
     series.videos.forEach((vid,index)=>{
         const card=document.createElement('div');
         card.classList.add('video-card');
-        if(index===0) card.classList.add('active');
-        card.textContent=vid.title;
         
-        // Elmentjük a forrást és típust a kártyába
+        // 4. Aktiváljuk a mentett indexű kártyát
+        if(index === initialIndex) card.classList.add('active'); 
+        
+        card.textContent=vid.title;
         card.setAttribute('data-src',vid.src);
         card.setAttribute('data-type',vid.type);
         
         videoList.appendChild(card);
         
         card.addEventListener('click',()=>{
-            // Lejátszó frissítése a kártya adataival
-            updatePlayer(vid.src, vid.type); 
+            // Lejátszó frissítése
+            updatePlayer(vid.src, vid.type);
             
             document.querySelectorAll('.video-card').forEach(c=>c.classList.remove('active'));
             card.classList.add('active');
+            
+            // >>> 5. Progress mentése kattintáskor <<<
+            saveProgress(seriesKey, index); 
         });
     });
 }
@@ -755,7 +839,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     setTimeout(checkTitleOverflow, 500); 
 });
 
-// 🔒 DevTools és mentés tiltás
+// 🔒 DevTools és mentés tiltás (Ahogy korábban javasoltam, ezt érdemes törölni, de meghagyom, ha ragaszkodik hozzá.)
 document.addEventListener('keydown', function(e) {
     if (e.key === "F12") e.preventDefault();
     if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "C")) e.preventDefault();
