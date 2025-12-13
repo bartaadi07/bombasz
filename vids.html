@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="hu">
 <head>
 <meta charset="UTF-8">
@@ -345,6 +345,130 @@ header h1 { margin:0; font-size:1.5rem; cursor:pointer; user-select:none; }
     .series-title { font-size: 0.8rem; }
     #login-container { padding: 30px 20px; }
 }
+/* MODERN MP4 PLAYER */
+.custom-player {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.custom-controls {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0));
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.custom-player:hover .custom-controls {
+    opacity: 1;
+}
+
+.control-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.progress-container {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #ff0000;
+    transition: width 0.1s linear;
+}
+.fullscreen-btn {
+    margin-left: 8px;
+}
+
+.custom-player:fullscreen {
+    border-radius: 0;
+}
+
+.custom-player:-webkit-full-screen {
+    border-radius: 0;
+}
+.control-btn {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: #fff;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.control-btn:hover {
+    background: #ff0000;
+    transform: scale(1.1);
+}
+
+.control-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: white;
+}
+.volume-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.volume-icon {
+    font-size: 16px;
+    color: white;
+    cursor: pointer;
+}
+
+.volume-slider {
+    width: 80px;
+    height: 4px;
+    appearance: none;
+    background: rgba(255,255,255,0.3);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ff0000;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ff0000;
+    border: none;
+}
+
 </style>
 </head>
 <body>
@@ -473,18 +597,18 @@ const seriesData = {
     "chainsaw-series": { 
         title:"Chainsaw Man", 
         videos:[
-            {title:"01. rész", src:"//embed.indavideo.hu/player/video/a8ecee9a07", type: 'indavideo'},
-            {title:"02. rész", src:"//embed.indavideo.hu/player/video/7becf36ad0", type: 'indavideo'},
-            {title:"03. rész", src:"//embed.indavideo.hu/player/video/0ec60e585b", type: 'indavideo'},
-            {title:"04. rész", src:"//embed.indavideo.hu/player/video/a94c366130", type: 'indavideo'},
-            {title:"05. rész", src:"//embed.indavideo.hu/player/video/ab93ec9fa4", type: 'indavideo'},
-            {title:"06. rész", src:"//embed.indavideo.hu/player/video/948404f619", type: 'indavideo'},
-            {title:"07. rész", src:"//embed.indavideo.hu/player/video/dae3d02660", type: 'indavideo'},
-            {title:"08. rész", src:"//embed.indavideo.hu/player/video/8a78588a9a", type: 'indavideo'},
-            {title:"09. rész", src:"//embed.indavideo.hu/player/video/5e36ee5bdb", type: 'indavideo'},
-            {title:"10. rész", src:"//embed.indavideo.hu/player/video/29844a7dfd", type: 'indavideo'},
-            {title:"11. rész", src:"//embed.indavideo.hu/player/video/4966f9bc28", type: 'indavideo'},
-            {title:"12. rész", src:"//embed.indavideo.hu/player/video/6151385752", type: 'indavideo'}
+            {title:"01. rész", src:"https://video8.videa.hu/static/1080p/8.2115862.1265416.1.13.1.1?md5=bCDKF88nVHbJBfFMlcFQfw&expires=1765688642", type: 'mp4'},
+            {title:"02. rész", src:"https://video10.videa.hu/static/1080p/8.2122583.1265416.1.13.1.1?md5=X_4u0lei-pWbkid_c-2paw&expires=1765689151", type: 'mp4'},
+            {title:"03. rész", src:"https://video11.videa.hu/static/1080p/8.2128854.1265416.1.13.1.1?md5=VJECliXUihMjpUY9-SsqFg&expires=1765689178", type: 'mp4'},
+            {title:"04. rész", src:"https://video4.videa.hu/static/1080p/8.2172886.1265416.1.13.1.1?md5=jYWBjtStawK7QWKUaSUScA&expires=1765689208", type: 'mp4'},
+            {title:"05. rész", src:"https://video2.videa.hu/static/1080p/8.2180532.1265416.1.13.1.1?md5=2pXILG45FxMnos7f4Bjosg&expires=1765689237", type: 'mp4'},
+            {title:"06. rész", src:"https://video6.videa.hu/static/1080p/8.2186899.1265416.1.13.1.1?md5=1B07QjbQNjsD211uBhjplw&expires=1765689265", type: 'mp4'},
+            {title:"07. rész", src:"https://video9.videa.hu/static/1080p/8.2191775.1265416.1.13.1.1?md5=GOOPcgVxnxK8RlRj9syALw&expires=1765689284", type: 'mp4'},
+            {title:"08. rész", src:"https://video13.videa.hu/static/1080p/8.2198591.1265416.1.13.1.1?md5=HLBeDg7yZTJncgmCaQl2Gw&expires=1765689299", type: 'mp4'},
+            {title:"09. rész", src:"https://video7.videa.hu/static/1080p/8.2203161.1265416.1.13.1.1?md5=pTp_ihD84ArxCFVHK18UyA&expires=1765689315", type: 'mp4'},
+            {title:"10. rész", src:"https://video5.videa.hu/static/1080p/8.2218117.1265416.1.13.1.1?md5=S65mx2Bnm4k3y01snPn0ug&expires=1765689331", type: 'mp4'},
+            {title:"11. rész", src:"https://video5.videa.hu/static/1080p/8.2219917.1265416.1.13.1.1?md5=NJxU-burJIt4zOfRxSMYjg&expires=1765689352", type: 'mp4'},
+            {title:"12. rész", src:"https://video11.videa.hu/static/1080p/8.2231170.1265416.1.13.1.1?md5=WQsTtJbsswRtz-EyqgtePw&expires=1765689369", type: 'mp4'}
         ] 
     },
     
@@ -536,7 +660,7 @@ const seriesData = {
     "record-of-ragnarok-s3": { 
         title:"Record of Ragnarok: Season 3", 
         videos:[
-            {title:"01. rész", src:"//videa.hu/player?v=fg5MMPRNCX0ArOrR", type: 'videa'},
+            {title:"01. rész", src:"https://video6.videa.hu/static/w1080p/8.3535298.2614802.1.13.1.1?md5=DPQIWsWwBYLbqXifZuaUHA&expires=1765691303", type: 'mp4'},
             {title:"02. rész", src:"//videa.hu/player?v=ZDf2cP8SmAXsEKrU", type: 'videa'},
             {title:"03. rész", src:"//videa.hu/player?v=CHUtrQYTZQgl6T2j", type: 'videa'},
             {title:"04. rész", src:"//videa.hu/player?v=QogXviAtwW63DrJE", type: 'videa'},
@@ -700,34 +824,54 @@ backBtn.addEventListener('click', () => {
 
 
 // Segédfüggvény a lejátszó dinamikus beállításához
-function updatePlayer(src, type){
+function updatePlayer(src, type) {
     const videoContainer = document.querySelector('.video-container');
-    
-    // Tisztítás
-    videoContainer.innerHTML = ''; 
+    videoContainer.innerHTML = '';
 
+    if (type === 'mp4') {
+        const wrapper = document.createElement('div');
+wrapper.className = 'custom-player';
+
+        wrapper.style.position = 'relative';
+        wrapper.style.width = '100%';
+        wrapper.style.height = '100%';
+
+        const video = document.createElement('video');
+        video.src = src;
+        video.autoplay = true;
+        video.playsInline = true;
+
+        // ❌ letöltés tiltása
+        video.controls = false;
+        video.controlsList = 'nodownload noplaybackrate';
+        video.disablePictureInPicture = true;
+
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.borderRadius = '12px';
+        video.style.background = '#000';
+
+        // ❌ jobb klikk tiltása
+        video.addEventListener('contextmenu', e => e.preventDefault());
+
+        wrapper.appendChild(video);
+        wrapper.appendChild(createControls(video));
+
+        videoContainer.appendChild(wrapper);
+        return;
+    }
+
+    // iframe (videa / indavideo)
     const iframe = document.createElement('iframe');
-    // Minden lejátszó közös attribútumai
+    iframe.src = src;
     iframe.allowFullscreen = true;
-    iframe.scrolling = 'no';
+    iframe.frameBorder = '0';
     iframe.width = '100%';
     iframe.height = '100%';
-    iframe.src = src;
-    iframe.frameBorder = '0';
-    
-    // Szolgáltató-specifikus attribútumok
-    if (type === 'indavideo') {
-        iframe.title = 'indavideo video player';
-        iframe.classList.add('indavideo-player'); 
-        iframe.type = 'text/html';
-    } else if (type === 'videa') { 
-        iframe.id = 'videaPlayer';
-        iframe.webkitallowfullscreen = true; 
-        iframe.mozallowfullscreen = true;
-    }
-    
     videoContainer.appendChild(iframe);
 }
+
+
 
 // Load series - FRISSÍTVE: Progress betöltés és kereső elrejtés
 async function loadSeries(seriesKey){ // <<< MEGJEGYZÉS: ASYNC kell
@@ -845,6 +989,124 @@ document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "C")) e.preventDefault();
     if (e.ctrlKey && (e.key === "u" || e.key === "s")) e.preventDefault();
 });
+function createControls(video) {
+    const controls = document.createElement('div');
+    controls.className = 'custom-controls';
+
+    // ▶️ / ⏸ ikonok
+    const playIcon = `
+        <svg viewBox="0 0 24 24">
+            <polygon points="6,4 20,12 6,20"></polygon>
+        </svg>`;
+    const pauseIcon = `
+        <svg viewBox="0 0 24 24">
+            <rect x="6" y="4" width="4" height="16"></rect>
+            <rect x="14" y="4" width="4" height="16"></rect>
+        </svg>`;
+
+    const playBtn = document.createElement('button');
+    playBtn.className = 'control-btn';
+    playBtn.innerHTML = playIcon;
+
+    const togglePlay = () => video.paused ? video.play() : video.pause();
+    playBtn.onclick = togglePlay;
+
+    video.addEventListener('play', () => playBtn.innerHTML = pauseIcon);
+    video.addEventListener('pause', () => playBtn.innerHTML = playIcon);
+
+    // 🖱️ katt / ⌨️ space
+    video.addEventListener('click', togglePlay);
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && document.contains(video)) {
+            e.preventDefault();
+            togglePlay();
+        }
+    });
+
+    // 🔴 progress
+    const progressContainer = document.createElement('div');
+    progressContainer.className = 'progress-container';
+
+    const progressBar = document.createElement('div');
+    progressBar.className = 'progress-bar';
+
+    progressContainer.appendChild(progressBar);
+
+    video.addEventListener('timeupdate', () => {
+        progressBar.style.width =
+            ((video.currentTime / video.duration) * 100 || 0) + '%';
+    });
+
+    progressContainer.addEventListener('click', (e) => {
+        const rect = progressContainer.getBoundingClientRect();
+        video.currentTime =
+            ((e.clientX - rect.left) / rect.width) * video.duration;
+    });
+
+    // 🔊 HANGERŐ
+    const volumeContainer = document.createElement('div');
+    volumeContainer.className = 'volume-container';
+
+    const volumeIcon = document.createElement('span');
+    volumeIcon.className = 'volume-icon';
+    volumeIcon.textContent = '🔊';
+
+    const volumeSlider = document.createElement('input');
+    volumeSlider.type = 'range';
+    volumeSlider.min = 0;
+    volumeSlider.max = 1;
+    volumeSlider.step = 0.01;
+    volumeSlider.value = video.volume;
+
+    volumeSlider.className = 'volume-slider';
+
+    volumeSlider.addEventListener('input', () => {
+        video.volume = volumeSlider.value;
+        volumeIcon.textContent =
+            video.volume == 0 ? '🔇' : video.volume < 0.5 ? '🔉' : '🔊';
+    });
+
+    volumeIcon.onclick = () => {
+        if (video.volume > 0) {
+            video.dataset.lastVolume = video.volume;
+            video.volume = 0;
+        } else {
+            video.volume = video.dataset.lastVolume || 0.7;
+        }
+        volumeSlider.value = video.volume;
+        volumeIcon.textContent = video.volume === 0 ? '🔇' : '🔊';
+    };
+
+    volumeContainer.appendChild(volumeIcon);
+    volumeContainer.appendChild(volumeSlider);
+
+    // ⛶ fullscreen
+    const fullscreenBtn = document.createElement('button');
+    fullscreenBtn.className = 'control-btn';
+    fullscreenBtn.innerHTML = '⛶';
+
+    fullscreenBtn.onclick = () => {
+        const player = video.parentElement;
+        !document.fullscreenElement
+            ? player.requestFullscreen()
+            : document.exitFullscreen();
+    };
+
+    video.addEventListener('dblclick', fullscreenBtn.onclick);
+
+    controls.appendChild(playBtn);
+    controls.appendChild(progressContainer);
+    controls.appendChild(volumeContainer);
+    controls.appendChild(fullscreenBtn);
+
+    return controls;
+}
+
+
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('dragstart', e => e.preventDefault());
+document.addEventListener('enterpictureinpicture', e => e.preventDefault());
+
 </script>
 </body>
 </html>
