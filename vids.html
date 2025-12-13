@@ -468,7 +468,15 @@ header h1 { margin:0; font-size:1.5rem; cursor:pointer; user-select:none; }
     background: #ff0000;
     border: none;
 }
+.custom-controls {
+    /* ... */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
 
+.custom-player:hover .custom-controls {
+    opacity: 1;
+}
 </style>
 </head>
 <body>
@@ -1000,123 +1008,180 @@ document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && (e.key === "u" || e.key === "s")) e.preventDefault();
 });
 function createControls(video) {
-    const controls = document.createElement('div');
-    controls.className = 'custom-controls';
-
-    // ▶️ / ⏸ ikonok
-// A JAVÍTOTT RÉSZ:
-
-const playIcon = `
-    <svg viewBox="0 0 24 24">
-        <path d="M8 5v14l11-7z"/>
-    </svg>`;
+    const controls = document.createElement('div');
+    controls.className = 'custom-controls';
     
-const pauseIcon = `
-    <svg viewBox="0 0 24 24">
-        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-    </svg>`;
-    const playBtn = document.createElement('button');
-    playBtn.className = 'control-btn';
-    playBtn.innerHTML = playIcon;
+    // Változó az időzítőnek
+    let hideTimer; 
 
-    const togglePlay = () => video.paused ? video.play() : video.pause();
-    playBtn.onclick = togglePlay;
+    // Vezérlők elrejtése/megjelenítése
+    const showControls = () => {
+        controls.style.opacity = 1;
+        if (!video.paused) {
+            clearTimeout(hideTimer);
+            // Elrejtés 3 másodperc inaktivitás után
+            hideTimer = setTimeout(() => {
+                controls.style.opacity = 0;
+            }, 3000);
+        }
+    };
 
-    video.addEventListener('play', () => playBtn.innerHTML = pauseIcon);
-    video.addEventListener('pause', () => playBtn.innerHTML = playIcon);
+    const hideControls = () => {
+        if (!video.paused) {
+             controls.style.opacity = 0;
+        }
+    };
 
-    // 🖱️ katt / ⌨️ space
-    video.addEventListener('click', togglePlay);
-    document.addEventListener('keydown', (e) => {
-        if (e.code === 'Space' && document.contains(video)) {
-            e.preventDefault();
-            togglePlay();
-        }
-    });
+    // ▶️ / ⏸ ikonok (Javított, középre igazított SVG-k)
+    const playIcon = `
+        <svg viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+        </svg>`;
+        
+    const pauseIcon = `
+        <svg viewBox="0 0 24 24">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+        </svg>`;
+        
+    const playBtn = document.createElement('button');
+    playBtn.className = 'control-btn';
+    playBtn.innerHTML = playIcon;
 
-    // 🔴 progress
-    const progressContainer = document.createElement('div');
-    progressContainer.className = 'progress-container';
+    const togglePlay = () => video.paused ? video.play() : video.pause();
+    
+    playBtn.onclick = () => {
+        togglePlay();
+        showControls(); // Kattintásra mutassa meg
+    };
 
-    const progressBar = document.createElement('div');
-    progressBar.className = 'progress-bar';
+    video.addEventListener('play', () => { 
+        playBtn.innerHTML = pauseIcon;
+        showControls(); // Elrejtési időzítő elindítása
+    });
+    
+    video.addEventListener('pause', () => { 
+        playBtn.innerHTML = playIcon;
+        clearTimeout(hideTimer);
+        controls.style.opacity = 1; // Szüneteltetéskor mutassa meg
+    });
 
-    progressContainer.appendChild(progressBar);
+    // Egérmozgás/Érintés/Fókusz események kezelése
+    const playerWrapper = video.parentElement;
+    playerWrapper.addEventListener('mousemove', showControls);
+    playerWrapper.addEventListener('touchstart', showControls);
+    playerWrapper.addEventListener('touchmove', showControls);
+    
+    // Kezdeti állapot: ha a videó elindul, a vezérlők tűnjenek el.
+    video.onloadedmetadata = () => {
+        if (!video.paused) {
+            hideControls();
+        } else {
+            showControls();
+        }
+    };
 
-    video.addEventListener('timeupdate', () => {
-        progressBar.style.width =
-            ((video.currentTime / video.duration) * 100 || 0) + '%';
-    });
 
-    progressContainer.addEventListener('click', (e) => {
-        const rect = progressContainer.getBoundingClientRect();
-        video.currentTime =
-            ((e.clientX - rect.left) / rect.width) * video.duration;
-    });
+    // 🖱️ katt / ⌨️ space
+    video.addEventListener('click', togglePlay);
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && document.contains(video)) {
+            e.preventDefault();
+            togglePlay();
+            showControls();
+        }
+    });
 
-    // 🔊 HANGERŐ
-    const volumeContainer = document.createElement('div');
-    volumeContainer.className = 'volume-container';
+    // 🔴 progress (többi kód nem változik)
+    const progressContainer = document.createElement('div');
+    progressContainer.className = 'progress-container';
 
-    const volumeIcon = document.createElement('span');
-    volumeIcon.className = 'volume-icon';
-    volumeIcon.textContent = '🔊';
+    const progressBar = document.createElement('div');
+    progressBar.className = 'progress-bar';
 
-    const volumeSlider = document.createElement('input');
-    volumeSlider.type = 'range';
-    volumeSlider.min = 0;
-    volumeSlider.max = 1;
-    volumeSlider.step = 0.01;
-    volumeSlider.value = video.volume;
+    progressContainer.appendChild(progressBar);
 
-    volumeSlider.className = 'volume-slider';
+    video.addEventListener('timeupdate', () => {
+        progressBar.style.width =
+            ((video.currentTime / video.duration) * 100 || 0) + '%';
+    });
 
-    volumeSlider.addEventListener('input', () => {
-        video.volume = volumeSlider.value;
-        volumeIcon.textContent =
-            video.volume == 0 ? '🔇' : video.volume < 0.5 ? '🔉' : '🔊';
-    });
+    progressContainer.addEventListener('click', (e) => {
+        const rect = progressContainer.getBoundingClientRect();
+        video.currentTime =
+            ((e.clientX - rect.left) / rect.width) * video.duration;
+        showControls(); // Kattintásra mutassa meg
+    });
 
-    volumeIcon.onclick = () => {
-        if (video.volume > 0) {
-            video.dataset.lastVolume = video.volume;
-            video.volume = 0;
-        } else {
-            video.volume = video.dataset.lastVolume || 0.7;
-        }
-        volumeSlider.value = video.volume;
-        volumeIcon.textContent = video.volume === 0 ? '🔇' : '🔊';
-    };
+    // 🔊 HANGERŐ
+    const volumeContainer = document.createElement('div');
+    volumeContainer.className = 'volume-container';
 
-    volumeContainer.appendChild(volumeIcon);
-    volumeContainer.appendChild(volumeSlider);
+    const volumeIcon = document.createElement('span');
+    volumeIcon.className = 'volume-icon';
+    volumeIcon.textContent = '🔊';
 
-    // ⛶ fullscreen
-    const fullscreenBtn = document.createElement('button');
-    fullscreenBtn.className = 'control-btn';
-    fullscreenBtn.innerHTML = '⛶';
+    const volumeSlider = document.createElement('input');
+    volumeSlider.type = 'range';
+    volumeSlider.min = 0;
+    volumeSlider.max = 1;
+    volumeSlider.step = 0.01;
+    volumeSlider.value = video.volume;
 
-    fullscreenBtn.onclick = () => {
-        const player = video.parentElement;
-        !document.fullscreenElement
-            ? player.requestFullscreen()
-            : document.exitFullscreen();
-    };
+    volumeSlider.className = 'volume-slider';
 
-    video.addEventListener('dblclick', fullscreenBtn.onclick);
+    volumeSlider.addEventListener('input', () => {
+        video.volume = volumeSlider.value;
+        volumeIcon.textContent =
+            video.volume == 0 ? '🔇' : video.volume < 0.5 ? '🔉' : '🔊';
+        showControls(); // Mozgatásra mutassa meg
+    });
 
-    controls.appendChild(playBtn);
-    controls.appendChild(progressContainer);
-    controls.appendChild(volumeContainer);
-    controls.appendChild(fullscreenBtn);
+    volumeIcon.onclick = () => {
+        if (video.volume > 0) {
+            video.dataset.lastVolume = video.volume;
+            video.volume = 0;
+        } else {
+            video.volume = video.dataset.lastVolume || 0.7;
+        }
+        volumeSlider.value = video.volume;
+        volumeIcon.textContent = video.volume === 0 ? '🔇' : '🔊';
+        showControls(); // Kattintásra mutassa meg
+    };
 
-    return controls;
+    volumeContainer.appendChild(volumeIcon);
+    volumeContainer.appendChild(volumeSlider);
+
+    // ⛶ fullscreen
+    const fullscreenBtn = document.createElement('button');
+    fullscreenBtn.className = 'control-btn';
+    fullscreenBtn.innerHTML = '⛶';
+
+    fullscreenBtn.onclick = () => {
+        const player = video.parentElement;
+        !document.fullscreenElement
+            ? player.requestFullscreen()
+            : document.exitFullscreen();
+        showControls(); // Kattintásra mutassa meg
+    };
+
+    video.addEventListener('dblclick', () => {
+        fullscreenBtn.onclick();
+        showControls();
+    });
+
+    controls.appendChild(playBtn);
+    controls.appendChild(progressContainer);
+    controls.appendChild(volumeContainer);
+    controls.appendChild(fullscreenBtn);
+
+    return controls;
 }
 
 
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('dragstart', e => e.preventDefault());
 document.addEventListener('enterpictureinpicture', e => e.preventDefault());
+
 
 </script>
 </body>
