@@ -1,894 +1,1026 @@
 <!DOCTYPE html>
 <html lang="hu">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bombasz Vids</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
- <link rel="icon" type="image/x-icon" href="/favicon.ico?v=1.1">
-<style>
-    /* PROGRESS BAR STÍLUSOK */
-.progress-container {
-    width: 100%;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-    margin-top: 5px;
-    overflow: hidden; /* Fontos, hogy a sáv lekerekített legyen */
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bombasz Vids</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+    <style>
+        /* PROGRESS BAR STÍLUSOK (megtartva a vizuális egységesség érdekében) */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
 
-.progress-bar {
-    height: 100%;
-    background: #ff0000; /* Vörös akcentus szín */
-    width: 0; /* Alapértelmezett, amit JS állít be */
-    transition: width 0.3s ease-out; /* Animáció a sáv növekedéséhez */
-    border-radius: 3px;
-}
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: #111;
-    color: #fff;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow-x: hidden;
-}
+        .progress-bar {
+            height: 100%;
+            background: #ff0000;
+            width: 0;
+            transition: width 0.3s ease-out;
+            border-radius: 3px;
+        }
 
-/* LOGIN FORM */
-#login-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(16px);
-    border-radius: 16px;
-    padding: 40px;
-    width: 90%; 
-    max-width: 380px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-}
-#login-container h2 { text-align:center; font-weight:700; font-size:1.8rem; margin-bottom:10px; }
-#login-container label { display:flex; flex-direction:column; font-size:0.9rem; }
-#login-container input {
-    padding:10px;
-    border-radius:8px;
-    border:none;
-    background: rgba(255,255,255,0.1);
-    color:#fff;
-    margin-top:6px;
-    transition: all 0.3s;
-}
-#login-container input:focus { background: rgba(255,255,255,0.2); outline:none; }
-.btn { padding:10px 15px; border-radius:20px; border:none; font-weight:600; cursor:pointer; transition: all 0.3s; }
-.btn.fill { background:#ff0000; color:#fff; }
-.btn.fill:hover { background:#cc0000; transform: scale(1.05); }
-.form-msg { font-size:0.85rem; min-height:20px; }
-.form-msg.error { color:#ff4c4c; }
-.form-msg.success { color:#4cff7f; }
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #111;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
 
-/* APP */
-#app { display:none; flex-direction:column; height:100vh; width:100vw; }
-header {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:15px 30px; 
-    background:#111;
-    box-shadow:0 4px 20px rgba(0,0,0,0.5);
-    position:relative;
-}
-header h1 { margin:0; font-size:1.5rem; cursor:pointer; user-select:none; } 
-#profile-btn { background:none; border:none; color:#fff; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; position:relative; }
-#profile-dropdown {
-    display: none;
-    position: absolute;
-    right: 30px;
-    top: 50px;
-    background: #222;
-    border-radius: 12px;
-    padding: 15px;
-    width: max-content;
-    min-width: 150px;
-    max-width: 90vw;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.6);
-    z-index: 100;
-}
-#profile-dropdown p span {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-#logout-btn { background:#ff0000; border:none; color:#fff; padding:8px; border-radius:50%; cursor:pointer; transition:all 0.3s; }
-#logout-btn:hover { background:#cc0000; transform:scale(1.1); }
+        /* LOGIN FORM */
+        #login-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            padding: 40px;
+            width: 90%;
+            max-width: 380px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        }
 
-/* Search */
-#search-container { position:relative; }
-#search-input {
-    position:absolute;
-    right:0;
-    top:-5px;
-    width:0;
-    padding:5px 10px;
-    padding-right: 35px; /* Hely az X gombnak */
-    border:none;
-    border-radius:8px;
-    transition: all 0.3s;
-    opacity:0;
-    background: rgba(255,255,255,0.1);
-    color:#fff;
-}
-#search-container.active #search-input { width:200px; opacity:1; }
+        #login-container h2 {
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
 
-/* Keresés Törlés Gomb Stílus */
-#search-clear-btn {
-    position: absolute;
-    right: 5px; 
-    top: 0;
-    bottom: 0;
-    margin: auto 0;
-    background: transparent;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    font-size: 1.2rem;
-    line-height: 1;
-    width: 30px; 
-    height: 30px; 
-    display: none; 
-    transition: all 0.3s;
-    opacity: 0;
-    pointer-events: none; 
-    z-index: 10;
-    padding: 0;
-}
-/* Aktiváljuk a gomb láthatóságát a konténer aktiválásakor */
-#search-container.active #search-clear-btn {
-    opacity: 1;
-    pointer-events: auto; 
-}
+        #login-container label {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9rem;
+        }
 
+        #login-container input {
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            margin-top: 6px;
+            transition: all 0.3s;
+        }
 
-/* MAIN PAGE */
-.main-page {
-    display:flex;
-    flex-wrap:wrap;
-    justify-content: flex-start;
-    align-items: flex-start; 
-    gap: 20px; 
-    padding: 40px; 
-    flex: 1;
-    overflow-y: auto;
-    width: 100%; 
-    box-sizing: border-box; 
-}
-.series-card {
-    width:180px; 
-    cursor:pointer;
-    transition:all 0.2s;
-    text-align:center;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    box-sizing: border-box; 
-    padding-bottom: 5px; 
-}
-.series-card:hover { transform:scale(1.05); }
-.series-card img {
-    width:100%;
-    aspect-ratio: 2/3;
-    object-fit:cover;
-    display:block;
-}
-.series-title {
-    width:100%;
-    height: 30px; 
-    overflow:hidden;
-    white-space:nowrap;
-    box-sizing:border-box;
-    text-align:center;
-    margin-top:5px;
-    font-size:0.9rem;
-    position: relative;
-    line-height: 1.2;
-}
-.series-title span {
-    display:inline-block;
-    padding-left: 0; 
-    animation: none; 
-    transform: translateX(0%); 
-}
-/* Csak azoknál a címeknél legyen animáció, ahol szükséges */
-.series-title.scrolling-title span {
-    padding-left:100%;
-    animation: scrollText 10s linear infinite;
-}
-@keyframes scrollText {
-    0% { transform: translateX(0%); }
-    100% { transform: translateX(-100%); }
-}
+        #login-container input:focus {
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+        }
 
-/* SERIES PAGE */
-.series-page {
-    display:none;
-    flex:1;
-    height:100%;
-    flex-direction: row; 
-}
-.sidebar {
-    width:240px;
-    background:#222;
-    padding:20px;
-    box-sizing:border-box;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    overflow-y:auto;
-    order: 0;
-}
+        .btn {
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
 
-/* Scrollbar elrejtése a görgetés funkció megtartásával */
-/* Chrome, Safari, Opera (Webkit alapú böngészők) */
-.sidebar::-webkit-scrollbar {
-    display: none;
-    width: 0 !important; 
-}
-/* Firefox */
-.sidebar {
-    -ms-overflow-style: none; 
-    scrollbar-width: none; 
-}
+        .btn.fill {
+            background: #ff0000;
+            color: #fff;
+        }
 
-.sidebar h2 { margin:0 0 10px 0; text-align:center; font-size:20px; }
-.video-card { background:#333; border-radius:8px; cursor:pointer; transition:all 0.2s; border:2px solid transparent; padding:10px; text-align:center; font-size:14px; }
-.video-card.active { border-color:#ff0000; }
-.video-card:hover { transform:scale(1.03); border-color:#ff4c4c; }
+        .btn.fill:hover {
+            background: #cc0000;
+            transform: scale(1.05);
+        }
 
-.video-container {
-    flex:1;
-    display:flex;
-    padding:20px;
-    box-sizing:border-box;
-    order: 1;
-}
+        .form-msg {
+            font-size: 0.85rem;
+            min-height: 20px;
+        }
 
-.video-container iframe { 
-    width:100%; 
-    height:100%; 
-    border:0; 
-    border-radius:12px; 
-}
+        .form-msg.error {
+            color: #ff4c4c;
+        }
 
-/* Indavideo lejátszó kicsit kisebb és középen van */
-.video-container iframe.indavideo-player {
-    width: 95%; 
-    height: 95%; 
-    margin: auto; 
-    display: block; 
-}
+        .form-msg.success {
+            color: #4cff7f;
+        }
 
-/* VISSZA GOMB STÍLUS */
-.back-button { 
-    background:#ff0000; 
-    color:#fff; 
-    border:none; 
-    padding:10px 15px; 
-    border-radius:8px; 
-    cursor:pointer; 
-    margin-bottom:15px; 
-    transition:all 0.3s; 
-    display: flex; /* Flex elrendezés az ikonhoz és szöveghez */
-    align-items: center;
-    justify-content: center;
-    gap: 8px; /* Távolság az ikon és a szöveg között */
-}
-.back-button:hover { transform:scale(1.05); }
+        /* APP */
+        #app {
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+        }
 
-/* ************************************** */
-/* MOBIL RESZPONZIVITÁS */
-/* ************************************** */
-@media(max-width:768px){
-    /* HEADER */
-    header { padding: 10px 15px; } 
-    header h1 { font-size: 1.3rem; }
-    #profile-btn { font-size:0.9rem; }
-    #profile-btn span { display: none; }
-    #profile-dropdown { top: 42px; padding: 10px; right: 15px; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #111;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
 
-    /* SEARCH */
-    #search-container.active #search-input { 
-        width:140px; 
-        padding-right: 35px; 
-    } 
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
 
-    /* MAIN PAGE */
-    .main-page { 
-        padding: 20px; 
-        gap: 15px;
-    }
-    .series-card { 
-        width: 140px; 
-    }
-    .series-title { font-size: 0.85rem; }
+        #profile-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+        }
+
+        #profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 30px;
+            top: 50px;
+            background: #222;
+            border-radius: 12px;
+            padding: 15px;
+            width: max-content;
+            min-width: 150px;
+            max-width: 90vw;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+            z-index: 100;
+        }
+
+        #profile-dropdown p span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #logout-btn {
+            background: #ff0000;
+            border: none;
+            color: #fff;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        #logout-btn:hover {
+            background: #cc0000;
+            transform: scale(1.1);
+        }
+
+        /* Search */
+        #search-container {
+            position: relative;
+        }
+
+        #search-input {
+            position: absolute;
+            right: 0;
+            top: -5px;
+            width: 0;
+            padding: 5px 10px;
+            padding-right: 35px;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+            opacity: 0;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        #search-container.active #search-input {
+            width: 200px;
+            opacity: 1;
+        }
+
+        /* Keresés Törlés Gomb Stílus */
+        #search-clear-btn {
+            position: absolute;
+            right: 5px;
+            top: 0;
+            bottom: 0;
+            margin: auto 0;
+            background: transparent;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1.2rem;
+            line-height: 1;
+            width: 30px;
+            height: 30px;
+            display: none;
+            transition: all 0.3s;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+            padding: 0;
+        }
+
+        /* Aktiváljuk a gomb láthatóságát a konténer aktiválásakor */
+        #search-container.active #search-clear-btn {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
 
-    /* SERIES PAGE (MOBIL) */
-    .series-page {
-        flex-direction: column; 
-        overflow-y: auto; 
-    }
-    .sidebar {
-        width: 100%; 
-        height: auto;
-        max-height: 250px; 
-        padding: 15px;
-        order: 1; 
-    }
-    .video-container {
-        height: 220px; 
-        padding: 15px;
-        order: 0; 
-    }
-    .sidebar h2 { margin-bottom: 5px; font-size: 1.2rem; }
-    .video-card { font-size: 12px; padding: 8px; }
-    
-}
+        /* MAIN PAGE */
+        .main-page {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 40px;
+            flex: 1;
+            overflow-y: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
 
-/* Kisebb mobilok */
-@media(max-width:480px){
-    .series-card { 
-        width: 120px; 
-        margin: 0 auto; 
-    }
-    .series-title { font-size: 0.8rem; }
-    #login-container { padding: 30px 20px; }
-}
-</style>
+        .series-card {
+            width: 180px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            padding-bottom: 5px;
+        }
+
+        .series-card:hover {
+            transform: scale(1.05);
+        }
+
+        .series-card img {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            display: block;
+        }
+
+        .series-title {
+            width: 100%;
+            height: 30px;
+            overflow: hidden;
+            white-space: nowrap;
+            box-sizing: border-box;
+            text-align: center;
+            margin-top: 5px;
+            font-size: 0.9rem;
+            position: relative;
+            line-height: 1.2;
+        }
+
+        .series-title span {
+            display: inline-block;
+            padding-left: 0;
+            animation: none;
+            transform: translateX(0%);
+        }
+
+        /* Csak azoknál a címeknél legyen animáció, ahol szükséges */
+        .series-title.scrolling-title span {
+            padding-left: 100%;
+            animation: scrollText 10s linear infinite;
+        }
+
+        @keyframes scrollText {
+            0% {
+                transform: translateX(0%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* SERIES PAGE */
+        .series-page {
+            display: none;
+            flex: 1;
+            height: 100%;
+            flex-direction: row;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #222;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+            order: 0;
+        }
+
+        /* Scrollbar elrejtése a görgetés funkció megtartásával */
+        /* Chrome, Safari, Opera (Webkit alapú böngészők) */
+        .sidebar::-webkit-scrollbar {
+            display: none;
+            width: 0 !important;
+        }
+
+        /* Firefox */
+        .sidebar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .sidebar h2 {
+            margin: 0 0 10px 0;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .video-card {
+            background: #333;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .video-card.active {
+            border-color: #ff0000;
+        }
+
+        .video-card:hover {
+            transform: scale(1.03);
+            border-color: #ff4c4c;
+        }
+
+        .video-container {
+            flex: 1;
+            display: flex;
+            padding: 20px;
+            box-sizing: border-box;
+            order: 1;
+            /* A video iframe-ek elhelyezkedése */
+        }
+
+        /* A video-container most flex-t tartalmaz, hogy az iframe jól kitöltse a helyet */
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            border-radius: 12px;
+            /* Fontos: az iframe most közvetlenül a video-containerben van */
+        }
+
+        /* Indavideo lejátszó kicsit kisebb és középen van (megtartva a korábbi viselkedést) */
+        .video-container iframe.indavideo-player {
+            width: 95%;
+            height: 95%;
+            margin: auto;
+            display: block;
+        }
+
+        /* VISSZA GOMB STÍLUS */
+        .back-button {
+            background: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* ************************************** */
+        /* MOBIL RESZPONZIVITÁS */
+        /* ************************************** */
+        @media(max-width:768px) {
+
+            /* HEADER */
+            header {
+                padding: 10px 15px;
+            }
+
+            header h1 {
+                font-size: 1.3rem;
+            }
+
+            #profile-btn {
+                font-size: 0.9rem;
+            }
+
+            #profile-btn span {
+                display: none;
+            }
+
+            #profile-dropdown {
+                top: 42px;
+                padding: 10px;
+                right: 15px;
+            }
+
+            /* SEARCH */
+            #search-container.active #search-input {
+                width: 140px;
+                padding-right: 35px;
+            }
+
+            /* MAIN PAGE */
+            .main-page {
+                padding: 20px;
+                gap: 15px;
+            }
+
+            .series-card {
+                width: 140px;
+            }
+
+            .series-title {
+                font-size: 0.85rem;
+            }
+
+
+            /* SERIES PAGE (MOBIL) */
+            .series-page {
+                flex-direction: column;
+                overflow-y: auto;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 250px;
+                padding: 15px;
+                order: 1;
+            }
+
+            .video-container {
+                height: 220px;
+                padding: 15px;
+                order: 0;
+            }
+
+            .sidebar h2 {
+                margin-bottom: 5px;
+                font-size: 1.2rem;
+            }
+
+            .video-card {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+        }
+
+        /* Kisebb mobilok */
+        @media(max-width:480px) {
+            .series-card {
+                width: 120px;
+                margin: 0 auto;
+            }
+
+            .series-title {
+                font-size: 0.8rem;
+            }
+
+            #login-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<div id="login-container">
-    <h2>Belépés</h2>
-    <form id="login-form" novalidate>
-        <label>E-mail
-            <input type="email" id="loginEmail" required>
-        </label>
-        <label>Jelszó
-            <input type="password" id="loginPassword" minlength="6" required>
-        </label>
-        <button type="submit" class="btn fill">Belépés</button>
-        <p id="login-msg" class="form-msg" role="status" aria-live="polite"></p>
-    </form>
-</div>
+    <div id="login-container">
+        <h2>Belépés</h2>
+        <form id="login-form" novalidate>
+            <label>E-mail
+                <input type="email" id="loginEmail" required>
+            </label>
+            <label>Jelszó
+                <input type="password" id="loginPassword" minlength="6" required>
+            </label>
+            <button type="submit" class="btn fill">Belépés</button>
+            <p id="login-msg" class="form-msg" role="status" aria-live="polite"></p>
+        </form>
+    </div>
 
-<div id="app">
-<header>
-    <h1 id="home-btn">Bombasz Vids</h1>
-    <div style="display:flex; align-items:center; gap:10px; position:relative;">
-        <div id="search-container">
-            <input type="text" id="search-input" placeholder="Keresés...">
-            <button id="search-clear-btn" aria-label="Keresés törlése" style="display:none;">&times;</button>
+    <div id="app">
+        <header>
+            <h1 id="home-btn">Bombasz Vids</h1>
+            <div style="display:flex; align-items:center; gap:10px; position:relative;">
+                <div id="search-container">
+                    <input type="text" id="search-input" placeholder="Keresés...">
+                    <button id="search-clear-btn" aria-label="Keresés törlése" style="display:none;">&times;</button>
+                </div>
+                <button id="search-btn"
+                    style="background:none; border:none; cursor:pointer; color:#fff; display:flex; align-items:center; justify-content:center; width:32px; height:32px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        width="20" height="20">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
+                <button id="profile-btn"><i class="fa-solid fa-user"></i> <span id="username-display"></span></button>
+                <div id="profile-dropdown">
+                    <p><strong>Felhasználónév:</strong> <span id="profile-name"></span></p>
+                    <p><strong>E-mail:</strong> <span id="profile-email"></span></p>
+                    <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i></button>
+                </div>
+            </div>
+        </header>
+
+
+        <div class="main-page" id="mainPage">
+            <div class="series-card" data-series="chainsaw-movie">
+                <img src="reze.png" alt="Chainsaw Man: Reze Arc">
+                <div class="series-title"><span>Chainsaw Man - The Movie: Reze Arc</span></div>
+            </div>
+            <div class="series-card" data-series="chainsaw-series">
+                <img src="chainsawman.webp" alt="Chainsaw Man">
+                <div class="series-title"><span>Chainsaw Man</span></div>
+            </div>
+            <div class="series-card" data-series="deathnote">
+                <img src="deathnote.avif" alt="Death Note">
+                <div class="series-title"><span>Death Note</span></div>
+            </div>
+            <div class="series-card" data-series="record-of-ragnarok-s1">
+                <img src="recordofragnaroks1.jpg" alt="Record of Ragnarok: Season 1">
+                <div class="series-title"><span>Record of Ragnarok: Season 1</span></div>
+            </div>
+            <div class="series-card" data-series="record-of-ragnarok-s2">
+                <img src="recordofragnaroks2.jpg" alt="Record of Ragnarok: Season 2">
+                <div class="series-title"><span>Record of Ragnarok: Season 2</span></div>
+            </div>
+
+            <div class="series-card" data-series="record-of-ragnarok-s3">
+                <img src="recordofragnaroks3.jpg" alt="Record of Ragnarok: Season 3">
+                <div class="series-title"><span>Record of Ragnarok: Season 3</span></div>
+            </div>
+
+
         </div>
-        <button id="search-btn" style="background:none; border:none; cursor:pointer; color:#fff; display:flex; align-items:center; justify-content:center; width:32px; height:32px;">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-        </button>
-        <button id="profile-btn"><i class="fa-solid fa-user"></i> <span id="username-display"></span></button>
-        <div id="profile-dropdown">
-            <p><strong>Felhasználónév:</strong> <span id="profile-name"></span></p>
-            <p><strong>E-mail:</strong> <span id="profile-email"></span></p>
-            <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i></button>
+
+        <div class="series-page" id="seriesPage">
+            <div class="sidebar">
+                <button id="back-btn" class="back-button">
+                    <i class="fa-solid fa-arrow-left"></i> Vissza
+                </button>
+                <h2 id="seriesTitle">Sorozat</h2>
+                <div id="videoList"></div>
+            </div>
+            <div class="video-container">
+                </div>
         </div>
     </div>
-</header>
+
+    <script type="module">
+        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
 
-<div class="main-page" id="mainPage">
-    <div class="series-card" data-series="chainsaw-movie">
-        <img src="reze.png" alt="Chainsaw Man: Reze Arc">
-        <div class="series-title"><span>Chainsaw Man - The Movie: Reze Arc</span></div>
-    </div>
-    <div class="series-card" data-series="chainsaw-series">
-        <img src="chainsawman.webp" alt="Chainsaw Man">
-        <div class="series-title"><span>Chainsaw Man</span></div>
-    </div>
-    <div class="series-card" data-series="deathnote">
-        <img src="deathnote.avif" alt="Death Note">
-        <div class="series-title"><span>Death Note</span></div>
-    </div>
-    <div class="series-card" data-series="record-of-ragnarok-s1">
-        <img src="recordofragnaroks1.jpg" alt="Record of Ragnarok: Season 1">
-        <div class="series-title"><span>Record of Ragnarok: Season 1</span></div>
-    </div>
-    <div class="series-card" data-series="record-of-ragnarok-s2">
-        <img src="recordofragnaroks2.jpg" alt="Record of Ragnarok: Season 2">
-        <div class="series-title"><span>Record of Ragnarok: Season 2</span></div>
-    </div>
-    <div class="series-card" data-series="record-of-ragnarok-s3">
-        <img src="recordofragnaroks3.jpg" alt="Record of Ragnarok: Season 3">
-        <div class="series-title"><span>Record of Ragnarok: Season 3</span></div>
-    </div>
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
+            authDomain: "konyv-93c63.firebaseapp.com",
+            projectId: "konyv-93c63",
+            storageBucket: "konyv-93c63.firebasestorage.app",
+            messagingSenderId: "349471560585",
+            appId: "1:349471560585:web:55c6e78499ebbca0540758"
+        };
 
-    
-</div>
-
-<div class="series-page" id="seriesPage">
-    <div class="sidebar">
-        <button id="back-btn" class="back-button">
-            <i class="fa-solid fa-arrow-left"></i> Vissza
-        </button>
-        <h2 id="seriesTitle">Sorozat</h2>
-        <div id="videoList"></div>
-    </div>
-    <div class="video-container">
-        </div>
-</div>
-</div>
-
-<script type="module">
-import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-// >>> ÚJ IMPORT A REALTIME DATABASE-hez <<<
-import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+        const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
 
 
-// Firebase config
-const firebaseConfig = {
-    apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
-    authDomain: "konyv-93c63.firebaseapp.com",
-    projectId: "konyv-93c63",
-    storageBucket: "konyv-93c63.firebasestorage.app",
-    messagingSenderId: "349471560585",
-    appId: "1:349471560585:web:55c6e78499ebbca0540758"
-};
+        const loginForm = document.getElementById("login-form");
+        const loginMsg = document.getElementById("login-msg");
+        const loginContainer = document.getElementById("login-container");
+        const appContainer = document.getElementById("app");
+        const logoutBtn = document.getElementById("logout-btn");
+        const profileBtn = document.getElementById("profile-btn");
+        const profileDropdown = document.getElementById("profile-dropdown");
+        const usernameDisplay = document.getElementById("username-display");
+        const profileName = document.getElementById("profile-name");
+        const profileEmail = document.getElementById("profile-email");
+        const homeBtn = document.getElementById('home-btn');
 
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-const auth = getAuth(app);
-// >>> ÚJ DATABASE VÁLTOZÓ <<<
-const db = getDatabase(app); 
+        const searchBtn = document.getElementById('search-btn');
+        const searchContainer = document.getElementById('search-container');
+        const searchInput = document.getElementById('search-input');
+        const searchClearBtn = document.getElementById('search-clear-btn');
+        const mainPage = document.getElementById('mainPage');
+        const seriesPage = document.getElementById('seriesPage');
+        const videoList = document.getElementById('videoList');
+        const seriesTitle = document.getElementById('seriesTitle');
+        const backBtn = document.getElementById('back-btn');
 
+        const seriesData = {
+            "chainsaw-movie": {
+                title: "Chainsaw Man - The Movie: Reze Arc",
+                videos: [
+                    { title: "1. rész", src: "//videa.hu/player?v=d5OOor9NDgsG1pTi", type: 'videa' }
+                ]
+            },
+            "chainsaw-series": {
+                title: "Chainsaw Man",
+                videos: [
+                    { title: "01. rész", src: "//embed.indavideo.hu/player/video/a8ecee9a07", type: 'indavideo' },
+                    { title: "02. rész", src: "//embed.indavideo.hu/player/video/7becf36ad0", type: 'indavideo' },
+                    { title: "03. rész", src: "//embed.indavideo.hu/player/video/0ec60e585b", type: 'indavideo' },
+                    { title: "04. rész", src: "//embed.indavideo.hu/player/video/a94c366130", type: 'indavideo' },
+                    { title: "05. rész", src: "//embed.indavideo.hu/player/video/ab93ec9fa4", type: 'indavideo' },
+                    { title: "06. rész", src: "//embed.indavideo.hu/player/video/948404f619", type: 'indavideo' },
+                    { title: "07. rész", src: "//embed.indavideo.hu/player/video/dae3d02660", type: 'indavideo' },
+                    { title: "08. rész", src: "//embed.indavideo.hu/player/video/8a78588a9a", type: 'indavideo' },
+                    { title: "09. rész", src: "//embed.indavideo.hu/player/video/5e36ee5bdb", type: 'indavideo' },
+                    { title: "10. rész", src: "//embed.indavideo.hu/player/video/29844a7dfd", type: 'indavideo' },
+                    { title: "11. rész", src: "//embed.indavideo.hu/player/video/4966f9bc28", type: 'indavideo' },
+                    { title: "12. rész", src: "//embed.indavideo.hu/player/video/6151385752", type: 'indavideo' }
+                ]
+            },
+            "deathnote": {
+                title: "Death Note",
+                videos: [
+                    { title: "01. rész", src: "//embed.indavideo.hu/player/video/0b203b1c34", type: 'indavideo' },
+                    { title: "02. rész", src: "//embed.indavideo.hu/player/video/6933aa54b7", type: 'indavideo' },
+                    { title: "03. rész", src: "//embed.indavideo.hu/player/video/e5784af123", type: 'indavideo' },
+                    { title: "04. rész", src: "//embed.indavideo.hu/player/video/9a5c7dd313", type: 'indavideo' },
+                    { title: "05. rész", src: "//embed.indavideo.hu/player/video/937eff53b8", type: 'indavideo' },
+                    { title: "06. rész", src: "//embed.indavideo.hu/player/video/b943513e4f", type: 'indavideo' },
+                    { title: "07. rész", src: "//embed.indavideo.hu/player/video/1970930830", type: 'indavideo' },
+                    { title: "08. rész", src: "//embed.indavideo.hu/player/video/50222e8add", type: 'indavideo' },
+                    { title: "09. rész", src: "//embed.indavideo.hu/player/video/d686d50524", type: 'indavideo' },
+                    { title: "10. rész", src: "//embed.indavideo.hu/player/video/4d14107766", type: 'indavideo' },
+                    { title: "11. rész", src: "//embed.indavideo.hu/player/video/795f8e280b", type: 'indavideo' },
+                    { title: "12. rész", src: "//embed.indavideo.hu/player/video/70f38bd78a", type: 'indavideo' },
+                    { title: "13. rész", src: "//embed.indavideo.hu/player/video/e3f848b673", type: 'indavideo' },
+                    { title: "14. rész", src: "//embed.indavideo.hu/player/video/ea4479c6e8", type: 'indavideo' },
+                    { title: "15. rész", src: "//embed.indavideo.hu/player/video/a7983034e3", type: 'indavideo' },
+                    { title: "16. rész", src: "//embed.indavideo.hu/player/video/932d9f3317", type: 'indavideo' },
+                    { title: "17. rész", src: "//embed.indavideo.hu/player/video/a4e723f5dc", type: 'indavideo' },
+                    { title: "18. rész", src: "//embed.indavideo.hu/player/video/a273ea4497", type: 'indavideo' },
+                    { title: "19. rész", src: "//embed.indavideo.hu/player/video/4e0303e106", type: 'indavideo' },
+                    { title: "20. rész", src: "//embed.indavideo.hu/player/video/556ec9ef82", type: 'indavideo' },
+                    { title: "21. rész", src: "//embed.indavideo.hu/player/video/623db0bd5a", type: 'indavideo' },
+                    { title: "22. rész", src: "//embed.indavideo.hu/player/video/517955f1d7", type: 'indavideo' },
+                    { title: "23. rész", src: "//embed.indavideo.hu/player/video/20df66d3d0", type: 'indavideo' },
+                    { title: "24. rész", src: "//embed.indavideo.hu/player/video/eb57cbdad5", type: 'indavideo' },
+                    { title: "25. rész", src: "//embed.indavideo.hu/player/video/8ed4518ea6", type: 'indavideo' },
+                    { title: "26. rész", src: "//embed.indavideo.hu/player/video/dc9c10a4de", type: 'indavideo' },
+                    { title: "27. rész", src: "//embed.indavideo.hu/player/video/671066c028", type: 'indavideo' },
+                    { title: "28. rész", src: "//embed.indavideo.hu/player/video/51de73d8cd", type: 'indavideo' },
+                    { title: "29. rész", src: "//embed.indavideo.hu/player/video/79b4169b8e", type: 'indavideo' },
+                    { title: "30. rész", src: "//embed.indavideo.hu/player/video/a6b6aa2390", type: 'indavideo' },
+                    { title: "31. rész", src: "//embed.indavideo.hu/player/video/a725c4e776", type: 'indavideo' },
+                    { title: "32. rész", src: "//embed.indavideo.hu/player/video/07358342a8", type: 'indavideo' },
+                    { title: "33. rész", src: "//embed.indavideo.hu/player/video/e502867b57", type: 'indavideo' },
+                    { title: "34. rész", src: "//embed.indavideo.hu/player/video/dc0d39efe0", type: 'indavideo' },
+                    { title: "35. rész", src: "//embed.indavideo.hu/player/video/f943a92474", type: 'indavideo' },
+                    { title: "36. rész", src: "//embed.indavideo.hu/player/video/b7c7749341", type: 'indavideo' },
+                    { title: "37. rész", src: "//embed.indavideo.hu/player/video/17e0c62204", type: 'indavideo' }
+                ]
+            },
+            "record-of-ragnarok-s1": {
+                title: "Record of Ragnarok: Season 1",
+                videos: [
+                    { title: "01. rész", src: "//embed.indavideo.hu/player/video/47eba82d74", type: 'indavideo' },
+                    { title: "02. rész", src: "//embed.indavideo.hu/player/video/64bcd4632e", type: 'indavideo' },
+                    { title: "03. rész", src: "//embed.indavideo.hu/player/video/415715ab33", type: 'indavideo' },
+                    { title: "04. rész", src: "//embed.indavideo.hu/player/video/db57f4f66f", type: 'indavideo' },
+                    { title: "05. rész", src: "//embed.indavideo.hu/player/video/0981a0913f", type: 'indavideo' },
+                    { title: "06. rész", src: "//embed.indavideo.hu/player/video/53fe4c1471", type: 'indavideo' },
+                    { title: "07. rész", src: "//embed.indavideo.hu/player/video/a2fad56e36", type: 'indavideo' },
+                    { title: "08. rész", src: "//embed.indavideo.hu/player/video/2590d2b062", type: 'indavideo' },
+                    { title: "09. rész", src: "//embed.indavideo.hu/player/video/8425e0a195", type: 'indavideo' },
+                    { title: "10. rész", src: "//embed.indavideo.hu/player/video/556f010595", type: 'indavideo' },
+                    { title: "11. rész", src: "//embed.indavideo.hu/player/video/7ee6e9fe63", type: 'indavideo' },
+                    { title: "12. rész", src: "//embed.indavideo.hu/player/video/38d878ec19", type: 'indavideo' },
+                ]
+            },
+            "record-of-ragnarok-s2": {
+                title: "Record of Ragnarok: Season 2",
+                videos: [
+                    { title: "01. rész", src: "//embed.indavideo.hu/player/video/b36154b500", type: 'indavideo' },
+                    { title: "02. rész", src: "//embed.indavideo.hu/player/video/e2292c54d4", type: 'indavideo' },
+                    { title: "03. rész", src: "//embed.indavideo.hu/player/video/072ed4adbf", type: 'indavideo' },
+                    { title: "04. rész", src: "//embed.indavideo.hu/player/video/0598413057", type: 'indavideo' },
+                    { title: "05. rész", src: "//embed.indavideo.hu/player/video/f305511ae3", type: 'indavideo' },
+                    { title: "06. rész", src: "//embed.indavideo.hu/player/video/1cd39537c6", type: 'indavideo' },
+                    { title: "07. rész", src: "//embed.indavideo.hu/player/video/d5ac5b4dad", type: 'indavideo' },
+                    { title: "08. rész", src: "//embed.indavideo.hu/player/video/bcf75d3a74", type: 'indavideo' },
+                    { title: "09. rész", src: "//embed.indavideo.hu/player/video/7b2bfcfb8b", type: 'indavideo' },
+                    { title: "10. rész", src: "//embed.indavideo.hu/player/video/e3f5985a19", type: 'indavideo' },
+                    { title: "11. rész", src: "//embed.indavideo.hu/player/video/d85f2d750b", type: 'indavideo' },
+                    { title: "12. rész", src: "//embed.indavideo.hu/player/video/94bb4ca873", type: 'indavideo' },
+                    { title: "13. rész", src: "//embed.indavideo.hu/player/video/5e5efceb4b", type: 'indavideo' },
+                    { title: "14. rész", src: "//embed.indavideo.hu/player/video/49fcdfb7bd", type: 'indavideo' },
+                    { title: "15. rész", src: "//embed.indavideo.hu/player/video/f2cec55687", type: 'indavideo' },
+                ]
+            },
+            "record-of-ragnarok-s3": {
+                title: "Record of Ragnarok: Season 3",
+                videos: [
+                    { title: "01. rész", src: "//videa.hu/player?v=fg5MMPRNCX0ArOrR", type: 'videa' },
+                    { title: "02. rész", src: "//videa.hu/player?v=ZDf2cP8SmAXsEKrU", type: 'videa' },
+                    { title: "03. rész", src: "//videa.hu/player?v=CHUtrQYTZQgl6T2j", type: 'videa' },
+                    { title: "04. rész", src: "//videa.hu/player?v=QogXviAtwW63DrJE", type: 'videa' },
+                    { title: "05. rész", src: "//videa.hu/player?v=eJZqfRGV1qrmYVh3", type: 'videa' },
+                    { title: "06. rész", src: "//videa.hu/player?v=T8R4Y0FCfUV0TOG6", type: 'videa' },
+                    { title: "07. rész", src: "//videa.hu/player?v=fTxYD90gq6lKy8Ud", type: 'videa' },
+                    { title: "08. rész", src: "//videa.hu/player?v=Rt3codXW3Fuo7oc4", type: 'videa' },
+                    { title: "09. rész", src: "//videa.hu/player?v=VxeSoFo0dKL3Hccf", type: 'videa' },
+                    { title: "10. rész", src: "//videa.hu/player?v=rEDfQlR8loKDN9qn", type: 'videa' },
+                    { title: "11. rész", src: "//videa.hu/player?v=I2zmWVBtqu6w0obg", type: 'videa' },
+                    { title: "12. rész", src: "//videa.hu/player?v=7Jtoc1SjPAK0ery9", type: 'videa' },
+                    { title: "13. rész", src: "//videa.hu/player?v=GzkmQWEW6MrNYDZq", type: 'videa' },
+                    { title: "14. rész", src: "//videa.hu/player?v=uJD5594gZbZq5q40", type: 'videa' },
+                    { title: "15. rész", src: "//videa.hu/player?v=vibakbKKhkPZX3Y9", type: 'videa' }
+                ]
+            }
+        };
 
-const loginForm = document.getElementById("login-form");
-const loginMsg = document.getElementById("login-msg");
-const loginContainer = document.getElementById("login-container");
-const appContainer = document.getElementById("app");
-const logoutBtn = document.getElementById("logout-btn");
-const profileBtn = document.getElementById("profile-btn");
-const profileDropdown = document.getElementById("profile-dropdown");
-const usernameDisplay = document.getElementById("username-display");
-const profileName = document.getElementById("profile-name");
-const profileEmail = document.getElementById("profile-email");
-const homeBtn = document.getElementById('home-btn');
+        // Üzenetek
+        function revealMsg(node, text, type = "") { if (!node) return; node.textContent = text; node.className = "form-msg" + (type ? " " + type : ""); }
 
-const searchBtn = document.getElementById('search-btn');
-const searchContainer = document.getElementById('search-container');
-const searchInput = document.getElementById('search-input');
-const searchClearBtn = document.getElementById('search-clear-btn');
-const mainPage = document.getElementById('mainPage');
-const seriesPage = document.getElementById('seriesPage');
-const videoList = document.getElementById('videoList');
-const seriesTitle = document.getElementById('seriesTitle');
-const backBtn = document.getElementById('back-btn');
+        // Scroll effekt csak hosszú címeknél
+        function checkTitleOverflow() {
+            document.querySelectorAll('.series-title').forEach(titleDiv => {
+                const titleSpan = titleDiv.querySelector('span');
 
-const seriesData = {
-    // RÉGI CHINSAW MAN (FILM) - Megváltoztatott kulcs: chainsaw-movie
-    "chainsaw-movie": { title:"Chainsaw Man - The Movie: Reze Arc", videos:[{title:"1. rész", src:"//videa.hu/player?v=d5OOor9NDgsG1pTi", type: 'videa'}] },
-    
-    // ÚJ CHINSAW MAN (SOROZAT)
-    "chainsaw-series": { 
-        title:"Chainsaw Man", 
-        videos:[
-            {title:"01. rész", src:"//embed.indavideo.hu/player/video/a8ecee9a07", type: 'indavideo'},
-            {title:"02. rész", src:"//embed.indavideo.hu/player/video/7becf36ad0", type: 'indavideo'},
-            {title:"03. rész", src:"//embed.indavideo.hu/player/video/0ec60e585b", type: 'indavideo'},
-            {title:"04. rész", src:"//embed.indavideo.hu/player/video/a94c366130", type: 'indavideo'},
-            {title:"05. rész", src:"//embed.indavideo.hu/player/video/ab93ec9fa4", type: 'indavideo'},
-            {title:"06. rész", src:"//embed.indavideo.hu/player/video/948404f619", type: 'indavideo'},
-            {title:"07. rész", src:"//embed.indavideo.hu/player/video/dae3d02660", type: 'indavideo'},
-            {title:"08. rész", src:"//embed.indavideo.hu/player/video/8a78588a9a", type: 'indavideo'},
-            {title:"09. rész", src:"//embed.indavideo.hu/player/video/5e36ee5bdb", type: 'indavideo'},
-            {title:"10. rész", src:"//embed.indavideo.hu/player/video/29844a7dfd", type: 'indavideo'},
-            {title:"11. rész", src:"//embed.indavideo.hu/player/video/4966f9bc28", type: 'indavideo'},
-            {title:"12. rész", src:"//embed.indavideo.hu/player/video/6151385752", type: 'indavideo'}
-        ] 
-    },
-    
-    // Death Note Indavideo URL-ekkel
-    "deathnote": { 
-        title:"Death Note", 
-        videos:[
-            {title:"01. rész", src:"//embed.indavideo.hu/player/video/0b203b1c34", type: 'indavideo'},
-            {title:"02. rész", src:"//embed.indavideo.hu/player/video/6933aa54b7", type: 'indavideo'},
-            {title:"03. rész", src:"//embed.indavideo.hu/player/video/e5784af123", type: 'indavideo'},
-            {title:"04. rész", src:"//embed.indavideo.hu/player/video/9a5c7dd313", type: 'indavideo'},
-            {title:"05. rész", src:"//embed.indavideo.hu/player/video/937eff53b8", type: 'indavideo'},
-            {title:"06. rész", src:"//embed.indavideo.hu/player/video/b943513e4f", type: 'indavideo'},
-            {title:"07. rész", src:"//embed.indavideo.hu/player/video/1970930830", type: 'indavideo'},
-            {title:"08. rész", src:"//embed.indavideo.hu/player/video/50222e8add", type: 'indavideo'},
-            {title:"09. rész", src:"//embed.indavideo.hu/player/video/d686d50524", type: 'indavideo'},
-            {title:"10. rész", src:"//embed.indavideo.hu/player/video/4d14107766", type: 'indavideo'},
-            {title:"11. rész", src:"//embed.indavideo.hu/player/video/795f8e280b", type: 'indavideo'},
-            {title:"12. rész", src:"//embed.indavideo.hu/player/video/70f38bd78a", type: 'indavideo'},
-            {title:"13. rész", src:"//embed.indavideo.hu/player/video/e3f848b673", type: 'indavideo'},
-            {title:"14. rész", src:"//embed.indavideo.hu/player/video/ea4479c6e8", type: 'indavideo'},
-            {title:"15. rész", src:"//embed.indavideo.hu/player/video/a7983034e3", type: 'indavideo'},
-            {title:"16. rész", src:"//embed.indavideo.hu/player/video/932d9f3317", type: 'indavideo'},
-            {title:"17. rész", src:"//embed.indavideo.hu/player/video/a4e723f5dc", type: 'indavideo'},
-            {title:"18. rész", src:"//embed.indavideo.hu/player/video/a273ea4497", type: 'indavideo'},
-            {title:"19. rész", src:"//embed.indavideo.hu/player/video/4e0303e106", type: 'indavideo'},
-            {title:"20. rész", src:"//embed.indavideo.hu/player/video/556ec9ef82", type: 'indavideo'},
-            {title:"21. rész", src:"//embed.indavideo.hu/player/video/623db0bd5a", type: 'indavideo'},
-            {title:"22. rész", src:"//embed.indavideo.hu/player/video/517955f1d7", type: 'indavideo'},
-            {title:"23. rész", src:"//embed.indavideo.hu/player/video/20df66d3d0", type: 'indavideo'},
-            {title:"24. rész", src:"//embed.indavideo.hu/player/video/eb57cbdad5", type: 'indavideo'},
-            {title:"25. rész", src:"//embed.indavideo.hu/player/video/8ed4518ea6", type: 'indavideo'},
-            {title:"26. rész", src:"//embed.indavideo.hu/player/video/dc9c10a4de", type: 'indavideo'},
-            {title:"27. rész", src:"//embed.indavideo.hu/player/video/671066c028", type: 'indavideo'},
-            {title:"28. rész", src:"//embed.indavideo.hu/player/video/51de73d8cd", type: 'indavideo'},
-            {title:"29. rész", src:"//embed.indavideo.hu/player/video/79b4169b8e", type: 'indavideo'},
-            {title:"30. rész", src:"//embed.indavideo.hu/player/video/a6b6aa2390", type: 'indavideo'},
-            {title:"31. rész", src:"//embed.indavideo.hu/player/video/a725c4e776", type: 'indavideo'},
-            {title:"32. rész", src:"//embed.indavideo.hu/player/video/07358342a8", type: 'indavideo'},
-            {title:"33. rész", src:"//embed.indavideo.hu/player/video/e502867b57", type: 'indavideo'},
-            {title:"34. rész", src:"//embed.indavideo.hu/player/video/dc0d39efe0", type: 'indavideo'},
-            {title:"35. rész", src:"//embed.indavideo.hu/player/video/f943a92474", type: 'indavideo'},
-            {title:"36. rész", src:"//embed.indavideo.hu/player/video/b7c7749341", type: 'indavideo'},
-            {title:"37. rész", src:"//embed.indavideo.hu/player/video/17e0c62204", type: 'indavideo'}
-        ] 
-    },
-    // ... seriesData meglévő adatok után
-"record-of-ragnarok-s1": { 
-        title:"Record of Ragnarok: Season 1", 
-        videos:[
-            {title:"01. rész", src:"https://index1-hu.indavideo.hu/indavideo/003/771/792/OKRecord.of.Ragnarok.S01E01.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=abcd4bc5a3c08e33a451c2e7afc0c026", type: 'mp4'}, 
-            {title:"02. rész", src:"https://magex1-hu.indavideo.hu/indavideo/003/771/794/OKRecord.of.Ragnarok.S01E02.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=eaf9d3d764edb82c918f6abf9ab8f339", type: 'mp4'},
-            {title:"03. rész", src:"https://magex2-hu.indavideo.hu/indavideo/003/771/796/OKRecord.of.Ragnarok.S01E03.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=fc4b812d507007f74c77b123dd9a7505", type: 'mp4'},
-            {title:"04. rész", src:"https://magex5-hu.indavideo.hu/indavideo/003/771/798/OKRecord.of.Ragnarok.S01E04.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=911359773d7a182ddcc5cdccdbd16a26", type: 'mp4'},
-            {title:"05. rész", src:"https://magex5-hu.indavideo.hu/indavideo/003/771/800/OKRecord.of.Ragnarok.S01E05.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=9001928445f64117125b448bf6cf6b13", type: 'mp4'},
-            {title:"06. rész", src:"https://magex1-hu.indavideo.hu/indavideo/003/771/802/OKRecord.of.Ragnarok.S01E06.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=42129eae7ce882d381f21a2a23031e55", type: 'mp4'},
-            {title:"07. rész", src:"https://magex2-hu.indavideo.hu/indavideo/003/771/804/OKRecord.of.Ragnarok.S01E07.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=6dcc9f04ea7daad544aa49644b114d0c", type: 'mp4'},
-            {title:"08. rész", src:"https://index2-hu.indavideo.hu/indavideo/003/771/806/OKRecord.of.Ragnarok.S01E08.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=2ca8e301e24f8225408fa167a0948c0e", type: 'mp4'},
-            {title:"09. rész", src:"https://magex5-hu.indavideo.hu/indavideo/003/771/812/OKRecord.of.Ragnarok.S01E09.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=b6b59febbccaf2e04311951f1d71e540", type: 'mp4'},
-            {title:"10. rész", src:"https://magex5-hu.indavideo.hu/indavideo/003/771/814/OKRecord.of.Ragnarok.S01E10.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=ab399b16faa32f91f45bba9cb27a84c2", type: 'mp4'},
-            {title:"11. rész", src:"https://magex5-hu.indavideo.hu/indavideo/003/771/820/OKRecord.of.Ragnarok.S01E11.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=9b9ebb772e7cee4c9f032c3590148d73", type: 'mp4'},
-            {title:"12. rész", src:"https://index1-hu.indavideo.hu/indavideo/003/771/824/OKRecord.of.Ragnarok.S01E12.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=52b0bdfe18ee55fe74705635e8457ce1", type: 'mp4'}
-        ] 
-    },
-"record-of-ragnarok-s2": { 
-        title:"Record of Ragnarok: Season 2", 
-        videos:[
-            {title:"01. rész", src:"https://index2-hu.indavideo.hu/indavideo/003/771/826/OKRecord.of.Ragnarok.S02E01.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=1002a3b428cd5c0b3b0ba5e18d708bdb", type: 'mp4'}, 
-            {title:"02. rész", src:"https://index1-hu.indavideo.hu/indavideo/003/771/828/OKRecord.of.Ragnarok.S02E02.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=cdeba06454cbd432e7b0dd20c23eb7db", type: 'mp4'},
-            {title:"03. rész", src:"https://magex2-hu.indavideo.hu/indavideo/003/771/830/OKRecord.of.Ragnarok.S02E03.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=b3ea12c470b0b68748133312280a5639", type: 'mp4'},
-            {title:"04. rész", src:"https://magex5-hu.indavideo.hu/indavideo/003/771/832/OKRecord.of.Ragnarok.S02E04.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=895fc9ed7fe59b451f3632ee1c090a83", type: 'mp4'},
-            {title:"05. rész", src:"https://magex1-hu.indavideo.hu/indavideo/003/771/834/OKRecord.of.Ragnarok.S02E05.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=b4ef2d032e8514f6fddc5e6b1af61bbc", type: 'mp4'},
-            {title:"06. rész", src:"https://magex5-hu.indavideo.hu/indavideo/003/771/840/OKRecord.of.Ragnarok.S02E06.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=29f9402fda7e4450f426b8492bcfe04d", type: 'mp4'},
-            {title:"07. rész", src:"https://index2-hu.indavideo.hu/indavideo/003/771/848/OKRecord.of.Ragnarok.S02E07.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=c91ef3c8f808250f0f0e33b33e182ccd", type: 'mp4'},
-            {title:"08. rész", src:"https://magex5-hu.indavideo.hu/indavideo/003/771/854/OKRecord.of.Ragnarok.S02E08.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=8b41e48f107f1241d424eae94ddd5dcb", type: 'mp4'},
-            {title:"09. rész", src:"https://magex2-hu.indavideo.hu/indavideo/003/771/858/OKRecord.of.Ragnarok.S02E09.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=e4e8d52d6c217bd794a1563f139bb862", type: 'mp4'},
-            {title:"10. rész", src:"https://magex1-hu.indavideo.hu/indavideo/003/771/860/OKRecord.of.Ragnarok.S02E10.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=57d9579288f6b1803be24b13db338826", type: 'mp4'},
-            {title:"11. rész", src:"https://magex3-hu.indavideo.hu/indavideo/003/771/864/OKRecord.of.Ragnarok.S02E11.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=9c888dd1158c53bf44391328b3ce991d", type: 'mp4'},
-            {title:"12. rész", src:"https://magex5-hu.indavideo.hu/indavideo/003/771/868/OKRecord.of.Ragnarok.S02E12.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=cde07e46d8b91f1f4555c2167940d147", type: 'mp4'},
-            {title:"13. rész", src:"https://index2-hu.indavideo.hu/indavideo/003/771/874/OKRecord.of.Ragnarok.S02E13.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=2fd4d783584320d49a3eaf4550b7c67c", type: 'mp4'},
-            {title:"14. rész", src:"https://magex1-hu.indavideo.hu/indavideo/003/771/876/OKRecord.of.Ragnarok.S02E14.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=a21e73769a3b78999f9db168e5652803", type: 'mp4'},
-            {title:"15. rész", src:"https://magex2-hu.indavideo.hu/indavideo/003/771/884/OKRecord.of.Ragnarok.S02E15.1080p-VARYG.720.mp4??&channel=main-a&zone=hu&token=d52f384dcba2cfda425b5eeffec47e09", type: 'mp4'}
-        ] 
-    },
-    "record-of-ragnarok-s3": { 
-        title:"Record of Ragnarok: Season 3", 
-        videos:[
-            {title:"01. rész", src:"//videa.hu/player?v=fg5MMPRNCX0ArOrR", type: 'videa'},
-            {title:"02. rész", src:"//videa.hu/player?v=ZDf2cP8SmAXsEKrU", type: 'videa'},
-            {title:"03. rész", src:"//videa.hu/player?v=CHUtrQYTZQgl6T2j", type: 'videa'},
-            {title:"04. rész", src:"//videa.hu/player?v=QogXviAtwW63DrJE", type: 'videa'},
-            {title:"05. rész", src:"//videa.hu/player?v=eJZqfRGV1qrmYVh3", type: 'videa'},
-            {title:"06. rész", src:"//videa.hu/player?v=T8R4Y0FCfUV0TOG6", type: 'videa'},
-            {title:"07. rész", src:"//videa.hu/player?v=fTxYD90gq6lKy8Ud", type: 'videa'},
-            {title:"08. rész", src:"//videa.hu/player?v=Rt3codXW3Fuo7oc4", type: 'videa'},
-            {title:"09. rész", src:"//videa.hu/player?v=VxeSoFo0dKL3Hccf", type: 'videa'},
-            {title:"10. rész", src:"//videa.hu/player?v=rEDfQlR8loKDN9qn", type: 'videa'},
-            {title:"11. rész", src:"//videa.hu/player?v=I2zmWVBtqu6w0obg", type: 'videa'},
-            {title:"12. rész", src:"//videa.hu/player?v=7Jtoc1SjPAK0ery9", type: 'videa'},
-            {title:"13. rész", src:"//videa.hu/player?v=GzkmQWEW6MrNYDZq", type: 'videa'},
-            {title:"14. rész", src:"//videa.hu/player?v=uJD5594gZbZq5q40", type: 'videa'},
-            {title:"15. rész", src:"//videa.hu/player?v=vibakbKKhkPZX3Y9", type: 'videa'}
-        ] 
-    }
-};
+                titleDiv.classList.remove('scrolling-title');
 
-// Üzenetek
-function revealMsg(node, text, type="") { if(!node) return; node.textContent = text; node.className = "form-msg" + (type ? " " + type : ""); }
-
-// Scroll effekt csak hosszú címeknél
-function checkTitleOverflow(){
-    document.querySelectorAll('.series-title').forEach(titleDiv => {
-        const titleSpan = titleDiv.querySelector('span');
-        
-        titleDiv.classList.remove('scrolling-title');
-        
-        if (titleSpan.scrollWidth > titleDiv.offsetWidth) {
-             titleDiv.classList.add('scrolling-title');
+                if (titleSpan.scrollWidth > titleDiv.offsetWidth) {
+                    titleDiv.classList.add('scrolling-title');
+                }
+            });
         }
-    });
-}
 
-// >>> PROGRESS FÜGGVÉNYEK (ÚJ) <<<
-
-// Adatok mentése a Firebase Realtime Database-be
-async function saveProgress(seriesKey, videoIndex) {
-    const user = auth.currentUser;
-    if (!user) return; 
-    
-    // A Realtime Database path: progress/{uid}/{seriesKey}
-    const progressRef = ref(db, `progress/${user.uid}/${seriesKey}`); 
-    try {
-        await set(progressRef, videoIndex);
-        // console.log(`Progress saved: ${seriesKey} - index ${videoIndex}`);
-    } catch(error) {
-        console.error("Hiba a progress mentésekor:", error);
-    }
-}
-
-// Adatok betöltése a Firebase Realtime Database-ből
-async function loadProgress(seriesKey) {
-    const user = auth.currentUser;
-    if (!user) return 0; // Ha nincs bejelentkezve, kezdje az első résszel
-    
-    const dbRef = ref(db);
-    try {
-        const snapshot = await get(child(dbRef, `progress/${user.uid}/${seriesKey}`));
-        if (snapshot.exists()) {
-            return snapshot.val(); // Visszaadja a mentett indexet
-        } else {
-            return 0; // Visszaadja az első részt (index 0)
+        // Progress funkciók
+        async function saveProgress(seriesKey, videoIndex) {
+            const user = auth.currentUser;
+            if (!user) return;
+            const progressRef = ref(db, `progress/${user.uid}/${seriesKey}`);
+            try {
+                await set(progressRef, videoIndex);
+            } catch (error) {
+                console.error("Hiba a progress mentésekor:", error);
+            }
         }
-    } catch(error) {
-        console.error("Hiba a progress betöltésekor:", error);
-        return 0; 
-    }
-}
+
+        async function loadProgress(seriesKey) {
+            const user = auth.currentUser;
+            if (!user) return 0;
+
+            const dbRef = ref(db);
+            try {
+                const snapshot = await get(child(dbRef, `progress/${user.uid}/${seriesKey}`));
+                if (snapshot.exists()) {
+                    return snapshot.val();
+                } else {
+                    return 0;
+                }
+            } catch (error) {
+                console.error("Hiba a progress betöltésekor:", error);
+                return 0;
+            }
+        }
 
 
-// Login
-loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    revealMsg(loginMsg,"");
-    const email = document.getElementById("loginEmail").value.trim();
-    const pass = document.getElementById("loginPassword").value;
-    if(!email||!pass) return revealMsg(loginMsg,"Tölts ki minden mezőt!","error");
-    try {
-        await setPersistence(auth, browserLocalPersistence);
-        await signInWithEmailAndPassword(auth,email,pass);
-    } catch(err){
-        revealMsg(loginMsg,"❌ Hibás e-mail vagy jelszó.","error");
-        console.error(err);
-    }
-});
-
-// Logout
-logoutBtn.addEventListener("click", async ()=>{ await signOut(auth); });
-
-// Profile dropdown toggle
-profileBtn.addEventListener("click", ()=>{ profileDropdown.style.display = profileDropdown.style.display==="block"?"none":"block"; });
-
-// Auth state
-onAuthStateChanged(auth,(user)=>{
-    if(user){
-        loginContainer.style.display="none";
-        appContainer.style.display="flex";
-        // Felhasználónév vágása @ előtt, ha nincs displayName
-        const displayId = user.displayName || user.email.split('@')[0];
-        usernameDisplay.textContent = displayId;
-        profileName.textContent = displayId;
-        profileEmail.textContent = user.email;
-        
-        // Ellenőrizzük az animációkat a bejelentkezés után
-        setTimeout(checkTitleOverflow, 500); 
-
-    } else {
-        loginContainer.style.display="flex";
-        appContainer.style.display="none";
-        profileDropdown.style.display="none";
-    }
-});
-
-// Series card click - FRISSÍTVE: async, await-tel hívja a loadSeries-t
-document.querySelectorAll('.series-card').forEach(card=>{
-    card.addEventListener('click', async ()=>{
-        const seriesKey=card.getAttribute('data-series');
-        await loadSeries(seriesKey); // VÁRJUK MEG, MÍG A PROGRESS BETÖLT
-        mainPage.style.display='none';
-        seriesPage.style.display='flex';
-    });
-});
-
-// Home click (Felső logó gomb) - FRISSÍTVE: kereső megjelenítése
-homeBtn.addEventListener('click', ()=>{
-    seriesPage.style.display='none';
-    mainPage.style.display='flex';
-    
-    // >>> Visszaállítás a főoldalra <<<
-    searchBtn.style.display = 'flex'; // Kereső gomb újra megjelenítése
-    searchContainer.classList.remove('active');
-    searchInput.value = '';
-    document.querySelectorAll('.series-card').forEach(card => card.style.display = 'flex');
-
-    // FIX: Alaphelyzetbe állítás a főoldalra váltáskor
-    document.querySelector('.video-container').innerHTML = '';
-    videoList.innerHTML = '';
-    
-    // Ellenőrizzük az animációkat
-    setTimeout(checkTitleOverflow, 100);
-});
-
-// Vissza gomb funkció (ÚJ) - FRISSÍTVE: kereső megjelenítése
-backBtn.addEventListener('click', () => {
-    // Vissza a főoldalra
-    seriesPage.style.display = 'none';
-    mainPage.style.display = 'flex';
-    
-    // >>> Visszaállítás a főoldalra <<<
-    searchBtn.style.display = 'flex'; // Kereső gomb újra megjelenítése
-    searchContainer.classList.remove('active');
-    
-    // Tisztítsuk ki az aktuális lejátszót és a videólistát
-    document.querySelector('.video-container').innerHTML = '';
-    videoList.innerHTML = '';
-
-    // Ellenőrizzük az animációkat
-    setTimeout(checkTitleOverflow, 100);
-});
-
-
-// Segédfüggvény a lejátszó dinamikus beállításához
-function updatePlayer(src, type){
-    const videoContainer = document.querySelector('.video-container');
-    
-    // Tisztítás
-    videoContainer.innerHTML = ''; 
-
-    const iframe = document.createElement('iframe');
-    // Minden lejátszó közös attribútumai
-    iframe.allowFullscreen = true;
-    iframe.scrolling = 'no';
-    iframe.width = '100%';
-    iframe.height = '100%';
-    iframe.src = src;
-    iframe.frameBorder = '0';
-    
-    // Szolgáltató-specifikus attribútumok
-    if (type === 'indavideo') {
-        iframe.title = 'indavideo video player';
-        iframe.classList.add('indavideo-player'); 
-        iframe.type = 'text/html';
-    } else if (type === 'videa') { 
-        iframe.id = 'videaPlayer';
-        iframe.webkitallowfullscreen = true; 
-        iframe.mozallowfullscreen = true;
-    }
-    
-    videoContainer.appendChild(iframe);
-}
-
-// Load series - FRISSÍTVE: Progress betöltés és kereső elrejtés
-async function loadSeries(seriesKey){ // <<< MEGJEGYZÉS: ASYNC kell
-    const series=seriesData[seriesKey];
-    if (!series) {
-        console.error(`Sorozat nem található ezzel a kulccsal: ${seriesKey}`);
-        return;
-    }
-
-    // 1. Kereső elrejtése a sorozatoldalon
-    searchContainer.classList.remove('active'); // Bezárja, ha nyitva volt
-    searchBtn.style.display = 'none'; // Elrejti a kereső gombot
-    
-    seriesTitle.textContent=series.title;
-    videoList.innerHTML="";
-    
-    // >>> 2. Progress betöltése <<<
-    const lastWatchedIndex = await loadProgress(seriesKey);
-    const initialIndex = Math.min(lastWatchedIndex, series.videos.length - 1); // Ellenőrzés
-    
-    // 3. Alapértelmezett lejátszás a mentett résszel
-    if (series.videos.length > 0) {
-        updatePlayer(series.videos[initialIndex].src, series.videos[initialIndex].type);
-    }
-
-    series.videos.forEach((vid,index)=>{
-        const card=document.createElement('div');
-        card.classList.add('video-card');
-        
-        // 4. Aktiváljuk a mentett indexű kártyát
-        if(index === initialIndex) card.classList.add('active'); 
-        
-        card.textContent=vid.title;
-        card.setAttribute('data-src',vid.src);
-        card.setAttribute('data-type',vid.type);
-        
-        videoList.appendChild(card);
-        
-        card.addEventListener('click',()=>{
-            // Lejátszó frissítése
-            updatePlayer(vid.src, vid.type);
-            
-            document.querySelectorAll('.video-card').forEach(c=>c.classList.remove('active'));
-            card.classList.add('active');
-            
-            // >>> 5. Progress mentése kattintáskor <<<
-            saveProgress(seriesKey, index); 
+        // Login
+        loginForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            revealMsg(loginMsg, "");
+            const email = document.getElementById("loginEmail").value.trim();
+            const pass = document.getElementById("loginPassword").value;
+            if (!email || !pass) return revealMsg(loginMsg, "Tölts ki minden mezőt!", "error");
+            try {
+                await setPersistence(auth, browserLocalPersistence);
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (err) {
+                revealMsg(loginMsg, "❌ Hibás e-mail vagy jelszó.", "error");
+                console.error(err);
+            }
         });
-    });
-}
 
-// Search toggle
-searchBtn.addEventListener('click',()=>{
-    searchContainer.classList.toggle('active');
-    if(searchContainer.classList.contains('active')) {
-        searchInput.focus();
-        // Ellenőrizzük, hogy kell-e megmutatni az X-et azonnal
-        searchClearBtn.style.display = searchInput.value.length > 0 ? 'block' : 'none';
-    } else {
-        // Ha kikapcsoljuk, rejtsük el a törlés gombot is
-        searchClearBtn.style.display = 'none';
-        
-        // Ha a keresőmező bezáródik, és volt benne tartalom, töröljük
-        if (searchInput.value !== '') {
+        // Logout
+        logoutBtn.addEventListener("click", async () => { await signOut(auth); });
+
+        // Profile dropdown toggle
+        profileBtn.addEventListener("click", () => { profileDropdown.style.display = profileDropdown.style.display === "block" ? "none" : "block"; });
+
+        // Auth state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginContainer.style.display = "none";
+                appContainer.style.display = "flex";
+                const displayId = user.displayName || user.email.split('@')[0];
+                usernameDisplay.textContent = displayId;
+                profileName.textContent = displayId;
+                profileEmail.textContent = user.email;
+                setTimeout(checkTitleOverflow, 500);
+            } else {
+                loginContainer.style.display = "flex";
+                appContainer.style.display = "none";
+                profileDropdown.style.display = "none";
+            }
+        });
+
+        // Series card click
+        document.querySelectorAll('.series-card').forEach(card => {
+            card.addEventListener('click', async () => {
+                const seriesKey = card.getAttribute('data-series');
+                await loadSeries(seriesKey);
+                mainPage.style.display = 'none';
+                seriesPage.style.display = 'flex';
+            });
+        });
+
+        // Home click
+        homeBtn.addEventListener('click', () => {
+            seriesPage.style.display = 'none';
+            mainPage.style.display = 'flex';
+            searchBtn.style.display = 'flex';
+            searchContainer.classList.remove('active');
             searchInput.value = '';
-            // Törléskor mutassuk újra az összes kártyát
             document.querySelectorAll('.series-card').forEach(card => card.style.display = 'flex');
+            document.querySelector('.video-container').innerHTML = '';
+            videoList.innerHTML = '';
+            setTimeout(checkTitleOverflow, 100);
+        });
+
+        // Back button
+        backBtn.addEventListener('click', () => {
+            seriesPage.style.display = 'none';
+            mainPage.style.display = 'flex';
+            searchBtn.style.display = 'flex';
+            searchContainer.classList.remove('active');
+            document.querySelector('.video-container').innerHTML = '';
+            videoList.innerHTML = '';
+            setTimeout(checkTitleOverflow, 100);
+        });
+
+        // Search functionality
+        searchBtn.addEventListener('click', () => {
+            if (searchContainer.classList.contains('active')) {
+                // Ha be van húzva, de üres a mező, vagy újra rákattintunk
+                if (searchInput.value.length === 0) {
+                    searchContainer.classList.remove('active');
+                    searchInput.blur();
+                } else {
+                    searchInput.focus();
+                }
+            } else {
+                // Ha ki van húzva, húzzuk be
+                searchContainer.classList.add('active');
+                searchInput.focus();
+            }
+        });
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            searchClearBtn.style.display = query.length > 0 ? 'block' : 'none';
+            document.querySelectorAll('.series-card').forEach(card => {
+                const titleElement = card.querySelector('.series-title span');
+                if (titleElement) {
+                    const title = titleElement.textContent.toLowerCase();
+                    card.style.display = title.includes(query) ? 'flex' : 'none';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            setTimeout(checkTitleOverflow, 10);
+        });
+
+        // Törlés gomb funkció
+        searchClearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            searchClearBtn.style.display = 'none';
+            searchInput.focus();
+            document.querySelectorAll('.series-card').forEach(card => card.style.display = 'flex');
+            setTimeout(checkTitleOverflow, 10);
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(checkTitleOverflow, 500);
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === "F12") e.preventDefault();
+            if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "C")) e.preventDefault();
+            if (e.ctrlKey && (e.key === "u" || e.key === "s")) e.preventDefault();
+        });
+
+
+        // >>> LETISZTÍTOTT UPDATEPLAYER FÜGGVÉNY <<<
+
+        function updatePlayer(src, type) {
+            const videoContainer = document.querySelector('.video-container');
+            videoContainer.innerHTML = '';
+
+            // Iframe létrehozása
+            const iframe = document.createElement('iframe');
+            iframe.allowFullscreen = true;
+            iframe.scrolling = 'no';
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.src = src;
+            iframe.frameBorder = '0';
+            iframe.allow = 'autoplay; fullscreen'; 
+
+            if (type === 'indavideo') {
+                iframe.title = 'indavideo video player';
+                iframe.classList.add('indavideo-player'); // A méretezéshez kellhet
+            } else if (type === 'videa') {
+                iframe.id = 'videaPlayer';
+                iframe.webkitallowfullscreen = true;
+                iframe.mozallowfullscreen = true;
+            }
+
+            videoContainer.appendChild(iframe);
         }
-    }
-});
 
-// Search functionality
-searchInput.addEventListener('input', ()=>{
-    const query = searchInput.value.toLowerCase();
-    
-    // X gomb megjelenítése/elrejtése
-    searchClearBtn.style.display = query.length > 0 ? 'block' : 'none';
 
-    document.querySelectorAll('.series-card').forEach(card=>{
-        const titleElement = card.querySelector('.series-title span');
-        // Keresés a title element tartalmában
-        if (titleElement) {
-            const title = titleElement.textContent.toLowerCase();
-            card.style.display = title.includes(query) ? 'flex' : 'none';
-        } else {
-             card.style.display = 'none';
+        // Load series
+        async function loadSeries(seriesKey) {
+            const series = seriesData[seriesKey];
+            if (!series) {
+                console.error(`Sorozat nem található ezzel a kulccsal: ${seriesKey}`);
+                return;
+            }
+
+            // Kereső elrejtése a sorozatoldalon
+            searchContainer.classList.remove('active');
+            searchBtn.style.display = 'none';
+
+            seriesTitle.textContent = series.title;
+            videoList.innerHTML = "";
+
+            // Progress betöltése
+            const lastWatchedIndex = await loadProgress(seriesKey);
+            const initialIndex = Math.min(lastWatchedIndex, series.videos.length - 1);
+
+            // Alapértelmezett lejátszás a mentett résszel
+            if (series.videos.length > 0) {
+                updatePlayer(series.videos[initialIndex].src, series.videos[initialIndex].type);
+            }
+
+            series.videos.forEach((vid, index) => {
+                const card = document.createElement('div');
+                card.classList.add('video-card');
+
+                // Aktiváljuk a mentett indexű kártyát
+                if (index === initialIndex) card.classList.add('active');
+
+                card.textContent = vid.title;
+                card.setAttribute('data-src', vid.src);
+                card.setAttribute('data-type', vid.type);
+
+                videoList.appendChild(card);
+
+                card.addEventListener('click', () => {
+                    // Lejátszó frissítése
+                    updatePlayer(vid.src, vid.type);
+
+                    document.querySelectorAll('.video-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+
+                    // Progress mentése kattintáskor
+                    saveProgress(seriesKey, index);
+                });
+            });
         }
-    });
-    
-    // Frissítsük a scroll effekteket (ha a kártyák megjelennek/eltűnnek)
-    setTimeout(checkTitleOverflow, 10);
-});
-
-// Törlés gomb funkció
-searchClearBtn.addEventListener('click', () => {
-    searchInput.value = ''; // Tartalom törlése
-    searchClearBtn.style.display = 'none'; // Gomb elrejtése
-    searchInput.focus(); // Fókusz visszaállítása
-    
-    // Az összes kártya visszaállítása
-    document.querySelectorAll('.series-card').forEach(card => card.style.display = 'flex');
-    
-    // Frissítsük a scroll effekteket
-    setTimeout(checkTitleOverflow, 10);
-});
-
-// Futtassuk a betöltés után, hogy a hosszú címek görgetést kapjanak
-document.addEventListener('DOMContentLoaded', ()=>{
-    setTimeout(checkTitleOverflow, 500); 
-});
-
-// 🔒 DevTools és mentés tiltás (Ahogy korábban javasoltam, ezt érdemes törölni, de meghagyom, ha ragaszkodik hozzá.)
-document.addEventListener('keydown', function(e) {
-    if (e.key === "F12") e.preventDefault();
-    if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "C")) e.preventDefault();
-    if (e.ctrlKey && (e.key === "u" || e.key === "s")) e.preventDefault();
-});
-</script>
+    </script>
 </body>
+
 </html>
