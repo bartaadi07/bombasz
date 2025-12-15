@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="hu">
 
 <head>
@@ -587,6 +587,16 @@
                 <div class="series-title"><span>Record of Ragnarok: Season 3</span></div>
             </div>
 
+            <div class="series-card" data-series="Evangelion">
+                <img src="evangelion.jpg" alt="Neon Genesis Evangelion">
+                <div class="series-title"><span>Neon Genesis Evangelion</span></div>
+            </div>
+
+            <!-- <div class="series-card" data-series="endofevangelion">
+                <img src="endofevangelion.jpg" alt="Neon Genesis Evangelion">
+                <div class="series-title"><span>Neon Genesis Evangelion: The End of Evangelion</span></div>
+            </div> -->
+
 
         </div>
 
@@ -599,7 +609,7 @@
                 <div id="videoList"></div>
             </div>
             <div class="video-container">
-                </div>
+            </div>
         </div>
     </div>
 
@@ -647,27 +657,17 @@
         const backBtn = document.getElementById('back-btn');
 
         const seriesData = {
-"chainsaw-movie": {
-    title: "Chainsaw Man - The Movie: Reze Arc",
-    videos: [
-        { title: "1. rész", src: "https://vkvideo.ru/video_ext.php?oid=-234629758&id=456239018&hd=4", type: 'vkvideo' }
-    ]
-},
+            "chainsaw-movie": {
+                title: "Chainsaw Man - The Movie: Reze Arc",
+                videos: [
+                    { title: "1. rész", src: "https://vkvideo.ru/video_ext.php?oid=-234629758&id=456239018&hd=4", type: 'vkvideo' }
+                ]
+            },
             "chainsaw-series": {
                 title: "Chainsaw Man",
                 videos: [
-                    { title: "01. rész", src: "//embed.indavideo.hu/player/video/a8ecee9a07", type: 'indavideo' },
-                    { title: "02. rész", src: "//embed.indavideo.hu/player/video/7becf36ad0", type: 'indavideo' },
-                    { title: "03. rész", src: "//embed.indavideo.hu/player/video/0ec60e585b", type: 'indavideo' },
-                    { title: "04. rész", src: "//embed.indavideo.hu/player/video/a94c366130", type: 'indavideo' },
-                    { title: "05. rész", src: "//embed.indavideo.hu/player/video/ab93ec9fa4", type: 'indavideo' },
-                    { title: "06. rész", src: "//embed.indavideo.hu/player/video/948404f619", type: 'indavideo' },
-                    { title: "07. rész", src: "//embed.indavideo.hu/player/video/dae3d02660", type: 'indavideo' },
-                    { title: "08. rész", src: "//embed.indavideo.hu/player/video/8a78588a9a", type: 'indavideo' },
-                    { title: "09. rész", src: "//embed.indavideo.hu/player/video/5e36ee5bdb", type: 'indavideo' },
-                    { title: "10. rész", src: "//embed.indavideo.hu/player/video/29844a7dfd", type: 'indavideo' },
-                    { title: "11. rész", src: "//embed.indavideo.hu/player/video/4966f9bc28", type: 'indavideo' },
-                    { title: "12. rész", src: "//embed.indavideo.hu/player/video/6151385752", type: 'indavideo' }
+                    { title: "1. évad", src: "https://vkvideo.ru/video_ext.php?oid=-234646183&id=456239017&hd=3", type: 'vkvideo' }
+
                 ]
             },
             "deathnote": {
@@ -768,15 +768,56 @@
                     { title: "14. rész", src: "//videa.hu/player?v=uJD5594gZbZq5q40", type: 'videa' },
                     { title: "15. rész", src: "//videa.hu/player?v=vibakbKKhkPZX3Y9", type: 'videa' }
                 ]
-            }
+            },
+            "Evangelion": {
+                title: "Neon Genesis Evangelion",
+                videos: [
+                    { title: "01. rész", src: "//embed.indavideo.hu/player/video/286a5eeac9", type: 'indavideo' },
+                    { title: "02. rész", src: "//embed.indavideo.hu/player/video/dcb4c643c4", type: 'indavideo' },
+                    { title: "03. rész", src: "//embed.indavideo.hu/player/video/729a1a303c", type: 'indavideo' },
+                    { title: "04. rész", src: "//embed.indavideo.hu/player/video/0cad784310", type: 'indavideo' },
+                    { title: "05. rész", src: "//embed.indavideo.hu/player/video/10982e58f7", type: 'indavideo' },
+                    { title: "06. rész", src: "//embed.indavideo.hu/player/video/5c22325712", type: 'indavideo' },
+                    { title: "07. rész", src: "//embed.indavideo.hu/player/video/15210731f0", type: 'indavideo' },
+                    { title: "08. rész", src: "//embed.indavideo.hu/player/video/d3131c29a5", type: 'indavideo' },
+                    { title: "09. rész", src: "//embed.indavideo.hu/player/video/8571557e9c", type: 'indavideo' },
+                    { title: "10. rész", src: "//embed.indavideo.hu/player/video/205b9a6324", type: 'indavideo' },
+                    { title: "11. rész", src: "//embed.indavideo.hu/player/video/9958e80402", type: 'indavideo' },
+                    { title: "12. rész", src: "//embed.indavideo.hu/player/video/41d4d74d6a", type: 'indavideo' },
+                    { title: "13. rész", src: "//embed.indavideo.hu/player/video/c9436061a6", type: 'indavideo' },
+                    { title: "14. rész", src: "//embed.indavideo.hu/player/video/e651c54cdd", type: 'indavideo' },
+                    { title: "15. rész", src: "//embed.indavideo.hu/player/video/b9e82c6005", type: 'indavideo' },
+                    { title: "16. rész", src: "//embed.indavideo.hu/player/video/59a49ab193", type: 'indavideo' },
+                    { title: "17. rész", src: "//embed.indavideo.hu/player/video/c8cddeaa1b", type: 'indavideo' },
+                    { title: "18. rész", src: "//embed.indavideo.hu/player/video/97bf930119", type: 'indavideo' },
+                    { title: "19. rész", src: "//embed.indavideo.hu/player/video/f3ce246582", type: 'indavideo' },
+                    { title: "20. rész", src: "//embed.indavideo.hu/player/video/e5da6af423", type: 'indavideo' },
+                    { title: "21. rész", src: "//embed.indavideo.hu/player/video/77979c4cac", type: 'indavideo' },
+                    { title: "22. rész", src: "//embed.indavideo.hu/player/video/9e2463619c", type: 'indavideo' },
+                    { title: "23. rész", src: "//embed.indavideo.hu/player/video/99c0d5fb6b", type: 'indavideo' },
+                    { title: "24. rész", src: "//embed.indavideo.hu/player/video/71cd1036af", type: 'indavideo' },
+                    { title: "25. rész", src: "//embed.indavideo.hu/player/video/c1e3575648", type: 'indavideo' },
+                    { title: "26. rész", src: "//embed.indavideo.hu/player/video/a1c1127501", type: 'indavideo' },
+
+
+                ]
+            },
+            "endofevangelion": {
+                title: "Neon Genesis Evangelion: The End of Evangelion",
+                videos: [
+                    { title: "01. rész", src: "", type: 'vkvideo' },
+
+                ]
+            },
         };
+
 
         // Üzenetek
         function revealMsg(node, text, type = "") { if (!node) return; node.textContent = text; node.className = "form-msg" + (type ? " " + type : ""); }
 
         // Scroll effekt csak hosszú címeknél
         function checkTitleOverflow() {
-            document.querySelectorAll('.series-title').forEach(titleDiv => {
+            document.querySelectorAll('.series-card').forEach(titleDiv => {
                 const titleSpan = titleDiv.querySelector('span');
 
                 titleDiv.classList.remove('scrolling-title');
@@ -956,7 +997,7 @@
             iframe.height = '100%';
             iframe.src = src;
             iframe.frameBorder = '0';
-            iframe.allow = 'autoplay; fullscreen'; 
+            iframe.allow = 'autoplay; fullscreen';
 
             if (type === 'indavideo') {
                 iframe.title = 'indavideo video player';
