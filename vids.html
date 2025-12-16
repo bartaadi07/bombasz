@@ -9,28 +9,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=1.1">
     <style>
-        /* PROGRESS BAR STÍLUSOK (megtartva a vizuális egységesség érdekében) */
+        /* A fő szín a sötétszürke #1A1A1A, a kiemelés #444 vagy a szövegnél #bbb */
+        
+        /* PROGRESS BAR STÍLUSOK */
         .progress-container {
             width: 100%;
             height: 6px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
+            border-radius: 0; 
             margin-top: 5px;
             overflow: hidden;
         }
 
         .progress-bar {
             height: 100%;
-            background: #ff0000;
+            /* CSERÉLVE PIROS HELYETT SÖTÉTSZÜRKÉRE/FEKETE ÁRNYALATRA */
+            background: #444; 
             width: 0;
             transition: width 0.3s ease-out;
-            border-radius: 3px;
+            border-radius: 0;
         }
 
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background: #111;
+            background: #111; 
             color: #fff;
             min-height: 100vh;
             display: flex;
@@ -39,18 +42,39 @@
             overflow-x: hidden;
         }
 
-        /* LOGIN FORM */
+        /* --- DINAMIKUS HÁTTÉR STÍLUSOK --- */
+
+        .series-page-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0; 
+            transition: opacity 0.5s ease;
+            filter: blur(10px); 
+            transform: scale(1.05); 
+        }
+        
+        #app.active-bg ~ .series-page-bg { 
+            opacity: 0.5;
+        }
+
+        /* LOGIN FORM ÉS GOMBOK (ÁTALAKÍTVA A KÁRTYA STÍLUSHOZ) */
         #login-container {
             display: flex;
             flex-direction: column;
             gap: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(16px);
-            border-radius: 16px;
+            background: #1A1A1A; /* Kártya háttér */
+            border-radius: 0;
             padding: 40px;
             width: 90%;
             max-width: 380px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), inset 0 0 5px rgba(255, 255, 255, 0.05); 
         }
 
         #login-container h2 {
@@ -60,85 +84,71 @@
             margin-bottom: 10px;
         }
 
-        #login-container label {
-            display: flex;
-            flex-direction: column;
-            font-size: 0.9rem;
-        }
-
         #login-container input {
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             color: #fff;
             margin-top: 6px;
             transition: all 0.3s;
         }
 
         #login-container input:focus {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            /* KIEMELÉS SZÜRKÉRE CSERÉLVE */
+            border-color: #444; 
+            box-shadow: 0 0 10px rgba(68, 68, 68, 0.3);
             outline: none;
         }
 
         .btn {
-            padding: 10px 15px;
-            border-radius: 20px;
+            padding: 12px 20px;
+            border-radius: 0; 
             border: none;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            letter-spacing: 0.5px;
         }
 
         .btn.fill {
-            background: #ff0000;
+            /* PIROS HELYETT SÖTÉTSZÜRKE (KÁRTYA TÓNUS) */
+            background: #252525; 
             color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
 
         .btn.fill:hover {
-            background: #cc0000;
-            transform: scale(1.05);
+            /* PIROS HELYETT KÖZEPES SZÜRKE */
+            background: #444; 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
         }
-
-        .form-msg {
-            font-size: 0.85rem;
-            min-height: 20px;
-        }
-
-        .form-msg.error {
-            color: #ff4c4c;
-        }
-
-        .form-msg.success {
-            color: #4cff7f;
-        }
-
-        /* APP */
+        
+        /* APP HEADER */
         #app {
+            position: relative; 
+            z-index: 1;
             display: none;
             flex-direction: column;
             height: 100vh;
             width: 100vw;
         }
-
         header {
+            box-shadow: none; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 30px;
+            padding: 2px 30px; 
             background: #111;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             position: relative;
         }
-
-        header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        #profile-btn {
+        
+        /* PROFILE ÉS LOGOUT GOMBOK */
+        #profile-btn, #logout-btn {
+            transition: color 0.3s, transform 0.3s;
             background: none;
             border: none;
             color: #fff;
@@ -149,48 +159,40 @@
             gap: 6px;
             position: relative;
         }
-
-        #profile-dropdown {
-            display: none;
-            position: absolute;
-            right: 30px;
-            top: 50px;
-            background: #222;
-            border-radius: 12px;
-            padding: 15px;
-            width: max-content;
-            min-width: 150px;
-            max-width: 90vw;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
-            z-index: 100;
-        }
-
-        #profile-dropdown p span {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        #logout-btn {
-            background: #ff0000;
-            border: none;
-            color: #fff;
-            padding: 8px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        #logout-btn:hover {
-            background: #cc0000;
+        /* KIEMELÉS SZÜRKÉRE CSERÉLVE */
+        #profile-btn:hover, #logout-btn:hover {
+            color: #bbb;
             transform: scale(1.1);
         }
+        #logout-btn {
+            /* PIROS HELYETT FEHÉR */
+            color: #fff; 
+            border-radius: 0;
+            padding: 5px 8px; /* Tömörebb logout gomb */
+        }
+        #logout-btn:hover {
+            background: #444;
+            box-shadow: none;
+        }
 
-        /* Search */
+        /* PROFILE DROPDOWN */
+        #profile-dropdown {
+            position: absolute;
+            right: 0;
+            top: 45px;
+            background: #222;
+            border-radius: 0;
+            padding: 15px;
+            min-width: 250px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            display: none; 
+        }
+        
+        /* Search Input */
         #search-container {
             position: relative;
         }
-
         #search-input {
             position: absolute;
             right: 0;
@@ -199,19 +201,16 @@
             padding: 5px 10px;
             padding-right: 35px;
             border: none;
-            border-radius: 8px;
+            border-radius: 0;
             transition: all 0.3s;
             opacity: 0;
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
         }
-
         #search-container.active #search-input {
             width: 200px;
             opacity: 1;
         }
-
-        /* Keresés Törlés Gomb Stílus */
         #search-clear-btn {
             position: absolute;
             right: 5px;
@@ -233,8 +232,6 @@
             z-index: 10;
             padding: 0;
         }
-
-        /* Aktiváljuk a gomb láthatóságát a konténer aktiválásakor */
         #search-container.active #search-clear-btn {
             opacity: 1;
             pointer-events: auto;
@@ -253,13 +250,19 @@
             overflow-y: auto;
             width: 100%;
             box-sizing: border-box;
+            transition: filter 0.5s ease; 
         }
 
+        /* SERIES CARD */
         .series-card {
             width: 180px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
             text-align: center;
+            border-radius: 0; 
+            overflow: hidden;
+            background: #1A1A1A; /* Fő kártya háttér */
+            box-shadow: none;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -268,7 +271,9 @@
         }
 
         .series-card:hover {
-            transform: scale(1.05);
+            transform: none; 
+            box-shadow: none;
+            background: #252525; /* Sötétebb szürke hoverre */
         }
 
         .series-card img {
@@ -276,8 +281,12 @@
             aspect-ratio: 2/3;
             object-fit: cover;
             display: block;
+            border-radius: 0;
+            transition: transform 0.3s ease-out;
         }
-
+        .series-card:hover img {
+            transform: none; 
+        }
         .series-title {
             width: 100%;
             height: 30px;
@@ -288,8 +297,8 @@
             font-size: 0.9rem;
             position: relative;
             line-height: 1.2;
+            padding: 5px 0;
         }
-
         .series-title span {
             display: inline-block;
             padding-left: 0;
@@ -298,8 +307,6 @@
             transform: translateX(0%);
             box-sizing: content-box;
         }
-
-        /* Csak azoknál a címeknél legyen animáció, ahol szükséges */
         .series-title.scrolling-title span {
             padding-left: 100%;
             animation: scrollText 10s linear infinite;
@@ -314,7 +321,7 @@
                 transform: translateX(-100%);
             }
         }
-
+        
         /* SERIES PAGE */
         .series-page {
             display: none;
@@ -325,7 +332,7 @@
 
         .sidebar {
             width: 240px;
-            background: #222;
+            background: rgba(34, 34, 34, 0.95);
             padding: 20px;
             box-sizing: border-box;
             display: flex;
@@ -333,16 +340,14 @@
             gap: 10px;
             overflow-y: auto;
             order: 0;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
         }
 
         /* Scrollbar elrejtése a görgetés funkció megtartásával */
-        /* Chrome, Safari, Opera (Webkit alapú böngészők) */
         .sidebar::-webkit-scrollbar {
             display: none;
             width: 0 !important;
         }
-
-        /* Firefox */
         .sidebar {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -354,49 +359,53 @@
             font-size: 20px;
         }
 
+        /* VIDEO CARD (EPISODE LIST) */
         .video-card {
-            background: #333;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 2px solid transparent;
+            background: #252525; 
+            border-radius: 0;
             padding: 10px;
+            transition: background 0.2s, border-color 0.2s, transform 0.2s;
+            border: 1px solid transparent;
+            cursor: pointer;
             text-align: center;
             font-size: 14px;
+            color: #bbb;
         }
 
         .video-card.active {
-            border-color: #ff0000;
+            /* KIEMELÉS SZÜRKÉRE CSERÉLVE */
+            border-color: #444;
+            background: #444; 
+            color: #fff;
+            transform: scale(1.02);
+            font-weight: 600;
         }
-
-        .video-card:hover {
-            transform: scale(1.03);
-            border-color: #ff4c4c;
+        .video-card.active .fa-check {
+             color: #fff;
         }
-
-        /* -------------------------------------- */
-        /* KÉRT STÍLUSOK: Epizódlista állapotok */
-        /* -------------------------------------- */
-
-        /* Megnézett epizódok diszkrét háttere */
-        .video-card.watched {
-            background: #1a1a1a;
-            opacity: 0.8;
-            border-color: #333;
-            position: relative;
+        .video-card:not(.active):hover {
+            background: #383838;
+            transform: scale(1.01);
+            /* KIEMELÉS SZÜRKÉRE CSERÉLVE */
+            border-color: #444;
+            color: #fff;
         }
-
-        .video-card.watched:hover {
-            opacity: 1;
+        
+        .video-card.watched:not(.active) {
+            background: #161616;
+            color: #777;
+            border-color: #161616;
         }
-
-        /* Pipa ikon stílusa (a megnézett részeken) */
+        .video-card.watched:not(.active):hover {
+             background: #222;
+        }
         .watched .fa-check {
             color: #4cff7f;
             margin-left: 5px;
         }
         
-        /* ÚJ KONTÉNER A VIDEÓNAK ÉS A GOMBNAK */
+        
+        /* VIDEÓ KONTÉNER */
         .video-content-wrapper {
             flex: 1;
             display: flex;
@@ -406,21 +415,16 @@
             order: 1;
             align-items: center; 
             
-            /* MÓDOSÍTVA: Rugalmas korlát 85% VW-ben, max 1300px-ig (1000 * 1.3) */
-            max-width: min(1300px, 85vw); 
+            max-width: min(1300px, 85vw);
             margin: 0 auto; 
             
             height: 100%; 
+            background: rgba(17, 17, 17, 0.9);
+            border-radius: 0;
         }
         
-        /* -------------------------------------- */
-        /* VIDEÓ KONTÉNER STÍLUSOK (FIX 16:9 ARÁNY) */
-        /* -------------------------------------- */
-
         .video-frame-container {
             width: 100%;
-            
-            /* Képarány trükk: A magasság 56.25% a szélességnek */
             position: relative; 
             height: 0; 
             padding-top: 56.25%; /* 16:9 arány */
@@ -436,22 +440,24 @@
             width: 100%; 
             height: 100%;
             border: 0;
-            border-radius: 12px;
+            border-radius: 0;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
         }
-        
         .video-frame-container iframe.indavideo-player {
             width: 100%; 
             height: 100%;
         }
 
 
-        /* Következő epizód gomb stílusa */
+        /* Következő epizód gomb */
         #nextEpisodeBtn {
-            background: #333;
+            /* PIROS HELYETT KÖZEPES SZÜRKE */
+            background: #252525;
             color: #fff;
-            border: 2px solid #ff0000;
+            /* PIROS HELYETT SÖTÉTSZÜRKE */
+            border: 2px solid #444;
             padding: 10px 20px;
-            border-radius: 8px;
+            border-radius: 0;
             cursor: pointer;
             margin-top: 20px;
             margin-bottom: 20px;
@@ -463,21 +469,24 @@
             gap: 10px;
             max-width: 400px;
             width: 100%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
 
         #nextEpisodeBtn:hover {
-            background: #ff0000;
-            transform: scale(1.02);
-            border-color: #fff;
+            /* PIROS HELYETT VILÁGOS SZÜRKE */
+            background: #444;
+            transform: translateY(-2px);
+            border-color: #bbb;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
         }
 
-        /* VISSZA GOMB STÍLUS */
+        /* VISSZA GOMB */
         .back-button {
-            background: #ff0000;
+            background: #444;
             color: #fff;
             border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
+            padding: 8px 15px;
+            border-radius: 0;
             cursor: pointer;
             margin-bottom: 15px;
             transition: all 0.3s;
@@ -485,9 +494,12 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            font-weight: 500;
         }
 
         .back-button:hover {
+            /* PIROS HELYETT VILÁGOSABB SZÜRKE */
+            background: #555;
             transform: scale(1.05);
         }
 
@@ -495,89 +507,75 @@
         /* MOBIL RESZPONZIVITÁS */
         /* ************************************** */
         @media(max-width:768px) {
-
-            /* HEADER */
             header {
-                padding: 10px 15px;
+                padding: 5px 15px; 
             }
-
             header h1 {
                 font-size: 1.3rem;
             }
-
             #profile-btn {
                 font-size: 0.9rem;
             }
-
             #profile-btn span {
                 display: none;
             }
-
             #profile-dropdown {
-                top: 42px;
+                top: 38px;
                 padding: 10px;
                 right: 15px;
+                border-radius: 0;
             }
-
-            /* SEARCH */
             #search-container.active #search-input {
                 width: 140px;
                 padding-right: 35px;
+                border-radius: 0;
             }
-
-            /* MAIN PAGE */
             .main-page {
                 padding: 20px;
                 gap: 15px;
             }
-
             .series-card {
                 width: 140px;
             }
-
             .series-title {
                 font-size: 0.85rem;
             }
-
-
-            /* SERIES PAGE (MOBIL) */
             .series-page {
                 flex-direction: column;
                 overflow-y: auto;
             }
-
             .sidebar {
                 width: 100%;
                 height: auto;
                 max-height: 250px;
                 padding: 15px;
                 order: 1;
+                background: #222;
             }
-            
             .video-content-wrapper {
                 height: 220px; 
                 padding: 15px;
                 order: 0;
+                background: none; 
+                margin: 0;
             }
-            
             .video-frame-container {
                  padding-top: 0; 
                  height: 100%;
             }
-
             .sidebar h2 {
                 margin-bottom: 5px;
                 font-size: 1.2rem;
             }
-
             .video-card {
                 font-size: 12px;
                 padding: 8px;
+                border-radius: 0;
             }
-            
             #nextEpisodeBtn {
                 margin-top: 15px;
                 max-width: 100%;
+                border-radius: 0;
             }
 
         }
@@ -588,11 +586,9 @@
                 width: 120px;
                 margin: 0 auto;
             }
-
             .series-title {
                 font-size: 0.8rem;
             }
-
             #login-container {
                 padding: 30px 20px;
             }
@@ -601,21 +597,23 @@
 </head>
 
 <body>
-
+    <div id="dynamicBackground" class="series-page-bg"></div>
+<center>
     <div id="login-container">
         <h2>Belépés</h2>
         <form id="login-form" novalidate>
-            <label>E-mail
+            <label>E-mail <br>
                 <input type="email" id="loginEmail" required>
             </label>
-            <label>Jelszó
+            <br>
+            <label>Jelszó<br>  
                 <input type="password" id="loginPassword" minlength="6" required>
-            </label>
+            </label><br><br>
             <button type="submit" class="btn fill">Belépés</button>
             <p id="login-msg" class="form-msg" role="status" aria-live="polite"></p>
         </form>
     </div>
-
+</center>
     <div id="app">
         <header>
             <h1 id="home-btn">Bombasz Vids</h1>
@@ -633,10 +631,11 @@
                     </svg>
                 </button>
                 <button id="profile-btn"><i class="fa-solid fa-user"></i> <span id="username-display"></span></button>
+                
                 <div id="profile-dropdown">
                     <p><strong>Felhasználónév:</strong> <span id="profile-name"></span></p>
                     <p><strong>E-mail:</strong> <span id="profile-email"></span></p>
-                    <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i></button>
+                    <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Kilépés</button>
                 </div>
             </div>
         </header>
@@ -644,38 +643,38 @@
 
         <div class="main-page" id="mainPage">
             <div class="series-card" data-series="chainsaw-movie">
-                <img src="reze.png" alt="Chainsaw Man: Reze Arc">
+                <img src="./reze.png" alt="Chainsaw Man: Reze Arc">
                 <div class="series-title"><span>Chainsaw Man - The Movie: Reze Arc</span></div>
             </div>
             <div class="series-card" data-series="chainsaw-series">
-                <img src="chainsawman.webp" alt="Chainsaw Man">
+                <img src="./chainsawman.webp" alt="Chainsaw Man">
                 <div class="series-title"><span>Chainsaw Man</span></div>
             </div>
             <div class="series-card" data-series="deathnote">
-                <img src="deathnote.avif" alt="Death Note">
+                <img src="./deathnote.avif" alt="Death Note">
                 <div class="series-title"><span>Death Note</span></div>
             </div>
             <div class="series-card" data-series="record-of-ragnarok-s1">
-                <img src="recordofragnaroks1.jpg" alt="Record of Ragnarok: Season 1">
+                <img src="./recordofragnaroks1.jpg" alt="Record of Ragnarok: Season 1">
                 <div class="series-title"><span>Record of Ragnarok: Season 1</span></div>
             </div>
             <div class="series-card" data-series="record-of-ragnarok-s2">
-                <img src="recordofragnaroks2.jpg" alt="Record of Ragnarok: Season 2">
+                <img src="./recordofragnaroks2.jpg" alt="Record of Ragnarok: Season 2">
                 <div class="series-title"><span>Record of Ragnarok: Season 2</span></div>
             </div>
 
             <div class="series-card" data-series="record-of-ragnarok-s3">
-                <img src="recordofragnaroks3.jpg" alt="Record of Ragnarok: Season 3">
+                <img src="./recordofragnaroks3.jpg" alt="Record of Ragnarok: Season 3">
                 <div class="series-title"><span>Record of Ragnarok: Season 3</span></div>
             </div>
 
             <div class="series-card" data-series="Evangelion">
-                <img src="evangelion.jpg" alt="Neon Genesis Evangelion">
+                <img src="./evangelion.jpg" alt="Neon Genesis Evangelion">
                 <div class="series-title"><span>Neon Genesis Evangelion</span></div>
             </div>
 
             <div class="series-card" data-series="endofevangelion">
-                <img src="endofevangelion.jpg" alt="Neon Genesis Evangelion">
+                <img src="./endofevangelion.jpg" alt="Neon Genesis Evangelion">
                 <div class="series-title"><span>Neon Genesis Evangelion: The End of Evangelion</span></div>
             </div>
 
@@ -743,6 +742,7 @@
         
         const videoContainer = document.querySelector('.video-frame-container');
         const nextEpisodeBtn = document.getElementById('nextEpisodeBtn');
+        const dynamicBackground = document.getElementById('dynamicBackground');
 
         const seriesData = {
             "chainsaw-movie": {
@@ -894,7 +894,7 @@
             "endofevangelion": {
                 title: "Neon Genesis Evangelion: The End of Evangelion",
                 videos: [
-                    { title: "01. rész", src: "", type: 'vkvideo' },
+                    { title: "01. rész", src: "https://vkvideo.ru/video_ext.php?oid=-234646183&id=456239019&hash=7524c94b7253d358&hd=3", type: 'vkvideo' },
 
                 ]
             },
@@ -968,8 +968,11 @@
         // Logout
         logoutBtn.addEventListener("click", async () => { await signOut(auth); });
 
-        // Profile dropdown toggle
-        profileBtn.addEventListener("click", () => { profileDropdown.style.display = profileDropdown.style.display === "block" ? "none" : "block"; });
+        // Profile dropdown toggle (A CSS megkívánja, hogy a JS kezelje a megjelenítést)
+        profileBtn.addEventListener("click", () => { 
+            // Megtartjuk a meglévő logikát, ami a CSS-ben rejtett elemet váltja
+            profileDropdown.style.display = profileDropdown.style.display === "block" ? "none" : "block"; 
+        });
 
         // Auth state
         onAuthStateChanged(auth, (user) => {
@@ -1009,6 +1012,11 @@
             videoContainer.innerHTML = '';
             videoList.innerHTML = '';
             nextEpisodeBtn.style.display = 'none';
+            
+            // HÁTTÉR KI KAPCSOLÁSA
+            appContainer.classList.remove('active-bg'); 
+            dynamicBackground.style.backgroundImage = 'none';
+            
             setTimeout(checkTitleOverflow, 100);
         });
 
@@ -1021,6 +1029,11 @@
             videoContainer.innerHTML = '';
             videoList.innerHTML = '';
             nextEpisodeBtn.style.display = 'none';
+            
+            // HÁTTÉR KI KAPCSOLÁSA
+            appContainer.classList.remove('active-bg'); 
+            dynamicBackground.style.backgroundImage = 'none';
+            
             setTimeout(checkTitleOverflow, 100);
         });
 
@@ -1116,6 +1129,16 @@
             videoList.innerHTML = "";
             nextEpisodeBtn.style.display = 'none';
             nextEpisodeBtn.onclick = null; // Töröljük az előző eseménykezelőt
+            
+            // ------------------------------------------------
+            // HÁTTÉRKÉP BEÁLLÍTÁSA ÉS AKTIVÁLÁSA
+            // ------------------------------------------------
+            const seriesCard = document.querySelector(`.series-card[data-series="${seriesKey}"] img`);
+            if (seriesCard && seriesCard.src) {
+                dynamicBackground.style.backgroundImage = `url('${seriesCard.src}')`; 
+            }
+            appContainer.classList.add('active-bg'); 
+            // ------------------------------------------------
 
             // Progress betöltése
             const lastWatchedIndex = await loadProgress(seriesKey);
