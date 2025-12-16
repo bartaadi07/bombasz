@@ -515,6 +515,58 @@
                 padding: 30px 20px;
             }
         }
+        /* Eredeti CSS módosítás nélkül maradhat a <style> blokkban, de a series-title és scrollText részeket leellenőriztem és finomítottam: */
+
+/* series-title: 
+   - A konténer, ami elrejti a túlcsorduló tartalmat
+   - A szélessége a kártyáé (100%)
+*/
+.series-title {
+    width: 100%;
+    height: 30px;
+    overflow: hidden; /* Ez rejti el a túlcsorduló részt */
+    box-sizing: border-box;
+    text-align: center;
+    margin-top: 5px;
+    font-size: 0.9rem;
+    position: relative;
+    line-height: 1.2;
+}
+
+/* series-title span: 
+   - Ez a tényleges tartalom. Alapértelmezésben maradjon érintetlen.
+   - White-space: nowrap elengedhetetlen a vízszintes scrollozáshoz
+*/
+.series-title span {
+    display: inline-block;
+    padding-left: 0;
+    white-space: nowrap; /* EZ FONTOS: megakadályozza a tördelést */
+    animation: none;
+    transform: translateX(0%);
+    box-sizing: content-box; /* Ne zavarjon bele a szélességbe a padding */
+}
+
+/* Csak azoknál a címeknél legyen animáció, ahol szükséges */
+.series-title.scrolling-title span {
+    /* Az animáció kezdetéhez kell 100% padding-left, hogy a szöveg eltűnjön jobbra a start előtt */
+    padding-left: 100%; 
+    animation: scrollText 10s linear infinite;
+}
+
+/* scrollText animáció:
+   - 100%-ról -100%-ra mozgatja az elemet
+*/
+@keyframes scrollText {
+    0% {
+        transform: translateX(0%);
+    }
+
+    100% {
+        /* A teljes cím szélessége + a konténer szélessége miatt kell 100% feletti érték
+           A -100% elegendő a folyamatos mozgáshoz, ha a padding-left 100%-ról indul */
+        transform: translateX(-100%); 
+    }
+}
     </style>
 </head>
 
@@ -592,10 +644,10 @@
                 <div class="series-title"><span>Neon Genesis Evangelion</span></div>
             </div>
 
-            <!-- <div class="series-card" data-series="endofevangelion">
+            <div class="series-card" data-series="endofevangelion">
                 <img src="endofevangelion.jpg" alt="Neon Genesis Evangelion">
                 <div class="series-title"><span>Neon Genesis Evangelion: The End of Evangelion</span></div>
-            </div> -->
+            </div>
 
 
         </div>
@@ -826,17 +878,23 @@
         function revealMsg(node, text, type = "") { if (!node) return; node.textContent = text; node.className = "form-msg" + (type ? " " + type : ""); }
 
         // Scroll effekt csak hosszú címeknél
-        function checkTitleOverflow() {
-            document.querySelectorAll('.series-card').forEach(titleDiv => {
-                const titleSpan = titleDiv.querySelector('span');
+// Scroll effekt csak hosszú címeknél
+        function checkTitleOverflow() {
+            document.querySelectorAll('.series-title').forEach(titleDiv => { // .series-title a konténer
+                const titleSpan = titleDiv.querySelector('span');
+                
+                // Alapértelmezett beállítások visszaállítása
+                titleDiv.classList.remove('scrolling-title');
 
-                titleDiv.classList.remove('scrolling-title');
+                // A span elem scrollozási szélességét (ami a teljes szöveg szélessége) hasonlítjuk
+                // A titleDiv látható szélességéhez.
 
-                if (titleSpan.scrollWidth > titleDiv.offsetWidth) {
-                    titleDiv.classList.add('scrolling-title');
-                }
-            });
-        }
+                // A "client" szélesség a látható szélesség, a "scroll" szélesség a teljes tartalom szélessége.
+                if (titleSpan.scrollWidth > titleDiv.clientWidth) {
+                    titleDiv.classList.add('scrolling-title');
+                }
+            });
+        }
 
         // Progress funkciók
         async function saveProgress(seriesKey, videoIndex) {
