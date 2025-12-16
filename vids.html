@@ -128,11 +128,16 @@
         #app {
             position: relative; 
             z-index: 1;
+            /* Kezdetben rejtve van, a JS teszi láthatóvá */
             display: none;
+            opacity: 0; 
+            transition: opacity 0.5s ease-in-out; 
+
             flex-direction: column;
             height: 100vh;
             width: 100vw;
         }
+        
         header {
             box-shadow: none; 
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -330,6 +335,16 @@
             line-height: 1.2;
             padding: 5px 0;
         }
+        /* A mozgó cím animáció kulcskockái */
+        @keyframes scrollText {
+            0% {
+                transform: translateX(0%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
         .series-title span {
             display: inline-block;
             padding-left: 0;
@@ -341,16 +356,6 @@
         .series-title.scrolling-title span {
             padding-left: 100%;
             animation: scrollText 10s linear infinite;
-        }
-
-        @keyframes scrollText {
-            0% {
-                transform: translateX(0%);
-            }
-
-            100% {
-                transform: translateX(-100%);
-            }
         }
         
         /* SERIES PAGE */
@@ -633,21 +638,24 @@
 
 <body>
     <div id="dynamicBackground" class="series-page-bg"></div>
-<center>
+
+    <center>
+    <div id="dynamicBackground" class="series-page-bg"></div>
+
     <div id="login-container">
         <h2>Belépés</h2>
         <form id="login-form" novalidate>
             <label>E-mail <br>
                 <input type="email" id="loginEmail" required>
             </label><br><br>
-            <label>Jelszó<br>
+            <label>Jelszó <br>
                 <input type="password" id="loginPassword" minlength="6" required>
             </label><br><br>
             <button type="submit" class="btn fill">Belépés</button>
             <p id="login-msg" class="form-msg" role="status" aria-live="polite"></p>
         </form>
     </div>
-  </center>  
+    </center>
     <div id="app">
         <header>
             <h2 id="home-btn">Bombasz Vids</h2>
@@ -667,18 +675,18 @@
                 <button id="profile-btn"><i class="fa-solid fa-user"></i> <span id="username-display"></span></button>
                 
                 <div id="profile-dropdown">
-                    <p><strong>Üdv, </strong> <span id="profile-name"></span></p>
+                    <p><strong>Üdv,</strong> <span id="profile-name"></span></p>
                     
                     <p style="font-weight: 600; margin-top: 15px; border-top: 1px solid #444; padding-top: 10px;">Legutóbb nézettek:</p>
                     <div id="watched-list" style="display: flex; flex-direction: column; gap: 5px;">
                         <p style="font-size: 0.85rem; color: #777;">Betöltés...</p>
                     </div>
+                    <br>
 
                     <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Kilépés</button>
                 </div>
             </div>
         </header>
-
 
         <div class="main-page" id="mainPage">
             <div class="series-card" data-series="chainsaw-movie">
@@ -998,7 +1006,7 @@
             }
         }
         
-        // ÚJ: ÖSSZES PROGRESSZ ADAT BETÖLTÉSE
+        // ÚJ: ÖSSZES PROGRESSZ ADAT BETÖLTÉSE (FADE-IN HEZ IS KELL)
         function loadAllProgress() {
             const user = auth.currentUser;
             if (!user) return;
@@ -1019,13 +1027,14 @@
             });
         }
         
-        // ÚJ: LEGUTÓBB NÉZETT LISTA FELTÖLTÉSE
+        // ÚJ: LEGUTÓBB NÉZETT LISTA FELTÖLTÉSE (CSAK 5 ELEM)
         function populateWatchedList(progressData) {
             if (!progressData || Object.keys(progressData).length === 0) {
                 watchedList.innerHTML = '<p style="font-size: 0.85rem; color: #777;">Még nem néztél sorozatot.</p>';
                 return;
             }
 
+            // Objektumok átalakítása listává, hogy timestamp alapján rendezhessük
             const watchedItems = Object.keys(progressData)
                 .map(seriesKey => {
                     const data = progressData[seriesKey];
@@ -1122,26 +1131,39 @@
         // Logout
         logoutBtn.addEventListener("click", async () => { await signOut(auth); });
 
-        // Profile dropdown toggle (A CSS megkívánja, hogy a JS kezelje a megjelenítést)
+        // Profile dropdown toggle
         profileBtn.addEventListener("click", (e) => { 
-            e.stopPropagation(); // Megakadályozzuk, hogy a document click azonnal bezárja
+            e.stopPropagation(); 
             
-            // Betöltjük a nézett listát a dropdown megjelenítése előtt
+            // Ha éppen bezárjuk a menüt, nincs szükség a betöltésre
             if (profileDropdown.style.display !== "block") {
+                 // Ha megnyitjuk, betöltjük a legutóbb nézettek listáját
                  loadAllProgress();
             }
             
             profileDropdown.style.display = profileDropdown.style.display === "block" ? "none" : "block"; 
         });
 
-        // ÚJ: BEZÁRÁS BÁRHOL MÁSUTT TÖRTÉNŐ KATTINTÁSRA
+        // ÚJ: GLOBÁLIS KATTINTÁSKEZELŐ (MENÜ ÉS KERESŐ BEZÁRÁSA)
         document.addEventListener('click', (e) => {
             const isClickInsideDropdown = profileDropdown.contains(e.target);
             const isClickOnProfileButton = profileBtn.contains(e.target);
             
-            // Ha a dropdown nyitva van, és nem a dropdown-ra vagy a gombra kattintunk, zárjuk be.
+            const isClickInsideSearch = searchContainer.contains(e.target);
+            const isClickOnSearchButton = searchBtn.contains(e.target);
+
+            // 1. Zárja be a Profil menüt
             if (profileDropdown.style.display === 'block' && !isClickInsideDropdown && !isClickOnProfileButton) {
                 profileDropdown.style.display = 'none';
+            }
+
+            // 2. Zárja be a Keresőmezőt (ha aktív, és nem a keresőmezőn/gombján történt a kattintás)
+            if (searchContainer.classList.contains('active') && !isClickInsideSearch && !isClickOnSearchButton) {
+                // Csak akkor zárjuk be, ha a mező üres, vagy máshova kattintunk
+                if (searchInput.value.length === 0) {
+                     searchContainer.classList.remove('active');
+                     searchInput.blur();
+                }
             }
         });
 
@@ -1150,15 +1172,30 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 loginContainer.style.display = "none";
+                
+                // --- FADE-IN LOGIKA ---
+                // 1. Megjelenítjük a konténert a megfelelő display típussal
                 appContainer.style.display = "flex";
+
+                // 2. Rövid késleltetés után (vagy azonnal) beállítjuk az átlátszatlanságot
+                setTimeout(() => {
+                    appContainer.style.opacity = "1";
+                }, 10); 
+                // ----------------------
+
                 const displayId = user.displayName || user.email.split('@')[0];
                 usernameDisplay.textContent = displayId;
                 profileName.textContent = displayId;
                 profileEmail.textContent = user.email;
                 setTimeout(checkTitleOverflow, 500);
+                
+                // AZ ÖSSZES ADAT BETÖLTÉSE BEJELENTKEZÉS UTÁN
+                loadAllProgress();
+
             } else {
-                loginContainer.style.display = "flex";
+                appContainer.style.opacity = "0";
                 appContainer.style.display = "none";
+                loginContainer.style.display = "flex";
                 profileDropdown.style.display = "none";
             }
         });
@@ -1208,13 +1245,18 @@
         });
 
         // Search functionality
-        searchBtn.addEventListener('click', () => {
+        searchBtn.addEventListener('click', (e) => {
+            // Megakadályozza, hogy a document click azonnal bezárja
+            e.stopPropagation();
+
             if (searchContainer.classList.contains('active')) {
-                if (searchInput.value.length === 0) {
+                // Ha már nyitva van, és van benne szöveg, akkor hagyja nyitva és várjon a bevitelnél
+                if (searchInput.value.length > 0) {
+                     searchInput.focus();
+                } else {
+                    // Ha üres, zárja be
                     searchContainer.classList.remove('active');
                     searchInput.blur();
-                } else {
-                    searchInput.focus();
                 }
             } else {
                 searchContainer.classList.add('active');
