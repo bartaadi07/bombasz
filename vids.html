@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bombasz Vids</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=1.1">
     <style>
@@ -282,7 +282,6 @@
             width: 100%;
             height: 30px;
             overflow: hidden;
-            white-space: nowrap;
             box-sizing: border-box;
             text-align: center;
             margin-top: 5px;
@@ -294,8 +293,10 @@
         .series-title span {
             display: inline-block;
             padding-left: 0;
+            white-space: nowrap;
             animation: none;
             transform: translateX(0%);
+            box-sizing: content-box;
         }
 
         /* Csak azoknál a címeknél legyen animáció, ahol szükséges */
@@ -373,30 +374,101 @@
             border-color: #ff4c4c;
         }
 
-        .video-container {
+        /* -------------------------------------- */
+        /* KÉRT STÍLUSOK: Epizódlista állapotok */
+        /* -------------------------------------- */
+
+        /* Megnézett epizódok diszkrét háttere */
+        .video-card.watched {
+            background: #1a1a1a;
+            opacity: 0.8;
+            border-color: #333;
+            position: relative;
+        }
+
+        .video-card.watched:hover {
+            opacity: 1;
+        }
+
+        /* Pipa ikon stílusa (a megnézett részeken) */
+        .watched .fa-check {
+            color: #4cff7f;
+            margin-left: 5px;
+        }
+        
+        /* ÚJ KONTÉNER A VIDEÓNAK ÉS A GOMBNAK */
+        .video-content-wrapper {
             flex: 1;
             display: flex;
+            flex-direction: column;
             padding: 20px;
             box-sizing: border-box;
             order: 1;
-            /* A video iframe-ek elhelyezkedése */
+            align-items: center; 
+            
+            /* MÓDOSÍTVA: Rugalmas korlát 85% VW-ben, max 1300px-ig (1000 * 1.3) */
+            max-width: min(1300px, 85vw); 
+            margin: 0 auto; 
+            
+            height: 100%; 
+        }
+        
+        /* -------------------------------------- */
+        /* VIDEÓ KONTÉNER STÍLUSOK (FIX 16:9 ARÁNY) */
+        /* -------------------------------------- */
+
+        .video-frame-container {
+            width: 100%;
+            
+            /* Képarány trükk: A magasság 56.25% a szélességnek */
+            position: relative; 
+            height: 0; 
+            padding-top: 56.25%; /* 16:9 arány */
+            max-width: 100%;
+            flex-shrink: 0;
+            overflow: hidden; 
         }
 
-        /* A video-container most flex-t tartalmaz, hogy az iframe jól kitöltse a helyet */
-        .video-container iframe {
-            width: 100%;
+        .video-frame-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; 
             height: 100%;
             border: 0;
             border-radius: 12px;
-            /* Fontos: az iframe most közvetlenül a video-containerben van */
+        }
+        
+        .video-frame-container iframe.indavideo-player {
+            width: 100%; 
+            height: 100%;
         }
 
-        /* Indavideo lejátszó kicsit kisebb és középen van (megtartva a korábbi viselkedést) */
-        .video-container iframe.indavideo-player {
-            width: 95%;
-            height: 95%;
-            margin: auto;
-            display: block;
+
+        /* Következő epizód gomb stílusa */
+        #nextEpisodeBtn {
+            background: #333;
+            color: #fff;
+            border: 2px solid #ff0000;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        #nextEpisodeBtn:hover {
+            background: #ff0000;
+            transform: scale(1.02);
+            border-color: #fff;
         }
 
         /* VISSZA GOMB STÍLUS */
@@ -481,11 +553,16 @@
                 padding: 15px;
                 order: 1;
             }
-
-            .video-container {
-                height: 220px;
+            
+            .video-content-wrapper {
+                height: 220px; 
                 padding: 15px;
                 order: 0;
+            }
+            
+            .video-frame-container {
+                 padding-top: 0; 
+                 height: 100%;
             }
 
             .sidebar h2 {
@@ -496,6 +573,11 @@
             .video-card {
                 font-size: 12px;
                 padding: 8px;
+            }
+            
+            #nextEpisodeBtn {
+                margin-top: 15px;
+                max-width: 100%;
             }
 
         }
@@ -515,58 +597,6 @@
                 padding: 30px 20px;
             }
         }
-        /* Eredeti CSS módosítás nélkül maradhat a <style> blokkban, de a series-title és scrollText részeket leellenőriztem és finomítottam: */
-
-/* series-title: 
-   - A konténer, ami elrejti a túlcsorduló tartalmat
-   - A szélessége a kártyáé (100%)
-*/
-.series-title {
-    width: 100%;
-    height: 30px;
-    overflow: hidden; /* Ez rejti el a túlcsorduló részt */
-    box-sizing: border-box;
-    text-align: center;
-    margin-top: 5px;
-    font-size: 0.9rem;
-    position: relative;
-    line-height: 1.2;
-}
-
-/* series-title span: 
-   - Ez a tényleges tartalom. Alapértelmezésben maradjon érintetlen.
-   - White-space: nowrap elengedhetetlen a vízszintes scrollozáshoz
-*/
-.series-title span {
-    display: inline-block;
-    padding-left: 0;
-    white-space: nowrap; /* EZ FONTOS: megakadályozza a tördelést */
-    animation: none;
-    transform: translateX(0%);
-    box-sizing: content-box; /* Ne zavarjon bele a szélességbe a padding */
-}
-
-/* Csak azoknál a címeknél legyen animáció, ahol szükséges */
-.series-title.scrolling-title span {
-    /* Az animáció kezdetéhez kell 100% padding-left, hogy a szöveg eltűnjön jobbra a start előtt */
-    padding-left: 100%; 
-    animation: scrollText 10s linear infinite;
-}
-
-/* scrollText animáció:
-   - 100%-ról -100%-ra mozgatja az elemet
-*/
-@keyframes scrollText {
-    0% {
-        transform: translateX(0%);
-    }
-
-    100% {
-        /* A teljes cím szélessége + a konténer szélessége miatt kell 100% feletti érték
-           A -100% elegendő a folyamatos mozgáshoz, ha a padding-left 100%-ról indul */
-        transform: translateX(-100%); 
-    }
-}
     </style>
 </head>
 
@@ -660,7 +690,10 @@
                 <h2 id="seriesTitle">Sorozat</h2>
                 <div id="videoList"></div>
             </div>
-            <div class="video-container">
+            <div class="video-content-wrapper">
+                <div class="video-frame-container">
+                    </div>
+                <button id="nextEpisodeBtn" style="display:none;"></button>
             </div>
         </div>
     </div>
@@ -707,6 +740,9 @@
         const videoList = document.getElementById('videoList');
         const seriesTitle = document.getElementById('seriesTitle');
         const backBtn = document.getElementById('back-btn');
+        
+        const videoContainer = document.querySelector('.video-frame-container');
+        const nextEpisodeBtn = document.getElementById('nextEpisodeBtn');
 
         const seriesData = {
             "chainsaw-movie": {
@@ -715,23 +751,23 @@
                     { title: "1. rész", src: "https://vkvideo.ru/video_ext.php?oid=-234629758&id=456239018&hd=4", type: 'vkvideo' }
                 ]
             },
-"chainsaw-series": {
-    "title": "Chainsaw Man",
-    "videos": [
-        { "title": "01. rész", "src": "https://mega.nz/embed/i34jHaxJ#2rze3ZC4mwLkf233l-cT-gNNElnZAtvoHJOJPfMilUI", "type": "videa" },
-        { "title": "02. rész", "src": "https://mega.nz/embed/nv4gVSgR#Ft3LTdB4j06VkdD4mxHcsfUhWnFtJqCI5Xj0jbHK6Yk", "type": "videa" },
-        { "title": "03. rész", "src": "https://mega.nz/embed/iiIShLKL#nfuCwaaQAIyPJlM-DAjJRAq-lM1JbjEe4L6D1xFAQ94", "type": "videa" },
-        { "title": "04. rész", "src": "https://mega.nz/embed/vyB3RK5Z#yImAcZSdffDJEAFCIaDVjci340cn8bfkfd3orp-gH4Q", "type": "videa" },
-        { "title": "05. rész", "src": "https://mega.nz/embed/7rRXRDZC#m0RE2jUHgznTcGPFrclDNP-xEyBCjHUeUYUu8FWdI0U", "type": "videa" },
-        { "title": "06. rész", "src": "https://mega.nz/embed/LqxzWTbb#eEDmR3m8_zIpeT-BdNfrKbp27yfZN7ZrYP5Ip2CwQjo", "type": "videa" },
-        { "title": "07. rész", "src": "https://mega.nz/embed/jvJiAAZD#ibghVyfWrp9WfpvkfBuC0O_yqgXpmU4IEb3uXgcqpMw", "type": "videa" },
-        { "title": "08. rész", "src": "https://mega.nz/embed/SrA3AaST#VlRTaCkuB3nnP_iRgd08_0T2HEOcWuoGLbblizEaY-Y", "type": "videa" },
-        { "title": "09. rész", "src": "https://mega.nz/embed/b7Yi1SCD#xLRyzn2Wd6QQ-ccEdA9o47GyrtAtMP8-CxJ7k9O1lGM", "type": "videa" },
-        { "title": "10. rész", "src": "https://mega.nz/embed/Hv5xDRZB#amCkiNUifgnaKxywkoCRWPNGV1c6NlpmdFxkQ95N1Ys", "type": "videa" },
-        { "title": "11. rész", "src": "https://mega.nz/embed/L2wREYAS#cULzLMKs-GY_V9btuCPko-L1jBENQNttm34Hsb14U5o", "type": "videa" },
-        { "title": "12. rész", "src": "https://mega.nz/embed/q3pDGRrR#OfHfr_Nxmxbi2Fplt3LnFaLtd_R9RpTQeiZIdTVf5Hg", "type": "videa" }
-    ]
-},
+            "chainsaw-series": {
+                "title": "Chainsaw Man",
+                "videos": [
+                    { "title": "01. rész", "src": "https://mega.nz/embed/i34jHaxJ#2rze3ZC4mwLkf233l-cT-gNNElnZAtvoHJOJPfMilUI", "type": "videa" },
+                    { "title": "02. rész", "src": "https://mega.nz/embed/nv4gVSgR#Ft3LTdB4j06VkdD4mxHcsfUhWnFtJqCI5Xj0jbHK6Yk", "type": "videa" },
+                    { "title": "03. rész", "src": "https://mega.nz/embed/iiIShLKL#nfuCwaaQAIyPJlM-DAjJRAq-lM1JbjEe4L6D1xFAQ94", "type": "videa" },
+                    { "title": "04. rész", "src": "https://mega.nz/embed/vyB3RK5Z#yImAcZSdffDJEAFCIaDVjci340cn8bfkfd3orp-gH4Q", "type": "videa" },
+                    { "title": "05. rész", "src": "https://mega.nz/embed/7rRXRDZC#m0RE2jUHgznTcGPFrclDNP-xEyBCjHUeUYUu8FWdI0U", "type": "videa" },
+                    { "title": "06. rész", "src": "https://mega.nz/embed/LqxzWTbb#eEDmR3m8_zIpeT-BdNfrKbp27yfZN7ZrYP5Ip2CwQjo", "type": "videa" },
+                    { "title": "07. rész", "src": "https://mega.nz/embed/jvJiAAZD#ibghVyfWrp9WfpvkfBuC0O_yqgXpmU4IEb3uXgcqpMw", "type": "videa" },
+                    { "title": "08. rész", "src": "https://mega.nz/embed/SrA3AaST#VlRTaCkuB3nnP_iRgd08_0T2HEOcWuoGLbblizEaY-Y", "type": "videa" },
+                    { "title": "09. rész", "src": "https://mega.nz/embed/b7Yi1SCD#xLRyzn2Wd6QQ-ccEdA9o47GyrtAtMP8-CxJ7k9O1lGM", "type": "videa" },
+                    { "title": "10. rész", "src": "https://mega.nz/embed/Hv5xDRZB#amCkiNUifgnaKxywkoCRWPNGV1c6NlpmdFxkQ95N1Ys", "type": "videa" },
+                    { "title": "11. rész", "src": "https://mega.nz/embed/L2wREYAS#cULzLMKs-GY_V9btuCPko-L1jBENQNttm34Hsb14U5o", "type": "videa" },
+                    { "title": "12. rész", "src": "https://mega.nz/embed/q3pDGRrR#OfHfr_Nxmxbi2Fplt3LnFaLtd_R9RpTQeiZIdTVf5Hg", "type": "videa" }
+                ]
+            },
             "deathnote": {
                 title: "Death Note",
                 videos: [
@@ -753,25 +789,16 @@
                     { title: "16. rész", src: "//embed.indavideo.hu/player/video/932d9f3317", type: 'indavideo' },
                     { title: "17. rész", src: "//embed.indavideo.hu/player/video/a4e723f5dc", type: 'indavideo' },
                     { title: "18. rész", src: "//embed.indavideo.hu/player/video/a273ea4497", type: 'indavideo' },
-                    { title: "19. rész", src: "//embed.indavideo.hu/player/video/4e0303e106", type: 'indavideo' },
-                    { title: "20. rész", src: "//embed.indavideo.hu/player/video/556ec9ef82", type: 'indavideo' },
-                    { title: "21. rész", src: "//embed.indavideo.hu/player/video/623db0bd5a", type: 'indavideo' },
-                    { title: "22. rész", src: "//embed.indavideo.hu/player/video/517955f1d7", type: 'indavideo' },
-                    { title: "23. rész", src: "//embed.indavideo.hu/player/video/20df66d3d0", type: 'indavideo' },
-                    { title: "24. rész", src: "//embed.indavideo.hu/player/video/eb57cbdad5", type: 'indavideo' },
-                    { title: "25. rész", src: "//embed.indavideo.hu/player/video/8ed4518ea6", type: 'indavideo' },
-                    { title: "26. rész", src: "//embed.indavideo.hu/player/video/dc9c10a4de", type: 'indavideo' },
-                    { title: "27. rész", src: "//embed.indavideo.hu/player/video/671066c028", type: 'indavideo' },
-                    { title: "28. rész", src: "//embed.indavideo.hu/player/video/51de73d8cd", type: 'indavideo' },
-                    { title: "29. rész", src: "//embed.indavideo.hu/player/video/79b4169b8e", type: 'indavideo' },
-                    { title: "30. rész", src: "//embed.indavideo.hu/player/video/a6b6aa2390", type: 'indavideo' },
-                    { title: "31. rész", src: "//embed.indavideo.hu/player/video/a725c4e776", type: 'indavideo' },
-                    { title: "32. rész", src: "//embed.indavideo.hu/player/video/07358342a8", type: 'indavideo' },
-                    { title: "33. rész", src: "//embed.indavideo.hu/player/video/e502867b57", type: 'indavideo' },
-                    { title: "34. rész", src: "//embed.indavideo.hu/player/video/dc0d39efe0", type: 'indavideo' },
-                    { title: "35. rész", src: "//embed.indavideo.hu/player/video/f943a92474", type: 'indavideo' },
-                    { title: "36. rész", src: "//embed.indavideo.hu/player/video/b7c7749341", type: 'indavideo' },
-                    { title: "37. rész", src: "//embed.indavideo.hu/player/video/17e0c62204", type: 'indavideo' }
+                    { title: "19. rész", src: "//embed.indavideo.hu/player/video/f3ce246582", type: 'indavideo' },
+                    { title: "20. rész", src: "//embed.indavideo.hu/player/video/e5da6af423", type: 'indavideo' },
+                    { title: "21. rész", src: "//embed.indavideo.hu/player/video/77979c4cac", type: 'indavideo' },
+                    { title: "22. rész", src: "//embed.indavideo.hu/player/video/9e2463619c", type: 'indavideo' },
+                    { title: "23. rész", src: "//embed.indavideo.hu/player/video/99c0d5fb6b", type: 'indavideo' },
+                    { title: "24. rész", src: "//embed.indavideo.hu/player/video/71cd1036af", type: 'indavideo' },
+                    { title: "25. rész", src: "//embed.indavideo.hu/player/video/c1e3575648", type: 'indavideo' },
+                    { title: "26. rész", src: "//embed.indavideo.hu/player/video/a1c1127501", type: 'indavideo' },
+
+
                 ]
             },
             "record-of-ragnarok-s1": {
@@ -878,23 +905,18 @@
         function revealMsg(node, text, type = "") { if (!node) return; node.textContent = text; node.className = "form-msg" + (type ? " " + type : ""); }
 
         // Scroll effekt csak hosszú címeknél
-// Scroll effekt csak hosszú címeknél
-        function checkTitleOverflow() {
-            document.querySelectorAll('.series-title').forEach(titleDiv => { // .series-title a konténer
-                const titleSpan = titleDiv.querySelector('span');
-                
-                // Alapértelmezett beállítások visszaállítása
-                titleDiv.classList.remove('scrolling-title');
+        function checkTitleOverflow() {
+            document.querySelectorAll('.series-title').forEach(titleDiv => {
+                const titleSpan = titleDiv.querySelector('span');
 
-                // A span elem scrollozási szélességét (ami a teljes szöveg szélessége) hasonlítjuk
-                // A titleDiv látható szélességéhez.
+                titleDiv.classList.remove('scrolling-title');
 
-                // A "client" szélesség a látható szélesség, a "scroll" szélesség a teljes tartalom szélessége.
-                if (titleSpan.scrollWidth > titleDiv.clientWidth) {
-                    titleDiv.classList.add('scrolling-title');
-                }
-            });
-        }
+                // A "client" szélesség a látható szélesség, a "scroll" szélesség a teljes tartalom szélessége.
+                if (titleSpan.scrollWidth > titleDiv.clientWidth) {
+                    titleDiv.classList.add('scrolling-title');
+                }
+            });
+        }
 
         // Progress funkciók
         async function saveProgress(seriesKey, videoIndex) {
@@ -984,8 +1006,9 @@
             searchContainer.classList.remove('active');
             searchInput.value = '';
             document.querySelectorAll('.series-card').forEach(card => card.style.display = 'flex');
-            document.querySelector('.video-container').innerHTML = '';
+            videoContainer.innerHTML = '';
             videoList.innerHTML = '';
+            nextEpisodeBtn.style.display = 'none';
             setTimeout(checkTitleOverflow, 100);
         });
 
@@ -995,15 +1018,15 @@
             mainPage.style.display = 'flex';
             searchBtn.style.display = 'flex';
             searchContainer.classList.remove('active');
-            document.querySelector('.video-container').innerHTML = '';
+            videoContainer.innerHTML = '';
             videoList.innerHTML = '';
+            nextEpisodeBtn.style.display = 'none';
             setTimeout(checkTitleOverflow, 100);
         });
 
         // Search functionality
         searchBtn.addEventListener('click', () => {
             if (searchContainer.classList.contains('active')) {
-                // Ha be van húzva, de üres a mező, vagy újra rákattintunk
                 if (searchInput.value.length === 0) {
                     searchContainer.classList.remove('active');
                     searchInput.blur();
@@ -1011,7 +1034,6 @@
                     searchInput.focus();
                 }
             } else {
-                // Ha ki van húzva, húzzuk be
                 searchContainer.classList.add('active');
                 searchInput.focus();
             }
@@ -1051,10 +1073,9 @@
         });
 
 
-        // >>> LETISZTÍTOTT UPDATEPLAYER FÜGGVÉNY <<<
-
+        // >>> FRISSÍTETT UPDATEPLAYER FÜGGVÉNY <<<
         function updatePlayer(src, type) {
-            const videoContainer = document.querySelector('.video-container');
+            const videoContainer = document.querySelector('.video-frame-container');
             videoContainer.innerHTML = '';
 
             // Iframe létrehozása
@@ -1069,9 +1090,8 @@
 
             if (type === 'indavideo') {
                 iframe.title = 'indavideo video player';
-                iframe.classList.add('indavideo-player'); // A méretezéshez kellhet
-            } else if (type === 'videa') {
-                iframe.id = 'videaPlayer';
+                iframe.classList.add('indavideo-player');
+            } else if (type === 'videa' || type === 'vkvideo') {
                 iframe.webkitallowfullscreen = true;
                 iframe.mozallowfullscreen = true;
             }
@@ -1080,7 +1100,7 @@
         }
 
 
-        // Load series
+        // >>> FRISSÍTETT LOADSERIES FÜGGVÉNY <<<
         async function loadSeries(seriesKey) {
             const series = seriesData[seriesKey];
             if (!series) {
@@ -1094,24 +1114,50 @@
 
             seriesTitle.textContent = series.title;
             videoList.innerHTML = "";
+            nextEpisodeBtn.style.display = 'none';
+            nextEpisodeBtn.onclick = null; // Töröljük az előző eseménykezelőt
 
             // Progress betöltése
             const lastWatchedIndex = await loadProgress(seriesKey);
-            const initialIndex = Math.min(lastWatchedIndex, series.videos.length - 1);
-
+            const totalEpisodes = series.videos.length;
+            
+            // Az éppen lejátszandó epizód
+            const initialIndex = Math.min(lastWatchedIndex, totalEpisodes - 1);
+            
+            // A következő epizód indexe
+            let nextIndex = initialIndex + 1;
+            
             // Alapértelmezett lejátszás a mentett résszel
-            if (series.videos.length > 0) {
+            if (totalEpisodes > 0) {
                 updatePlayer(series.videos[initialIndex].src, series.videos[initialIndex].type);
             }
+
+            let activeCard = null;
 
             series.videos.forEach((vid, index) => {
                 const card = document.createElement('div');
                 card.classList.add('video-card');
 
-                // Aktiváljuk a mentett indexű kártyát
-                if (index === initialIndex) card.classList.add('active');
+                // ------------------------------------------------
+                // 3. Vizuális jelzések: Megnézett és Aktív jelölés
+                // ------------------------------------------------
+                
+                // Megnézett részek jelölése (ha kisebb, mint az utoljára nézett index)
+                if (index < lastWatchedIndex) {
+                    card.classList.add('watched');
+                    // Pipa ikon hozzáadása a megnézett részhez
+                    card.innerHTML = `${vid.title} <i class="fa-solid fa-check"></i>`;
+                } else {
+                    card.textContent = vid.title;
+                }
+                
+                // "Utoljára nézett" jelölés (aktív)
+                if (index === initialIndex) {
+                    card.classList.add('active');
+                    activeCard = card; // Ezt kell görgetni
+                }
 
-                card.textContent = vid.title;
+                card.setAttribute('data-index', index);
                 card.setAttribute('data-src', vid.src);
                 card.setAttribute('data-type', vid.type);
 
@@ -1121,13 +1167,65 @@
                     // Lejátszó frissítése
                     updatePlayer(vid.src, vid.type);
 
+                    // Aktív kártya frissítése
                     document.querySelectorAll('.video-card').forEach(c => c.classList.remove('active'));
                     card.classList.add('active');
 
                     // Progress mentése kattintáskor
                     saveProgress(seriesKey, index);
+                    
+                    // Frissítsük a Következő Epizód gombot is
+                    updateNextEpisodeButton(seriesKey, index + 1);
                 });
             });
+
+            // ------------------------------------------------
+            // 2. Automatikus görgetés az utoljára nézett részhez
+            // ------------------------------------------------
+            if (activeCard) {
+                // A 'smooth' animációhoz és a középre igazításhoz
+                activeCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            // ------------------------------------------------
+            // 1. Következő epizód gomb megjelenítése
+            // ------------------------------------------------
+            updateNextEpisodeButton(seriesKey, nextIndex);
+        }
+
+        // >>> MÓDOSÍTOTT SEGÉDFÜGGVÉNY: Következő epizód gomb frissítése <<<
+        function updateNextEpisodeButton(seriesKey, nextIndex) {
+            const series = seriesData[seriesKey];
+            const totalEpisodes = series.videos.length;
+            
+            if (nextIndex < totalEpisodes) {
+                // Eset 1: Van még következő epizód
+                const nextVideo = series.videos[nextIndex];
+                nextEpisodeBtn.textContent = `Következő epizód: ${nextVideo.title}`;
+                nextEpisodeBtn.style.display = 'flex';
+                
+                // Eseménykezelő beállítása a következő részre ugráshoz
+                nextEpisodeBtn.onclick = () => {
+                    // Megkeresi a következő epizód kártyáját az index alapján
+                    const nextCard = document.querySelector(`.video-card[data-index="${nextIndex}"]`);
+                    if (nextCard) {
+                        nextCard.click(); // Szimulálja a kártya kattintását
+                    }
+                };
+
+            } else {
+                // Eset 2: Nincs több epizód (vagy befejezett sorozat, vagy film)
+                if (totalEpisodes === 1) {
+                    // Film: Csak rejtse el a gombot
+                    nextEpisodeBtn.style.display = 'none';
+                    nextEpisodeBtn.onclick = null;
+                } else {
+                    // Befejezett sorozat: Írja ki az üzenetet
+                    nextEpisodeBtn.textContent = `A sorozat befejezve!`;
+                    nextEpisodeBtn.style.display = 'flex';
+                    nextEpisodeBtn.onclick = null;
+                }
+            }
         }
     </script>
 </body>
