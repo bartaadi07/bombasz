@@ -1,381 +1,136 @@
 <!DOCTYPE html>
 <html lang="hu">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>UNCS</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BOMBASZ</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Orbitron:wght@700;900&display=swap"
+        rel="stylesheet" />
 
-  <!-- Fonts & Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet" />
+    <style>
 
-  <!-- Style -->
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/x-icon" href="adamimg/favicon.ico">
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        });
+    </script>
 </head>
+
 <body>
 
-  <!-- A régi hátterek/canvas-ok nem kellenek -->
+    <div class="bg-wrap"></div>
+
+    <main class="container">
+
+        <h1 class="main-title-display">B O M B A S Z</h1>
+
+        <section id="home" class="main-content-grid">
+
+            <div class="left-panel">
 
 
-  <!-- AURORA háttér -->
-  <div class="aurora-bg">
-    <span class="blob blob-a"></span>
-    <span class="blob blob-b"></span>
-    <span class="blob blob-c"></span>
-    <span class="blob blob-d"></span>
-  </div>
+                <div class="assets-container">
+                    <div class="assets-sub-section">
+                                               <h2>> ALOLDALAK</h2>
+                        <div class="assets-grid">
 
-  <!-- BAL IKONSÁV (mintaképes) -->
-  <aside class="side-nav">
-    <a href="#home"     class="active" title="Főoldal"><i class="fa-solid fa-house"></i></a>
-    <a href="#about"    title="Rólunk"><i class="fa-solid fa-circle-info"></i></a>
-    <a href="#team"     title="Csapat"><i class="fa-solid fa-users"></i></a>
-    <a href="#register" title="Regisztráció"><i class="fa-solid fa-user-plus"></i></a>
-    <a href="#contact"  title="Kapcsolat"><i class="fa-solid fa-envelope"></i></a>
-  
-    <!-- ÚJ: külső oldalak -->
-    <a href="chat2.html"  target="_blank" title="Chat"><i class="fa-solid fa-comments"></i></a>
-    <a href="konyv.html" target="_blank" title="Könyvek"><i class="fa-solid fa-book"></i></a>
-  </aside>
-  
-  <!-- FENTI ÜVEG TOPBAR -->
+                            <a href="https://www.bombasz.hu/chat" target="_blank" class="asset-card external">
+                                <i class="fa-solid fa-comments"></i>
+                                <h4>Chat</h4>
+                            </a>
 
-  
+                            <a href="https://www.bombasz.hu/chat2" target="_blank" class="asset-card external">
+                                <i class="fa-solid fa-terminal"></i>
+                                <h4>Terminál</h4>
+                            </a>
 
-  <!-- FŐ GLASS KÁRTYA (Hero) -->
-  <main id="home" class="container">
-    <section class="glass hero">
-      <div class="hero-left">
-        <p class="eyebrow">we are the</p>
-        <h1 class="display">U N C S<br><span><div id="real-time-clock" class="clock"></div>
-        </span></h1>
-        <p class="lead">Dedicated for you!</p>
+                            <a href="https://www.bombasz.hu/konyv" target="_blank" class="asset-card external">
+                                <i class="fa-solid fa-book-open"></i>
+                                <h4>Könyvek</h4>
+                            </a>
 
-        <div class="downloads">
-            <a href="Setup.exe" class="btn pill ghost" download>
-              <i class="fa-solid fa-download"></i> SRT. Időzítő (exe)
-            </a>
-          
-            <a href="bombasz.apk" class="btn pill ghost" download>
-              <i class="fa-solid fa-mobile-screen"></i> BombaszChat (apk)
-            </a>
-          
-            <div class="btn-with-credit">
-              <a href="downloader_app.py" class="btn pill ghost" download>
-                <i class="fa-solid fa-music"></i> Zene Letöltő (py)
-              </a>
-              <span class="credit-badge">
-                
-                Külső Közreműködő:
-                <br>
-                Hajdu Balázs
-              </span>
+                            <a href="https://www.bombasz.hu/vids" target="_blank" class="asset-card external">
+                                <i class="fa-solid fa-circle-play"></i>
+                                <h4>Vids</h4>
+                            </a>
+
+                            <a href="https://www.bombasz.hu/mikulas" target="_blank" class="asset-card external">
+                                <i class="fa-solid fa-gift"></i>
+                                <h4>Mikulás</h4>
+                            </a>
+
+                            <a href="https://www.bombasz.hu/uncs" target="_blank" class="asset-card external">
+                                <i class="fa-solid fa-check"></i>
+                                <h4>UNCS</h4>
+                            </a>
+
+                            <a href="https://www.bombasz.hu/cbz" target="_blank" class="asset-card external">
+                                <i class="fa-solid fa-book-open"></i>
+                                <h4>CBZ</h4>
+                            </a>
+
+                        </div>
+                    </div>
+
+                    <div class="assets-sub-section">
+ 
+                        <h2>> LETÖLTÉSEK</h2>
+                        <div class="assets-grid">
+                            <a href="Setup.exe" class="asset-card" download>
+                                <i class="fa-solid fa-desktop"></i>
+                                <h4>SRT. Időzítő</h4>
+                                <small>(exe)</small>
+                            </a>
+
+                            <a href="bombasz.apk" class="asset-card" download>
+                                <i class="fa-solid fa-mobile-screen"></i>
+                                <h4>BombaszChat</h4>
+                                <small>(apk)</small>
+                            </a>
+
+                            <a href="downloader_app.py" class="asset-card" download>
+                                <i class="fa-solid fa-music"></i>
+                                <h4>Zene Letöltő</h4>
+                                <small>Készítette: Hajdu Balázs (py)</small>
+                            </a>
+
+                        </div>
+                    </div>
+
+                </div>
             </div>
-          </div>
-          
-
-      </div>
-
-      <div class="hero-right">
-        <div class="hero-art">
-          <img src="adamimg/unnamed (1) (1).jpg" alt="UNCS illusztráció">
-          <ul class="floating-icons">
-            <li><i class="fa-solid fa-cloud-arrow-down"></i></li>
-            <li><i class="fa-solid fa-photo-film"></i></li>
-            <li><i class="fa-solid fa-shapes"></i></li>
-            <li><i class="fa-solid fa-sliders"></i></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- SZEKCIÓ RÁCS – üvegkártyák -->
-  <section id="about" class="container grid">
-    <article class="glass card">
-      <h2>Rólunk</h2>
-      <p>Mi vagyunk a piacvezetők a könnyű, üvegfelületű webes UI-k terén.</p>
-    </article>
-
-    <article id="team" class="glass card">
-      <h2>Csapat</h2>
-      <div class="team">
-        <div class="member">
-          <img src="https://dummyimage.com/160x160/ccd2ff/1a2034.png&text=BA" alt="Barta Ádám">
-          <div>
-            <h3>Barta Ádám</h3>
-            <p>Fejlesztő – Profi ChatGPT használó.</p>
-          </div>
-        </div>
-        <div class="member">
-          <img src="https://dummyimage.com/160x160/ccd2ff/1a2034.png&text=GB" alt="Gombos Bálint">
-          <div>
-            <h3>Gombos Bálint</h3>
-            <p>Designer – Grafikai tervezés és UI/UX.</p>
-          </div>
-        </div>
-        <div class="member">
-          <img src="https://dummyimage.com/160x160/ccd2ff/1a2034.png&text=BZ" alt="Beluscsák Zsolt">
-          <div>
-            <h3>Beluscsák Zsolt</h3>
-            <p>Fejlesztő – Frontend/Backend specialista.</p>
-          </div>
-        </div>
-      </div>
-    </article>
-    <article id="login" class="glass card">
-        <h2>Bejelentkezés</h2>
-      
-       <form id="login-form" novalidate class="form">
-        
-            <label>
-              E-mail
-              <input type="email" id="loginEmail" placeholder="valaki@pelda.hu" required>
-            </label>
-            <label>
-              Jelszó
-              <input type="password" id="loginPassword" minlength="6" required>
-            </label>
-            <div class="auth-actions">
-              <label class="remember">
-                <input type="checkbox" id="loginRemember"> Emlékezz rám
-              </label>
-              <button type="button" id="reset-password" class="btn ghost pill">Elfelejtett jelszó?</button>
+            <div class="assets-sub-section">
+                <h2>> BOMBASZ FIÓK</h2>
+                <div class="auth-forms-wrap" id="register-access">
+                    <article id="register" class="form-card">
+                        <h3>> REGISZTRÁCIÓ</h3>
+                        <form id="register-form" novalidate class="form">
+                            <label>Megjelenő név<input type="text" id="regDisplayName" placeholder=""></label>
+                            <label>E-mail<input type="email" id="regEmail" placeholder="" required></label>
+                            <div class="two">
+                                <label>Jelszó (min. 6 karakter)<input type="password" id="regPassword" minlength="6"
+                                        placeholder="" required></label>
+                                <label>Jelszó újra<input type="password" id="regPassword2" minlength="6"
+                                        required></label>
+                            </div>
+                            <button type="submit" id="register-btn" class="btn btn-fill">CREATE ACCOUNT</button>
+                            <p id="register-msg" class="form-msg" role="status" aria-live="polite"></p>
+                        </form>
+                    </article>
+                </div>
             </div>
-            <button type="submit" id="login-btn" class="btn pill fill">Belépés</button>
-            
-            <p id="login-msg" class="form-msg" role="status" aria-live="polite"></p>
-          </form>
-          
-      </article>
-      
-    <article id="register" class="glass card">
-      <h2>Regisztráció</h2>
-      <form id="register-form" novalidate class="form">
-        <label>
-          Megjelenő név
-          <input type="text" id="regDisplayName" placeholder="pl. bomboclat">
-        </label>
-        <label>
-          E-mail
-          <input type="email" id="regEmail" placeholder="valaki@pelda.hu" required>
-        </label>
-        <div class="two">
-          <label>
-            Jelszó
-            <input type="password" id="regPassword" minlength="6" placeholder="Legalább 6 karakter" required>
-          </label>
-          <label>
-            Jelszó újra
-            <input type="password" id="regPassword2" minlength="6" required>
-          </label>
-        </div>
-        <button type="submit" id="register-btn" class="btn pill fill">Fiók létrehozása</button>
-        <p id="register-msg" class="form-msg" role="status" aria-live="polite"></p>
-      </form>
-    </article>
+        </section>
 
-   
-    <article id="tools" class="glass card">
-        <h2>Eszközök</h2>
-        <!-- <p class="muted">Slideshow és a Név AI panel.</p> -->
-        <div class="tool-actions">
-          <button id="toggle-slideshow" class="btn pill ghost">Slideshow</button>
-          <button id="toggle-chat" class="btn pill fill">Név&nbsp;AI</button>
-        </div>
-      </article>
-      <article id="contact" class="glass card">
-        <h2>Kapcsolat</h2>
-        <p><a href="mailto:bartaa@kkszki.hu">bartaa@kkszki.hu</a></p>
-        <p><a href="mailto:gombosb@kkszki.hu">gombosb@kkszki.hu</a></p>
-        <p><a href="mailto:beluscsakzs@kkszki.hu">beluscsakzs@kkszki.hu</a></p>
-      </article>
-  </section>
+    </main>
 
-  <!-- SLIDESHOW (meglévő markuppal, csak üveg stílus) -->
-  <section class="container glass slideshow" hidden>
-    <div class="slideshow-container">
-      <div class="slide active"><img src="adamimg/unnamed (1) (1).jpg" alt="Slide 1"></div>
-      <div class="slide"><img src="adamimg/140622-BLUE-LANDSCAPE-PC-HD.png" alt="Slide 2"></div>
-      <div class="slide"><img src="adamimg/abstract-blue-wave-background-digital-art-4k-wallpaper-uhdpaper.com-486@0@f.jpg" alt="Slide 3"></div>
-      <a class="prev">&#10094;</a>
-      <a class="next">&#10095;</a>
-    </div>
-    <div class="dots"></div>
-  </section>
 
-  <!-- CHAT DOBOZ + FIX GOMBOK: ID-k maradnak -->
-  <div id="chat-box" class="glass chatbox">
-    <header>Név – Nem Elemző</header>
-    <div id="chat-messages"></div>
-    <div id="chat-input-wrapper">
-      <input type="text" id="chat-input" placeholder="Írj be egy nevet (pl. Péter, Anna)…" />
-      <button id="send-chat" class="btn pill fill">Elemzés</button>
-    </div>
-  </div>
-
-  <footer class="container footer">
-    <p>&copy; 2025 UNCS. Minden jog fenntartva.</p>
-    <div class="social">
-      <a target="_blank" href="https://www.instagram.com/bartaadi/" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-    </div>
-  </footer>
-  <!-- Firebase REG – VÁLTOZATLAN KÓD -->
-  <script type="module">
-    import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import {
-      getAuth, createUserWithEmailAndPassword, updateProfile,
-      sendEmailVerification, deleteUser,
-      setPersistence, browserLocalPersistence, browserSessionPersistence,
-      signInWithEmailAndPassword, sendPasswordResetEmail
-    } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-    import {
-      getDatabase, ref, set, get, runTransaction, serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-  
-    // --- Firebase config ---
-    const firebaseConfig = {
-      apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
-      authDomain: "konyv-93c63.firebaseapp.com",
-      projectId: "konyv-93c63",
-      storageBucket: "konyv-93c63.firebasestorage.app",
-      messagingSenderId: "349471560585",
-      appId: "1:349471560585:web:55c6e78499ebbca0540758",
-      measurementId: "G-NF07N36ETJ"
-    };
-  
-    // --- App, Auth, DB ---
-    const app  = getApps().length ? getApp() : initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db   = getDatabase(app);
-  
-    // --- Segédek ---
-    const $ = (sel) => document.querySelector(sel);
-    function revealMsg(node, text, type=""){
-      if(!node) return;
-      node.textContent = text;
-      node.className = "form-msg" + (type ? " " + type : "");
-      node.style.display = "block";
-      try { node.scrollIntoView({ behavior: "smooth", block: "center" }); } catch(_){}
-    }
-    const normalizeUsername = (s="") =>
-      s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-       .toLowerCase().replace(/[^a-z0-9]+/g,"").slice(0,20);
-  
-    // ---------- REGISZTRÁCIÓ ----------
-    {
-      const form = $("#register-form");
-      const msg  = $("#register-msg");
-  
-      form?.addEventListener("submit", async (e) => {
-        e.preventDefault(); e.stopPropagation();
-        revealMsg(msg, "");
-  
-        const rawName = $("#regDisplayName").value.trim();
-        const email   = $("#regEmail").value.trim();
-        const pass    = $("#regPassword").value;
-        const pass2   = $("#regPassword2").value;
-  
-        const uname = normalizeUsername(rawName);
-        if(!rawName)                 return revealMsg(msg, "Adj meg egy felhasználónevet.", "error");
-        if(uname.length < 3)         return revealMsg(msg, "A felhasználónév túl rövid (min. 3 karakter, ékezet nélkül).", "error");
-        if(!email || !pass || !pass2)return revealMsg(msg, "Kérlek, tölts ki minden mezőt!", "error");
-        if(pass !== pass2)           return revealMsg(msg, "A két jelszó nem egyezik.", "error");
-        if(pass.length < 6)          return revealMsg(msg, "A jelszónak legalább 6 karakteresnek kell lennie.", "error");
-  
-        try{
-          const unameRef = ref(db, "usernames/" + uname);
-          const pre = await get(unameRef);
-          if(pre.exists()) return revealMsg(msg, "Ez a felhasználónév már foglalt. Válassz másikat.", "error");
-  
-          const cred = await createUserWithEmailAndPassword(auth, email, pass);
-  
-          const claim = await runTransaction(unameRef, (current) => {
-            if(current === null) return { uid: cred.user.uid, displayName: rawName };
-            return; // már foglalt
-          });
-          if(!claim.committed){
-            try { await deleteUser(cred.user); } catch(_){}
-            return revealMsg(msg, "Sajnálom, közben lefoglalták ezt a nevet. Válassz másikat!", "error");
-          }
-  
-          try { await updateProfile(cred.user, { displayName: rawName }); } catch(_){}
-  
-          await set(ref(db, "users/" + cred.user.uid), {
-            displayName: rawName,
-            username: uname,
-            email,
-            createdAt: serverTimestamp()
-          });
-  
-          try { await sendEmailVerification(cred.user); } catch(_){}
-  
-          revealMsg(msg, "✅ Sikeres regisztráció! Ellenőrizd az e-mailed a megerősítéshez.", "success");
-          form.reset();
-        }catch(err){
-          let text = "Hiba történt a regisztráció során.";
-          if (err?.code === "auth/email-already-in-use") text = "Ez az e-mail már használatban van.";
-          if (err?.code === "auth/invalid-email")        text = "Érvénytelen e-mail cím.";
-          if (err?.code === "auth/weak-password")        text = "Gyenge jelszó (min. 6 karakter).";
-          revealMsg(msg, "❌ " + text, "error");
-          console.error(err);
-        }
-      });
-    }
-  
-    // ---------- BEJELENTKEZÉS + JELSZÓ RESET ----------
-    {
-      const form     = $("#login-form");
-      const msg      = $("#login-msg");
-      const resetBtn = $("#reset-password");
-  
-      form?.addEventListener("submit", async (e) => {
-        e.preventDefault(); e.stopPropagation();
-        revealMsg(msg, "");
-  
-        const email = $("#loginEmail").value.trim();
-        const pass  = $("#loginPassword").value;
-        const remember = $("#loginRemember")?.checked;
-  
-        if(!email || !pass) return revealMsg(msg, "Tölts ki minden mezőt!", "error");
-  
-        try{
-          await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
-          const cred = await signInWithEmailAndPassword(auth, email, pass);
-          revealMsg(msg, "✅ Sikeres bejelentkezés! Üdv, " + (cred.user.displayName || cred.user.email) + ".", "success");
-          form.reset();
-        }catch(err){
-          let text = "Nem sikerült a bejelentkezés.";
-          if(err?.code === "auth/invalid-credential") text = "Hibás e-mail vagy jelszó.";
-          if(err?.code === "auth/user-not-found")     text = "Nincs ilyen felhasználó.";
-          if(err?.code === "auth/wrong-password")     text = "Hibás jelszó.";
-          if(err?.code === "auth/too-many-requests")  text = "Túl sok próbálkozás. Próbáld később.";
-          revealMsg(msg, "❌ " + text, "error");
-          console.error(err);
-        }
-      });
-  
-      resetBtn?.addEventListener("click", async () => {
-        const email = $("#loginEmail").value.trim();
-        if(!email) return revealMsg(msg, "Írd be az e-mail címed a visszaállításhoz.", "error");
-        try{
-          await sendPasswordResetEmail(auth, email);
-          revealMsg(msg, "📧 Küldtünk egy jelszó-visszaállító e-mailt.", "success");
-        }catch(err){
-          let text = "Nem sikerült elküldeni a visszaállító e-mailt.";
-          if(err?.code === "auth/user-not-found") text = "Nincs ilyen felhasználó.";
-          revealMsg(msg, "❌ " + text, "error");
-          console.error(err);
-        }
-      });
-    }
-  </script>
-  
-  <!-- Saját JS-ed -->
-  <script src="script.js"></script>
-  <!-- Ide visszateheted az eddigi Firebase modul scriptet VÁLTOZÁS NÉLKÜL -->
+    <script src="script.js" type="module"></script>
+    </script>
 </body>
+
 </html>
-
-

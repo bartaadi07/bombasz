@@ -1,152 +1,101 @@
-/* UNCS – stabil UI JS (Aurora Glass) */
-"use strict";
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {
+    getAuth, createUserWithEmailAndPassword, updateProfile,
+    sendEmailVerification, deleteUser,
+    setPersistence, browserSessionPersistence
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {
+    getDatabase, ref, set, get, runTransaction, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-  // ---- Óra ----
-  const clockEl = document.getElementById("real-time-clock");
-  const z = v => String(v).padStart(2,"0");
-  function tick(){
-    if (!clockEl) return;
-    const n = new Date();
-    clockEl.textContent = `${z(n.getHours())}:${z(n.getMinutes())}:${z(n.getSeconds())}`;
-  }
-  tick(); setInterval(tick, 1000);
+const firebaseConfig = {
+    apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
+    authDomain: "konyv-93c63.firebaseapp.com",
+    projectId: "konyv-93c63",
+    storageBucket: "konyv-93c63.firebasestorage.app",
+    messagingSenderId: "349471560585",
+    appId: "1:349471560585:web:55c6e78499ebbca0540758",
+    measurementId: "G-NF07N36ETJ"
+};
 
-  // ---- Név AI chat ----
-  const chatBtn      = document.getElementById("toggle-chat");
-  const chatBox      = document.getElementById("chat-box");
-  const chatInput    = document.getElementById("chat-input");
-  const sendBtn      = document.getElementById("send-chat");
-  const chatMessages = document.getElementById("chat-messages");
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
 
-  if (chatBox && chatBtn) {
-    chatBox.style.display = "none";
-    chatBtn.addEventListener("click", () => {
-      const open = chatBox.style.display !== "none";
-      chatBox.style.display = open ? "none" : "flex";
-      chatBtn.textContent   = open ? "Név AI" : "Bezár";
-      if (!open) chatInput?.focus();
-    });
-  }
-
-  const MALE = new Set(["bence","levente","máté","dániel","dominik","dávid","zsolt","bálint","ádám","péter","attila","zoltán","gábor","istván","tamás","marcell","benedek"]);
-  const FEMALE = new Set(["anna","hanna","réka","luca","lilla","fanni","nóra","zoé","kata","eszter","viktória","kinga","blanka","zsófia","boglárka","laura"]);
-
-  function determineGender(name){
-    const n = name.trim().toLowerCase();
-    if (!n) return "Írj be egy nevet.";
-    if (MALE.has(n))   return `A(z) <strong>${name}</strong> valószínűleg <strong>FÉRFI</strong> név. ♂️`;
-    if (FEMALE.has(n)) return `A(z) <strong>${name}</strong> valószínűleg <strong>NŐI</strong> név. ♀️`;
-    return `A(z) <strong>${name}</strong> nincs a listámban – nem megállapítható. 🤔`;
-  }
-  function appendMsg(html, cls){
-    const el = document.createElement("div");
-    el.className = cls;
-    el.innerHTML = html;
-    chatMessages?.appendChild(el);
-    if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight; // mindig a végére ugrik
-  }
-  function processName(){
-    if (!chatInput) return;
-    const val = chatInput.value.trim();
-    if (!val) return;
-    appendMsg(val, "user-msg");
-    chatInput.value = "";
-    appendMsg("Elemzés…", "bot-msg");
-    setTimeout(() => {
-      if (chatMessages?.lastElementChild?.textContent === "Elemzés…") {
-        chatMessages.removeChild(chatMessages.lastElementChild);
-      }
-      appendMsg(determineGender(val), "bot-msg");
-    }, 300);
-  }
-
-  // <<< LÉNYEG: biztos kötés gomb + Enter + delegáció fallback
-  sendBtn?.addEventListener("click", processName);
-  chatInput?.addEventListener("keydown", e => {
-    if (e.key === "Enter") { e.preventDefault(); processName(); }
-  });
-  document.addEventListener("click", e => {
-    const t = e.target;
-    if (t && t.closest && t.closest("#send-chat")) processName();
-  });
-  document.addEventListener("keydown", e => {
-    if (e.key === "Enter" && document.activeElement?.id === "chat-input") {
-      e.preventDefault(); processName();
-    }
-  });
-
-  // ---- Slideshow (ha nem kell, ezt hagyhatod) ----
-  initSlideshow();
-});
-
-/* Egyszerű slideshow init */
-function initSlideshow(){
-  const wrapper   = document.querySelector(".slideshow") || document.querySelector(".slideshow-wrapper");
-  if (!wrapper) return;
-  const container = wrapper.querySelector(".slideshow-container");
-  const slides    = container ? Array.from(container.querySelectorAll(".slide")) : [];
-  const prev      = container?.querySelector(".prev");
-  const next      = container?.querySelector(".next");
-  const dotsBox   = wrapper.querySelector(".dots");
-  if (!slides.length || !dotsBox) return;
-
-  dotsBox.innerHTML = "";
-  slides.forEach((_, i) => {
-    const b = document.createElement("button");
-    b.type = "button"; b.className = "dot"; b.setAttribute("aria-label", `Kép ${i+1}`);
-    b.addEventListener("click", () => { go(i); stop(); });
-    dotsBox.appendChild(b);
-  });
-
-  let idx = Math.max(0, slides.findIndex(s => s.classList.contains("active")));
-  const dots = Array.from(dotsBox.querySelectorAll(".dot"));
-  function render(){ slides.forEach((s,i)=>s.classList.toggle("active", i===idx));
-                     dots.forEach((d,i)=>d.classList.toggle("active",  i===idx)); }
-  function go(n){ idx = (n + slides.length) % slides.length; render(); }
-
-  prev?.addEventListener("click", e => { e.preventDefault(); go(idx-1); stop(); });
-  next?.addEventListener("click", e => { e.preventDefault(); go(idx+1); stop(); });
-
-  let auto=null; const start=()=>{ if(!auto) auto=setInterval(()=>go(idx+1),5000); };
-  const stop =()=>{ if(auto){ clearInterval(auto); auto=null; } };
-  wrapper.addEventListener("mouseenter", stop);
-  wrapper.addEventListener("mouseleave", start);
-  wrapper.addEventListener("touchstart", stop, {passive:true});
-  wrapper.addEventListener("touchend",   start, {passive:true});
-
-  // FAB toggler (ha van)
-  const toggle = document.getElementById("toggle-slideshow");
-  if (toggle) toggle.addEventListener("click", () => {
-    const hidden = wrapper.hasAttribute("hidden");
-    if (hidden) { wrapper.removeAttribute("hidden"); toggle.setAttribute("aria-pressed","true"); }
-    else        { wrapper.setAttribute("hidden","");  toggle.setAttribute("aria-pressed","false"); }
-  });
-
-  if (idx < 0) idx = 0;
-  render(); start();
+const $ = (sel) => document.querySelector(sel);
+function revealMsg(node, text, type = "") {
+    if (!node) return;
+    node.textContent = text;
+    node.className = "form-msg" + (type ? " " + type : "");
+    node.style.display = "block";
+    try { node.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (_) { }
 }
-// --- Mobil menü (hamburger) ---
-(() => {
-    const burger = document.getElementById('hamburger');
-    const nav    = document.getElementById('main-nav');
-    if (!burger || !nav) return;
-  
-    const toggle = () => {
-      const open = nav.classList.toggle('open');
-      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    };
-  
-    burger.addEventListener('click', toggle);
-    // menüpont választás után zárás
-    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      nav.classList.remove('open');
-      burger.setAttribute('aria-expanded','false');
-    }));
-  })();
-  (() => {
-    const burger = document.getElementById('hamburger');
-    const nav    = document.getElementById('main-nav');
-    if (!burger || !nav) return; // nincs már felső menü, kilépünk
-  })();
-    
+const normalizeUsername = (s = "") =>
+    s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase().replace(/[^a-z0-9]+/g, "").slice(0, 20);
+
+{
+    const form = $("#register-form");
+    const msg = $("#register-msg");
+
+    form?.addEventListener("submit", async (e) => {
+        e.preventDefault(); e.stopPropagation();
+        revealMsg(msg, "");
+
+        const rawName = $("#regDisplayName").value.trim();
+        const email = $("#regEmail").value.trim();
+        const pass = $("#regPassword").value;
+        const pass2 = $("#regPassword2").value;
+
+        const uname = normalizeUsername(rawName);
+        if (!rawName) return revealMsg(msg, "Adj meg egy felhasználónevet.", "error");
+        if (uname.length < 3) return revealMsg(msg, "A felhasználónév túl rövid (min. 3 karakter, ékezet nélkül).", "error");
+        if (!email || !pass || !pass2) return revealMsg(msg, "Kérlek, tölts ki minden mezőt!", "error");
+        if (pass !== pass2) return revealMsg(msg, "A két jelszó nem egyezik.", "error");
+        if (pass.length < 6) return revealMsg(msg, "A jelszónak legalább 6 karakteresnek kell lennie.", "error");
+
+        try {
+            const unameRef = ref(db, "usernames/" + uname);
+            const pre = await get(unameRef);
+            if (pre.exists()) return revealMsg(msg, "Ez a felhasználónév már foglalt. Válassz másikat.", "error");
+
+            await setPersistence(auth, browserSessionPersistence);
+            const cred = await createUserWithEmailAndPassword(auth, email, pass);
+
+            const claim = await runTransaction(unameRef, (current) => {
+                if (current === null) return { uid: cred.user.uid, displayName: rawName };
+                return;
+            });
+            if (!claim.committed) {
+                try { await deleteUser(cred.user); } catch (_) { }
+                return revealMsg(msg, "Sajnálom, közben lefoglalták ezt a nevet. Válassz másikat!", "error");
+            }
+
+            try { await updateProfile(cred.user, { displayName: rawName }); } catch (_) { }
+
+            await set(ref(db, "users/" + cred.user.uid), {
+                displayName: rawName,
+                username: uname,
+                email,
+                createdAt: serverTimestamp()
+            });
+
+            try { await sendEmailVerification(cred.user); } catch (_) { }
+
+            revealMsg(msg, "✅ Sikeres regisztráció! Ellenőrizd az e-mailed a megerősítéshez.", "success");
+            form.reset();
+        } catch (err) {
+            let text = "Hiba történt a regisztráció során.";
+            if (err?.code === "auth/email-already-in-use") text = "Ez az e-mail már használatban van.";
+            if (err?.code === "auth/invalid-email") text = "Érvénytelen e-mail cím.";
+            if (err?.code === "auth/weak-password") text = "Gyenge jelszó (min. 6 karakter).";
+            revealMsg(msg, "❌ " + text, "error");
+            console.error(err);
+        }
+    });
+}
+document.addEventListener('keydown', function (e) {
+    if (e.key === "F12") e.preventDefault();
+    if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "C")) e.preventDefault();
+    if (e.ctrlKey && (e.key === "u" || e.key === "s")) e.preventDefault();
+});
