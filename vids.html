@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hu">
 
 <head>
@@ -41,26 +41,31 @@
             overflow-x: hidden;
         }
 
-        .series-page-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0;
-            transition: opacity 0.5s ease;
+.series-page-bg {
+    pointer-events: none; /* Átengedi a kattintást az alatta lévő elemekre */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* Az app mögött (ami 1), de a body felett */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    filter: blur(10px);
+    transform: scale(1.05);
+}
 
-            filter: blur(10px);
-            transform: scale(1.05);
-        }
+.series-page-bg.visible {
+    opacity: 0.6 !important; /* Emeltem az átlátszóságon, hogy látszódjon */
+}
 
-        #app.active-bg~.series-page-bg {
-            opacity: 0.5;
-        }
+/* EZRE CSERÉLD LE: */
+.series-page-bg.visible {
+    opacity: 0.5;
+}
 
         #login-container {
             display: flex;
@@ -120,26 +125,29 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
         }
 
-        #app {
-            position: relative;
-            z-index: 1;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-
-            flex-direction: column;
-            height: 100vh;
-            width: 100vw;
-        }
+#app {
+    position: relative;
+    z-index: 1;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    
+    /* Ez a sor a legfontosabb: */
+    background: transparent !important; 
+    z-index: 1;
+}
 
         header {
             box-shadow: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 2px 30px;
-            background: #111;
+
             position: relative;
         }
 
@@ -363,25 +371,32 @@
             animation: scrollText 10s linear infinite;
         }
 
-        .series-page {
-            display: none;
-            flex: 1;
-            height: 100%;
-            flex-direction: row;
-        }
+      .series-page {
+    display: none;
+    flex: 1;
+    height: calc(100vh - 60px); /* Kiszámolja a maradék helyet a header alatt */
+    flex-direction: row;
+    align-items: flex-start; /* Fontos: megakadályozza, hogy a sidebar függőlegesen kinyúljon */
+}
 
-        .sidebar {
-            width: 240px;
-            background: rgba(34, 34, 34, 0.95);
-            padding: 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            overflow-y: auto;
-            order: 0;
-            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
-        }
+/* A javított sidebar stílus */
+.sidebar {
+    width: 240px;
+    height: fit-content; /* Csak a tartalom (részek) végéig ér */
+    max-height: calc(100vh - 100px); /* Megakadályozza, hogy túl sok résznél kilógjon a képernyőről */
+    background: rgba(0, 0, 0, 0.3) !important; 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto; /* Ha sok rész van, ezen belül lehet görgetni */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 20px; /* Modern, lebegő hatást ad neki */
+    border-radius: 4px;
+}
 
         .sidebar::-webkit-scrollbar {
             display: none;
@@ -446,22 +461,21 @@
         }
 
 
-        .video-content-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            box-sizing: border-box;
-            order: 1;
-            align-items: center;
-
-            max-width: min(1300px, 85vw);
-            margin: 0 auto;
-
-            height: 100%;
-            background: rgba(17, 17, 17, 0.9);
-            border-radius: 0;
-        }
+.video-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    order: 1;
+    align-items: center;
+    max-width: min(1300px, 85vw);
+    margin: 0 auto;
+    height: 100%;
+    /* A háttérszínt töröltük, hogy átlátszódjon a dinamikus kép */
+    background: transparent; 
+    border-radius: 0;
+}
 
         .video-frame-container {
             width: 100%;
@@ -550,9 +564,41 @@
                 margin: 0 auto;
             }
 
-            header {
-                padding: 5px 15px;
-            }
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+    
+    /* Sticky pozíció: így görgetésnél is látszik az üveg hatás */
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    /* Áttetsző sötét háttér */
+    background: rgba(0, 0, 0, 0.4) !important; 
+    
+    /* Üveg hatás (homályosítás) */
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    
+    /* Elegáns választóvonal */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: none !important;
+    
+    /* Simább átmenet a színek között */
+    transition: background 0.3s ease;
+}
+
+/* Mobil optimalizálás a headernek */
+@media (max-width: 768px) {
+    header {
+        padding: 5px 15px;
+        height: 50px;
+    }
+}
 
             header h1 {
                 font-size: 1.3rem;
@@ -601,12 +647,12 @@
             }
 
             .sidebar {
-                width: 100%;
+                width: 240px;
                 height: auto;
                 max-height: 250px;
-                padding: 15px;
+                padding: 20px;
                 order: 1;
-                background: #222;
+               background: rgba(17, 17, 17, 0.8);
             }
 
             .video-content-wrapper {
@@ -1342,6 +1388,7 @@
         });
 
         // Home click
+       // Home click
         homeBtn.addEventListener('click', () => {
             seriesPage.style.display = 'none';
             mainPage.style.display = 'flex';
@@ -1353,13 +1400,16 @@
             videoList.innerHTML = '';
             nextEpisodeBtn.style.display = 'none';
 
-            appContainer.classList.remove('active-bg');
+            // EZEKET MÁSOLD IDE:
             dynamicBackground.style.backgroundImage = 'none';
+            dynamicBackground.classList.remove('visible');
+            appContainer.classList.remove('active-bg');
 
             setTimeout(checkTitleOverflow, 100);
         });
 
         // Back button
+// Back button
         backBtn.addEventListener('click', () => {
             seriesPage.style.display = 'none';
             mainPage.style.display = 'flex';
@@ -1369,12 +1419,13 @@
             videoList.innerHTML = '';
             nextEpisodeBtn.style.display = 'none';
 
-            appContainer.classList.remove('active-bg');
+            // EZEKET MÁSOLD IDE:
             dynamicBackground.style.backgroundImage = 'none';
+            dynamicBackground.classList.remove('visible');
+            appContainer.classList.remove('active-bg');
 
             setTimeout(checkTitleOverflow, 100);
         });
-
         // Search functionality
         searchBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -1451,87 +1502,51 @@
             videoContainer.appendChild(iframe);
         }
 
+async function loadSeries(seriesKey) {
+    const series = seriesData[seriesKey];
+    if (!series) return;
 
-        // FRISSÍTETT LOADSERIES FÜGGVÉNY
-        async function loadSeries(seriesKey) {
-            const series = seriesData[seriesKey];
-            if (!series) {
-                console.error(`Sorozat nem található ezzel a kulccsal: ${seriesKey}`);
-                return;
-            }
+    // UI tisztítás
+    searchContainer.classList.remove('active');
+    searchBtn.style.display = 'none';
+    seriesTitle.textContent = series.title;
+    videoList.innerHTML = "";
+    nextEpisodeBtn.style.display = 'none';
 
-            searchContainer.classList.remove('active');
-            searchBtn.style.display = 'none';
+    // DINAMIKUS HÁTTÉRKÉP BEÁLLÍTÁSA
+    const seriesCardImg = document.querySelector(`.series-card[data-series="${seriesKey}"] img`);
+    if (seriesCardImg && seriesCardImg.src) {
+        dynamicBackground.style.backgroundImage = `url('${seriesCardImg.src}')`;
+        dynamicBackground.classList.add('visible');
+    }
 
-            seriesTitle.textContent = series.title;
-            videoList.innerHTML = "";
-            nextEpisodeBtn.style.display = 'none';
-            nextEpisodeBtn.onclick = null;
+    const lastWatchedIndex = await loadProgress(seriesKey);
+    const totalEpisodes = series.videos.length;
+    const initialIndex = Math.min(lastWatchedIndex, totalEpisodes - 1);
 
-            // HÁTTÉRKÉP BEÁLLÍTÁSA ÉS AKTIVÁLÁSA
-            const seriesCard = document.querySelector(`.series-card[data-series="${seriesKey}"] img`);
-            if (seriesCard && seriesCard.src) {
-                dynamicBackground.style.backgroundImage = `url('${seriesCard.src}')`;
-            }
-            appContainer.classList.add('active-bg');
+    if (totalEpisodes > 0) {
+        updatePlayer(series.videos[initialIndex].src, series.videos[initialIndex].type);
+    }
 
-            const lastWatchedIndex = await loadProgress(seriesKey);
-            const totalEpisodes = series.videos.length;
+    series.videos.forEach((vid, index) => {
+        const card = document.createElement('div');
+        card.classList.add('video-card');
+        card.textContent = vid.title;
 
-            const initialIndex = Math.min(lastWatchedIndex, totalEpisodes - 1);
+        if (index === initialIndex) card.classList.add('active');
 
-            let nextIndex = initialIndex + 1;
+        card.addEventListener('click', () => {
+            updatePlayer(vid.src, vid.type);
+            document.querySelectorAll('.video-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            saveProgress(seriesKey, index);
+            updateNextEpisodeButton(seriesKey, index + 1);
+        });
+        videoList.appendChild(card);
+    });
 
-            if (totalEpisodes > 0) {
-                updatePlayer(series.videos[initialIndex].src, series.videos[initialIndex].type);
-            }
-
-            let activeCard = null;
-
-            series.videos.forEach((vid, index) => {
-                const card = document.createElement('div');
-                card.classList.add('video-card');
-
-                // Vizuális jelzések: Megnézett és Aktív jelölés
-
-                if (index < lastWatchedIndex) {
-                    card.classList.add('watched');
-                    card.innerHTML = `${vid.title} <i class="fa-solid fa-check"></i>`;
-                } else {
-                    card.textContent = vid.title;
-                }
-
-                if (index === initialIndex) {
-                    card.classList.add('active');
-                    activeCard = card;
-                }
-
-                card.setAttribute('data-index', index);
-                card.setAttribute('data-src', vid.src);
-                card.setAttribute('data-type', vid.type);
-
-                videoList.appendChild(card);
-
-                card.addEventListener('click', () => {
-                    updatePlayer(vid.src, vid.type);
-
-                    document.querySelectorAll('.video-card').forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-
-                    saveProgress(seriesKey, index);
-
-                    updateNextEpisodeButton(seriesKey, index + 1);
-                });
-            });
-
-            // Automatikus görgetés az utoljára nézett részhez
-            if (activeCard) {
-                activeCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-
-            // Következő epizód gomb megjelenítése
-            updateNextEpisodeButton(seriesKey, nextIndex);
-        }
+    updateNextEpisodeButton(seriesKey, initialIndex + 1);
+}
 
         // MÓDOSÍTOTT SEGÉDFÜGGVÉNY: Következő epizód gomb frissítése
         function updateNextEpisodeButton(seriesKey, nextIndex) {
