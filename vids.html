@@ -593,48 +593,99 @@ header {
 }
 
 /* Mobil optimalizálás a headernek */
-@media (max-width: 768px) {
-    header {
-        padding: 5px 15px;
-        height: 50px;
-    }
-}
-
-            header h1 {
-                font-size: 1.3rem;
+/* MOBIL NÉZET JAVÍTÁSA - CSAK 768px ALATT */
+/* MOBIL NÉZET JAVÍTÁSA - CSAK 768px ALATT */
+        @media(max-width:768px) {
+            body {
+                display: block !important;
+                overflow-x: hidden;
+                overflow-y: auto;
+                height: auto !important;
+                min-height: 100vh;
             }
 
-            #profile-btn {
-                font-size: 0.9rem;
+            /* FIX HEADER MOBILON */
+            header {
+                position: fixed !important; /* Fixen rögzítjük a tetején */
+                top: 0;
+                left: 0;
+                width: 100%;
+                z-index: 2000 !important; /* Hogy minden felett legyen */
+                box-sizing: border-box;
+                background: rgba(17, 17, 17, 0.95) !important;
+                backdrop-filter: blur(10px);
+                height: 60px !important;
+                display: flex !important;
+                padding: 0 15px !important;
             }
 
-            #profile-btn span {
-                display: none;
+            #app {
+                display: none; 
+                flex-direction: column !important;
+                height: auto !important;
+                min-height: 100vh;
+                padding-top: 60px !important; /* Helyet hagyunk a fix fejlécnek */
+                overflow-y: visible !important;
             }
 
-            #profile-dropdown {
-                top: 38px;
-                padding: 10px;
-                right: 15px;
-                border-radius: 0;
+            .series-page {
+                flex-direction: column !important;
+                height: auto !important;
+                padding-bottom: 50px;
             }
 
-            #search-container.active #search-input {
-                width: 140px;
-                padding-right: 35px;
-                border-radius: 0;
+            /* VIDEÓ RÉSZ: Mobilon legyen felül */
+            .video-content-wrapper {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 10px !important;
+                margin: 0 !important;
+                order: 0 !important;
+                height: auto !important;
+                flex: none !important;
+            }
+
+            .video-frame-container {
+                padding-top: 56.25% !important; 
+                height: 0 !important;
+                position: relative !important;
+                display: block !important;
+            }
+
+            .video-frame-container iframe {
+                position: absolute !important;
+                top: 0;
+                left: 0;
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+            /* SIDEBAR (Részek listája): A videó alá */
+            .sidebar {
+                width: calc(100% - 30px) !important;
+                margin: 15px !important;
+                max-height: 300px !important;
+                order: 1 !important;
+                background: rgba(20, 20, 20, 0.9) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                flex: none !important;
+            }
+
+            #nextEpisodeBtn {
+                order: 2 !important;
+                width: calc(100% - 30px) !important;
+                margin: 10px 15px !important;
             }
 
             .main-page {
-                padding: 20px;
-                gap: 15px;
-                justify-content: center;
-                align-items: flex-start;
+                padding: 15px !important;
+                justify-content: center !important;
             }
 
             .series-card {
-                width: 140px;
+                width: 140px !important;
             }
+        }
 
             .series-title {
                 font-size: 0.85rem;
