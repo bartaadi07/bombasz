@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="hu">
 
 <head>
@@ -353,31 +353,39 @@
             transform: none;
         }
 
-.series-title {
-    width: 100%;
-    height: 35px;
-    overflow: hidden; /* Ez vágja le a kilógó részt */
-    position: relative;
-    white-space: nowrap;
-    padding: 5px 0;
-}
+        .series-title {
+            width: 100%;
+            height: 35px;
+            overflow: hidden;
+            /* Ez vágja le a kilógó részt */
+            position: relative;
+            white-space: nowrap;
+            padding: 5px 0;
+        }
 
-.series-title span {
-    display: inline-block; /* Fontos a méréshez és mozgatáshoz */
-    padding-left: 10px;
-    will-change: transform;
-}
+        .series-title span {
+            display: inline-block;
+            /* Fontos a méréshez és mozgatáshoz */
+            padding-left: 10px;
+            will-change: transform;
+        }
 
-/* Az animáció, ami a transzformációt végzi */
-@keyframes smoothScroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); } 
-    /* Azért -50%, mert a JS megduplázza a szöveget */
-}
+        /* Az animáció, ami a transzformációt végzi */
+        @keyframes smoothScroll {
+            0% {
+                transform: translateX(0);
+            }
 
-.series-title.scrolling-title span {
-    animation: smoothScroll linear infinite;
-}
+            100% {
+                transform: translateX(-50%);
+            }
+
+            /* Azért -50%, mert a JS megduplázza a szöveget */
+        }
+
+        .series-title.scrolling-title span {
+            animation: smoothScroll linear infinite;
+        }
 
         @keyframes smoothScroll {
             0% {
@@ -1099,6 +1107,14 @@
                 <img src="fallouts2.jpg" alt="Fallout Season 2">
                 <div class="series-title"><span>Fallout Season 2</span></div>
             </div>
+            <div class="series-card" data-series="codegeasss1">
+                <img src="codegeasss1.jpg" alt="Code Geass Season 1">
+                <div class="series-title"><span>Code Geass Season 1</span></div>
+            </div>
+            <div class="series-card" data-series="codegeasss2">
+                <img src="codegeasss2.png" alt="Code Geass Season 2">
+                <div class="series-title"><span>Code Geass Season 2</span></div>
+            </div>
         </div>
 
         <div class="series-page" id="seriesPage">
@@ -1171,7 +1187,7 @@
         let allProgressData = {};
 
         // --- SOROZAT ADATOK ---
- const seriesData = {
+        const seriesData = {
             "chainsaw-movie": {
                 title: "Chainsaw Man - The Movie: Reze Arc",
                 videos: [
@@ -1408,53 +1424,115 @@
                     { title: "08. rész", src: "//embed.indavideo.hu/player/video/44b74dbe17", type: 'indavideo' },
                 ]
             },
-"fallouts2": {
-    title: "Fallout Season 2",
-    videos: [
-        { 
-            title: "01. rész", 
-            src: "https://vkvideo.ru/video_ext.php?oid=-234646183&id=456239036&hash=9c03a0bb706aed15&hd=3", 
-            type: 'drive' 
-        },
-    ]
-},
+            "fallouts2": {
+                title: "Fallout Season 2",
+                videos: [
+                    {
+                        title: "01. rész",
+                        src: "https://vkvideo.ru/video_ext.php?oid=-234646183&id=456239036&hash=9c03a0bb706aed15&hd=3",
+                        type: 'drive'
+                    },
+                ]
+            },
+            "codegeasss1": {
+                title: "Code Geass Season 1",
+                videos: [
+
+                    { title: "01. rész", src: "//embed.indavideo.hu/player/video/6a8bcf9a94", type: 'indavideo' },
+                    { title: "02. rész", src: "//embed.indavideo.hu/player/video/b7a9882035", type: 'indavideo' },
+                    { title: "03. rész", src: "//embed.indavideo.hu/player/video/bce6dbd8bd", type: 'indavideo' },
+                    { title: "04. rész", src: "//embed.indavideo.hu/player/video/c03c78f5c7", type: 'indavideo' },
+                    { title: "05. rész", src: "//embed.indavideo.hu/player/video/84ff5fbc7e", type: 'indavideo' },
+                    { title: "06. rész", src: "//embed.indavideo.hu/player/video/d23ad64446", type: 'indavideo' },
+                    { title: "07. rész", src: "//embed.indavideo.hu/player/video/71283c7de9", type: 'indavideo' },
+                    { title: "08. rész", src: "//embed.indavideo.hu/player/video/1bd63f81fd", type: 'indavideo' },
+                    { title: "09. rész", src: "//embed.indavideo.hu/player/video/02843ec67f", type: 'indavideo' },
+                    { title: "10. rész", src: "//embed.indavideo.hu/player/video/bce5e8efe4", type: 'indavideo' },
+                    { title: "11. rész", src: "//embed.indavideo.hu/player/video/61666af110", type: 'indavideo' },
+                    { title: "12. rész", src: "//embed.indavideo.hu/player/video/3fa3d5b2b7", type: 'indavideo' },
+                    { title: "13. rész", src: "//embed.indavideo.hu/player/video/1187ae89eb", type: 'indavideo' },
+                    { title: "14. rész", src: "//embed.indavideo.hu/player/video/c0cbdd8573", type: 'indavideo' },
+                    { title: "15. rész", src: "//embed.indavideo.hu/player/video/03166a185a", type: 'indavideo' },
+                    { title: "16. rész", src: "//embed.indavideo.hu/player/video/9700f7c3cf", type: 'indavideo' },
+                    { title: "17. rész", src: "//embed.indavideo.hu/player/video/b34b58e0db", type: 'indavideo' },
+                    { title: "18. rész", src: "//embed.indavideo.hu/player/video/5c47f813c2", type: 'indavideo' },
+                    { title: "19. rész", src: "//embed.indavideo.hu/player/video/da062e1eea", type: 'indavideo' },
+                    { title: "20. rész", src: "//embed.indavideo.hu/player/video/1c7c7c22f2", type: 'indavideo' },
+                    { title: "21. rész", src: "//embed.indavideo.hu/player/video/410ca8d323", type: 'indavideo' },
+                    { title: "22. rész", src: "//embed.indavideo.hu/player/video/6fb059c43f", type: 'indavideo' },
+                    { title: "23. rész", src: "//embed.indavideo.hu/player/video/641b0078ff", type: 'indavideo' },
+                    { title: "24. rész", src: "//embed.indavideo.hu/player/video/13013e6aee", type: 'indavideo' },
+                    { title: "25. rész", src: "//embed.indavideo.hu/player/video/17121eff67", type: 'indavideo' },
+                ]
+            },
+            "codegeasss2": {
+                title: "Code Geass Season 2",
+                videos: [
+
+                    { title: "01. rész", src: "//embed.indavideo.hu/player/video/fe51db26e1", type: 'indavideo' },
+                    { title: "02. rész", src: "//embed.indavideo.hu/player/video/81f81d57cb", type: 'indavideo' },
+                    { title: "03. rész", src: "//embed.indavideo.hu/player/video/b28a1100ec", type: 'indavideo' },
+                    { title: "04. rész", src: "//embed.indavideo.hu/player/video/8131b57477", type: 'indavideo' },
+                    { title: "05. rész", src: "//embed.indavideo.hu/player/video/c76c9ef5a9", type: 'indavideo' },
+                    { title: "06. rész", src: "//embed.indavideo.hu/player/video/9513805548", type: 'indavideo' },
+                    { title: "07. rész", src: "//embed.indavideo.hu/player/video/3f52c1f837", type: 'indavideo' },
+                    { title: "08. rész", src: "//embed.indavideo.hu/player/video/7f32826157", type: 'indavideo' },
+                    { title: "09. rész", src: "//embed.indavideo.hu/player/video/f35c06e45c", type: 'indavideo' },
+                    { title: "10. rész", src: "//embed.indavideo.hu/player/video/82891c2b5f", type: 'indavideo' },
+                    { title: "11. rész", src: "//embed.indavideo.hu/player/video/61974773e9", type: 'indavideo' },
+                    { title: "12. rész", src: "//embed.indavideo.hu/player/video/06faac3d1c", type: 'indavideo' },
+                    { title: "13. rész", src: "//embed.indavideo.hu/player/video/c450a7aa23", type: 'indavideo' },
+                    { title: "14. rész", src: "//embed.indavideo.hu/player/video/ab3f4d79aa", type: 'indavideo' },
+                    { title: "15. rész", src: "//embed.indavideo.hu/player/video/98650b79ae", type: 'indavideo' },
+                    { title: "16. rész", src: "//embed.indavideo.hu/player/video/dc982c77e1", type: 'indavideo' },
+                    { title: "17. rész", src: "//embed.indavideo.hu/player/video/80acc09620", type: 'indavideo' },
+                    { title: "18. rész", src: "//embed.indavideo.hu/player/video/96d6a1ddfc", type: 'indavideo' },
+                    { title: "19. rész", src: "//embed.indavideo.hu/player/video/bdb9cf51e8", type: 'indavideo' },
+                    { title: "20. rész", src: "//embed.indavideo.hu/player/video/dacddec6be", type: 'indavideo' },
+                    { title: "21. rész", src: "//embed.indavideo.hu/player/video/fb2f1e1f72", type: 'indavideo' },
+                    { title: "22. rész", src: "//embed.indavideo.hu/player/video/19b896ac01", type: 'indavideo' },
+                    { title: "23. rész", src: "//embed.indavideo.hu/player/video/5fb8f358c9", type: 'indavideo' },
+                    { title: "24. rész", src: "//embed.indavideo.hu/player/video/26a6c19178", type: 'indavideo' },
+                    { title: "25. rész", src: "//embed.indavideo.hu/player/video/847e1b87b5", type: 'indavideo' },
+                ]
+            },
         };
 
         // --- SEGÉDFÜGGVÉNYEK ---
         function revealMsg(node, text, type = "") { if (!node) return; node.textContent = text; node.className = "form-msg" + (type ? " " + type : ""); }
 
-function checkTitleOverflow() {
-    // Adjunk egy kis időt a renderelésnek
-    setTimeout(() => {
-        document.querySelectorAll('.series-title').forEach(titleDiv => {
-            const titleSpan = titleDiv.querySelector('span');
-            if (!titleSpan) return;
+        function checkTitleOverflow() {
+            // Adjunk egy kis időt a renderelésnek
+            setTimeout(() => {
+                document.querySelectorAll('.series-title').forEach(titleDiv => {
+                    const titleSpan = titleDiv.querySelector('span');
+                    if (!titleSpan) return;
 
-            // Eredeti tartalom mentése, ha még nincs
-            if (!titleSpan.hasAttribute('data-original')) {
-                titleSpan.setAttribute('data-original', titleSpan.innerHTML);
-            }
-            
-            const originalText = titleSpan.getAttribute('data-original');
-            titleSpan.innerHTML = originalText; // Visszaállítjuk méréshez
-            titleDiv.classList.remove('scrolling-title');
+                    // Eredeti tartalom mentése, ha még nincs
+                    if (!titleSpan.hasAttribute('data-original')) {
+                        titleSpan.setAttribute('data-original', titleSpan.innerHTML);
+                    }
 
-            const containerWidth = titleDiv.clientWidth;
-            const textWidth = titleSpan.offsetWidth;
+                    const originalText = titleSpan.getAttribute('data-original');
+                    titleSpan.innerHTML = originalText; // Visszaállítjuk méréshez
+                    titleDiv.classList.remove('scrolling-title');
 
-            if (textWidth > containerWidth) {
-                // Szóköz és duplázás a folytonos hatáshoz
-                const spacing = "&nbsp;".repeat(10);
-                titleSpan.innerHTML = originalText + spacing + originalText + spacing;
-                
-                // Sebesség kiszámítása pixel alapján (pixel / sebesség = másodperc)
-                const duration = (titleSpan.offsetWidth / 2) / 40; 
-                titleSpan.style.animationDuration = duration + 's';
-                titleDiv.classList.add('scrolling-title');
-            }
-        });
-    }, 300); // 300ms késleltetés a biztos betöltődésért
-}
+                    const containerWidth = titleDiv.clientWidth;
+                    const textWidth = titleSpan.offsetWidth;
+
+                    if (textWidth > containerWidth) {
+                        // Szóköz és duplázás a folytonos hatáshoz
+                        const spacing = "&nbsp;".repeat(10);
+                        titleSpan.innerHTML = originalText + spacing + originalText + spacing;
+
+                        // Sebesség kiszámítása pixel alapján (pixel / sebesség = másodperc)
+                        const duration = (titleSpan.offsetWidth / 2) / 40;
+                        titleSpan.style.animationDuration = duration + 's';
+                        titleDiv.classList.add('scrolling-title');
+                    }
+                });
+            }, 300); // 300ms késleltetés a biztos betöltődésért
+        }
 
         // debounce helper to avoid excessive recalculations on resize
         function debounce(fn, wait) {
