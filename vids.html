@@ -9,6 +9,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=1.1">
     <style>
+       *, *::before, *::after {
+    box-sizing: border-box; /* Megakadályozza, hogy a padding növelje a szélességet */
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-width: 100%;
+    overflow-x: hidden; /* Ez csak akkor ér valamit, ha a szülő nem tágul */
+    position: relative;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
         body * {
             cursor: default !important;
         }
@@ -304,36 +324,44 @@
         }
 
 
-        .main-page {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-start;
-            align-items: flex-start;
-            gap: 20px;
-            padding: 40px;
-            flex: 1;
-            overflow-y: auto;
-            width: 100%;
-            box-sizing: border-box;
-            transition: filter 0.5s ease;
-        }
+.main-page {
+    width: 100%;
+    max-width: 100%;
+    padding: 15px;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    overflow-x: hidden;
+}
 
-        .series-card {
-            width: 180px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            border-radius: 0;
-            overflow: hidden;
-            background: #1A1A1A;
-            box-shadow: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-sizing: border-box;
-            padding-bottom: 5px;
-        }
+.series-card {
+    /* Asztali méret marad 180px */
+    width: 180px; 
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    background: #1A1A1A;
+    transition: all 0.3s;
+}
+@media (max-width: 480px) {
+    .main-page {
+        padding: 10px;
+        gap: 10px;
+    }
+    
+    .series-card {
+        /* Kiszámoljuk, hogy két kártya pont elférjen (50% mínusz a gap fele) */
+        width: calc(50% - 15px); 
+        min-width: 120px; /* Megakadályozza, hogy túl kicsi legyen */
+    }
 
+    .series-title {
+        min-height: 45px;
+        padding: 5px;
+    }
+}
         .series-card:hover {
             transform: none;
             box-shadow: none;
@@ -352,37 +380,63 @@
         .series-card:hover img {
             transform: none;
         }
+.series-title {
+    width: 100%;
+    min-height: 50px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
 
-        .series-title {
-            width: 100%;
-            height: 35px;
-            overflow: hidden;
-            /* Ez vágja le a kilógó részt */
-            position: relative;
-            white-space: nowrap;
-            padding: 5px 0;
-        }
+.series-title span {
+    font-size: 0.85rem;
+    line-height: 1.2;
+    text-align: center;
+    color: #fff;
+    display: block;
+    
+    /* Alapértelmezett levágás 2 sorra */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2; /* Standard tulajdonoság a sárga aláhúzás ellen */
+    overflow: hidden;
+}
 
-        .series-title span {
-            display: inline-block;
-            /* Fontos a méréshez és mozgatáshoz */
-            padding-left: 10px;
-            will-change: transform;
-        }
+/* ASZTALI GÉPEN: Egér ráhúzásra nyílik */
+@media (hover: hover) {
+    .series-card:hover .series-title span {
+        -webkit-line-clamp: unset;
+        line-clamp: unset;
+        overflow: visible;
+        display: block;
+    }
+    .series-card:hover .series-title {
+        height: auto;
+    }
+}
 
-        /* Az animáció, ami a transzformációt végzi */
-        @keyframes smoothScroll {
-            0% {
-                transform: translateX(0);
-            }
+/* TELEFONON: Koppintásra (hosszabb nyomásra vagy kattintásra) nyílik */
+@media (max-width: 768px) {
+    /* Amikor a kártyát megérintik, a cím kinyílik */
+    .series-card:active .series-title span,
+    .series-card:focus .series-title span {
+        -webkit-line-clamp: unset;
+        line-clamp: unset;
+        overflow: visible;
+        display: block;
+    }
 
-            100% {
-                transform: translateX(-50%);
-            }
-
-            /* Azért -50%, mert a JS megduplázza a szöveget */
-        }
-
+    .series-card:active .series-title,
+    .series-card:focus .series-title {
+        height: auto;
+    }
+}
         .series-title.scrolling-title span {
             animation: smoothScroll linear infinite;
         }
@@ -973,6 +1027,7 @@
             display: none !important;
             /* Elrejti a logót és a profilod mozi módban */
         }
+        
     </style>
 </head>
 
@@ -1502,36 +1557,7 @@
         function revealMsg(node, text, type = "") { if (!node) return; node.textContent = text; node.className = "form-msg" + (type ? " " + type : ""); }
 
         function checkTitleOverflow() {
-            // Adjunk egy kis időt a renderelésnek
-            setTimeout(() => {
-                document.querySelectorAll('.series-title').forEach(titleDiv => {
-                    const titleSpan = titleDiv.querySelector('span');
-                    if (!titleSpan) return;
-
-                    // Eredeti tartalom mentése, ha még nincs
-                    if (!titleSpan.hasAttribute('data-original')) {
-                        titleSpan.setAttribute('data-original', titleSpan.innerHTML);
-                    }
-
-                    const originalText = titleSpan.getAttribute('data-original');
-                    titleSpan.innerHTML = originalText; // Visszaállítjuk méréshez
-                    titleDiv.classList.remove('scrolling-title');
-
-                    const containerWidth = titleDiv.clientWidth;
-                    const textWidth = titleSpan.offsetWidth;
-
-                    if (textWidth > containerWidth) {
-                        // Szóköz és duplázás a folytonos hatáshoz
-                        const spacing = "&nbsp;".repeat(10);
-                        titleSpan.innerHTML = originalText + spacing + originalText + spacing;
-
-                        // Sebesség kiszámítása pixel alapján (pixel / sebesség = másodperc)
-                        const duration = (titleSpan.offsetWidth / 2) / 40;
-                        titleSpan.style.animationDuration = duration + 's';
-                        titleDiv.classList.add('scrolling-title');
-                    }
-                });
-            }, 300); // 300ms késleltetés a biztos betöltődésért
+            
         }
 
         // debounce helper to avoid excessive recalculations on resize
@@ -1864,5 +1890,6 @@
         };
     </script>
 </body>
+
 
 </html>
