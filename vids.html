@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hu">
 
 <head>
@@ -9,26 +9,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=1.1">
     <style>
-       *, *::before, *::after {
-    box-sizing: border-box; /* Megakadályozza, hogy a padding növelje a szélességet */
-}
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            /* Megakadályozza, hogy a padding növelje a szélességet */
+        }
 
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-width: 100%;
-    overflow-x: hidden; /* Ez csak akkor ér valamit, ha a szülő nem tágul */
-    position: relative;
-}
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-width: 100%;
+            overflow-x: hidden;
+            /* Ez csak akkor ér valamit, ha a szülő nem tágul */
+            position: relative;
+        }
 
-#app {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-}
+        #app {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
         body * {
             cursor: default !important;
         }
@@ -256,11 +262,12 @@ html, body {
             font-size: 0.8em;
             color: #777;
         }
-#search-container {
-    display: flex;
-    align-items: center;
-    position: relative;
-}
+
+        #search-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
 
         /* Ezt a részt cseréld a stílusaid között */
         #search-input {
@@ -326,44 +333,47 @@ html, body {
         }
 
 
-.main-page {
-    width: 100%;
-    max-width: 100%;
-    padding: 15px;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    overflow-x: hidden;
-}
+        .main-page {
+            width: 100%;
+            max-width: 100%;
+            padding: 15px;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            overflow-x: hidden;
+        }
 
-.series-card {
-    /* Asztali méret marad 180px */
-    width: 180px; 
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    background: #1A1A1A;
-    transition: all 0.3s;
-}
-@media (max-width: 480px) {
-    .main-page {
-        padding: 10px;
-        gap: 10px;
-    }
-    
-    .series-card {
-        /* Kiszámoljuk, hogy két kártya pont elférjen (50% mínusz a gap fele) */
-        width: calc(50% - 15px); 
-        min-width: 120px; /* Megakadályozza, hogy túl kicsi legyen */
-    }
+        .series-card {
+            /* Asztali méret marad 180px */
+            width: 180px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            background: #1A1A1A;
+            transition: all 0.3s;
+        }
 
-    .series-title {
-        min-height: 45px;
-        padding: 5px;
-    }
-}
+        @media (max-width: 480px) {
+            .main-page {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .series-card {
+                /* Kiszámoljuk, hogy két kártya pont elférjen (50% mínusz a gap fele) */
+                width: calc(50% - 15px);
+                min-width: 120px;
+                /* Megakadályozza, hogy túl kicsi legyen */
+            }
+
+            .series-title {
+                min-height: 45px;
+                padding: 5px;
+            }
+        }
+
         .series-card:hover {
             transform: none;
             box-shadow: none;
@@ -382,63 +392,68 @@ html, body {
         .series-card:hover img {
             transform: none;
         }
-.series-title {
-    width: 100%;
-    min-height: 50px;
-    padding: 8px 10px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
 
-.series-title span {
-    font-size: 0.85rem;
-    line-height: 1.2;
-    text-align: center;
-    color: #fff;
-    display: block;
-    
-    /* Alapértelmezett levágás 2 sorra */
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2; /* Standard tulajdonoság a sárga aláhúzás ellen */
-    overflow: hidden;
-}
+        .series-title {
+            width: 100%;
+            min-height: 50px;
+            padding: 8px 10px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
 
-/* ASZTALI GÉPEN: Egér ráhúzásra nyílik */
-@media (hover: hover) {
-    .series-card:hover .series-title span {
-        -webkit-line-clamp: unset;
-        line-clamp: unset;
-        overflow: visible;
-        display: block;
-    }
-    .series-card:hover .series-title {
-        height: auto;
-    }
-}
+        .series-title span {
+            font-size: 0.85rem;
+            line-height: 1.2;
+            text-align: center;
+            color: #fff;
+            display: block;
 
-/* TELEFONON: Koppintásra (hosszabb nyomásra vagy kattintásra) nyílik */
-@media (max-width: 768px) {
-    /* Amikor a kártyát megérintik, a cím kinyílik */
-    .series-card:active .series-title span,
-    .series-card:focus .series-title span {
-        -webkit-line-clamp: unset;
-        line-clamp: unset;
-        overflow: visible;
-        display: block;
-    }
+            /* Alapértelmezett levágás 2 sorra */
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            /* Standard tulajdonoság a sárga aláhúzás ellen */
+            overflow: hidden;
+        }
 
-    .series-card:active .series-title,
-    .series-card:focus .series-title {
-        height: auto;
-    }
-}
+        /* ASZTALI GÉPEN: Egér ráhúzásra nyílik */
+        @media (hover: hover) {
+            .series-card:hover .series-title span {
+                -webkit-line-clamp: unset;
+                line-clamp: unset;
+                overflow: visible;
+                display: block;
+            }
+
+            .series-card:hover .series-title {
+                height: auto;
+            }
+        }
+
+        /* TELEFONON: Koppintásra (hosszabb nyomásra vagy kattintásra) nyílik */
+        @media (max-width: 768px) {
+
+            /* Amikor a kártyát megérintik, a cím kinyílik */
+            .series-card:active .series-title span,
+            .series-card:focus .series-title span {
+                -webkit-line-clamp: unset;
+                line-clamp: unset;
+                overflow: visible;
+                display: block;
+            }
+
+            .series-card:active .series-title,
+            .series-card:focus .series-title {
+                height: auto;
+            }
+        }
+
         .series-title.scrolling-title span {
             animation: smoothScroll linear infinite;
         }
@@ -1029,7 +1044,172 @@ html, body {
             display: none !important;
             /* Elrejti a logót és a profilod mozi módban */
         }
-        
+        #continueList {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding-bottom: 15px;
+    scrollbar-width: none; /* Firefox */
+}
+
+#continueList::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+#continueList .series-card {
+    flex: 0 
+    0 auto; /* Megakadályozza, hogy összenyomódjanak a kártyák */
+}
+/* Kompakt folytatás szekció */
+#continueWatchingSection {
+    width: 100%;
+    padding: 10px 40px 0 40px;
+    margin-bottom: -10px; /* Hogy közelebb legyen a főrácshoz */
+}
+
+#continueList {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 5px 0 15px 0;
+    scrollbar-width: none;
+}
+
+#continueList::-webkit-scrollbar { display: none; }
+
+.continue-chip {
+    background: #252525;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 15px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    min-width: 160px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.continue-chip:hover {
+    background: #333;
+    border-color: #4cff7f;
+    transform: translateY(-2px);
+}
+
+.continue-chip .series-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #fff;
+}
+
+.continue-chip .episode-name {
+    font-size: 0.75rem;
+    color: #4cff7f;
+}
+
+@media (max-width: 768px) {
+    #continueWatchingSection { padding: 10px 20px 0 20px; }
+}
+/* Kompakt, modern Folytatás rész */
+#continueWatchingSection {
+    width: 100%;
+    padding: 20px 40px 0 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent);
+}
+
+#continueList {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 10px 0;
+    scrollbar-width: none;
+}
+
+.continue-chip {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    padding: 10px 16px;
+    border-radius: 8px; /* Lekerekített, modernebb forma */
+    min-width: 200px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.continue-chip:hover {
+    background: #282828;
+    border-color: #4cff7f;
+}
+
+.series-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #eee;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 130px;
+}
+
+.episode-name {
+    font-size: 0.75rem;
+    color: #4cff7f;
+    background: rgba(76, 255, 127, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* Főoldali kártyák finomítása */
+.series-card {
+    border-radius: 8px;
+    overflow: hidden;
+    background: #161616;
+    border: 1px solid transparent;
+}
+
+.series-card:hover {
+    border-color: #333;
+    background: #1e1e1e;
+}
+.series-card {
+    width: 180px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    background: #1A1A1A;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid transparent;
+    /* Ez biztosítja a sima mozgást */
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Kurzus ráhúzáskor (Zoom effekt) */
+.series-card:hover {
+    transform: scale(1.05); /* 5%-os növekedés */
+    background: #252525;
+    border-color: #444;
+    z-index: 10; /* Hogy a szomszédos kártyák fölé emelkedjen */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.series-card img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    display: block;
+}
+.video-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 10px;
+    text-align: left; /* Így jobban néz ki a kép mellett */
+}
     </style>
 </head>
 
@@ -1083,7 +1263,7 @@ html, body {
                 </div>
             </div>
         </header>
-
+      
         <div class="main-page" id="mainPage">
             <div class="series-card" data-series="chainsaw-movie">
                 <img src="./reze.png" alt="Chainsaw Man: Reze Arc">
@@ -1288,15 +1468,28 @@ html, body {
                     { title: "15. rész", src: "//embed.indavideo.hu/player/video/a7983034e3", type: 'indavideo' },
                     { title: "16. rész", src: "//embed.indavideo.hu/player/video/932d9f3317", type: 'indavideo' },
                     { title: "17. rész", src: "//embed.indavideo.hu/player/video/a4e723f5dc", type: 'indavideo' },
-                    { title: "18. rész", src: "//embed.indavideo.hu/player/video/a273ea4497", type: 'indavideo' },
-                    { title: "19. rész", src: "//embed.indavideo.hu/player/video/f3ce246582", type: 'indavideo' },
-                    { title: "20. rész", src: "//embed.indavideo.hu/player/video/e5da6af423", type: 'indavideo' },
-                    { title: "21. rész", src: "//embed.indavideo.hu/player/video/77979c4cac", type: 'indavideo' },
-                    { title: "22. rész", src: "//embed.indavideo.hu/player/video/9e2463619c", type: 'indavideo' },
-                    { title: "23. rész", src: "//embed.indavideo.hu/player/video/99c0d5fb6b", type: 'indavideo' },
-                    { title: "24. rész", src: "//embed.indavideo.hu/player/video/71cd1036af", type: 'indavideo' },
-                    { title: "25. rész", src: "//embed.indavideo.hu/player/video/c1e3575648", type: 'indavideo' },
-                    { title: "26. rész", src: "//embed.indavideo.hu/player/video/a1c1127501", type: 'indavideo' },
+                    { title: "18. rész", src: "//embed.indavideo.hu/player/video/e477654a6e", type: 'indavideo' },
+                    { title: "19. rész", src: "//embed.indavideo.hu/player/video/80db743f48", type: 'indavideo' },
+                    { title: "20. rész", src: "//embed.indavideo.hu/player/video/72af6efb0e", type: 'indavideo' },
+                    { title: "21. rész", src: "//embed.indavideo.hu/player/video/c0f69ac19f", type: 'indavideo' },
+                    { title: "22. rész", src: "//embed.indavideo.hu/player/video/a49b91ceea", type: 'indavideo' },
+                    { title: "23. rész", src: "//embed.indavideo.hu/player/video/e4b2d6b6a0", type: 'indavideo' },
+                    { title: "24. rész", src: "//embed.indavideo.hu/player/video/a8567542e9", type: 'indavideo' },
+                    { title: "25. rész", src: "//embed.indavideo.hu/player/video/bf9a83c341", type: 'indavideo' },
+                    { title: "26. rész", src: "//embed.indavideo.hu/player/video/21c605c3b4", type: 'indavideo' },
+                    { title: "27. rész", src: "//embed.indavideo.hu/player/video/56a36e5761", type: 'indavideo' },
+                    { title: "28. rész", src: "//embed.indavideo.hu/player/video/0a052a561b", type: 'indavideo' },
+                    { title: "29. rész", src: "//embed.indavideo.hu/player/video/28f5893006", type: 'indavideo' },
+                    { title: "30. rész", src: "//embed.indavideo.hu/player/video/3fc53facf0", type: 'indavideo' },
+                    { title: "31. rész", src: "//embed.indavideo.hu/player/video/79dce3a53c", type: 'indavideo' },
+                    { title: "32. rész", src: "//embed.indavideo.hu/player/video/8e2b8742a1", type: 'indavideo' },
+                    { title: "33. rész", src: "//embed.indavideo.hu/player/video/56149fc81e", type: 'indavideo' },
+                    { title: "34. rész", src: "//embed.indavideo.hu/player/video/c7d9f3c339", type: 'indavideo' },
+                    { title: "35. rész", src: "//embed.indavideo.hu/player/video/e39a796763", type: 'indavideo' },
+                    { title: "36. rész", src: "//embed.indavideo.hu/player/video/1120cae12f", type: 'indavideo' },
+                    { title: "37. rész", src: "//embed.indavideo.hu/player/video/c987a5b573", type: 'indavideo' },
+
+
 
 
                 ]
@@ -1559,7 +1752,7 @@ html, body {
         function revealMsg(node, text, type = "") { if (!node) return; node.textContent = text; node.className = "form-msg" + (type ? " " + type : ""); }
 
         function checkTitleOverflow() {
-            
+
         }
 
         // debounce helper to avoid excessive recalculations on resize
@@ -1662,19 +1855,109 @@ html, body {
             const snapshot = await get(child(ref(db), `progress/${user.uid}/${seriesKey}`));
             return snapshot.exists() ? snapshot.val().index : 0;
         }
+function updateContinueWatching(progressData) {
+    const continueSection = document.getElementById('continueWatchingSection');
+    const continueList = document.getElementById('continueList');
+    continueList.innerHTML = '';
 
-        function loadAllProgress() {
-            const user = auth.currentUser;
-            if (!user) return;
-            onValue(ref(db, `progress/${user.uid}`), (snapshot) => {
-                if (snapshot.exists()) {
-                    allProgressData = snapshot.val();
-                    populateWatchedList(allProgressData);
-                } else {
-                    watchedList.innerHTML = '<p style="font-size: 0.85rem; color: #777;">Még nem néztél sorozatot.</p>';
+    // Csak azokat mutatjuk, ahol van valódi haladás
+    const sortedItems = Object.keys(progressData)
+        .map(key => ({ key, ...seriesData[key], ...progressData[key] }))
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .slice(0, 5);
+
+    if (sortedItems.length > 0) {
+        continueSection.style.display = 'block';
+        sortedItems.forEach(item => {
+            const chip = document.createElement('div');
+            chip.className = 'continue-chip';
+            chip.innerHTML = `
+                <div class="series-name">${item.title}</div>
+                <div class="episode-name">${item.index + 1}. rész folytatása</div>
+            `;
+            chip.onclick = () => {
+                loadSeries(item.key);
+                mainPage.style.display = 'none';
+                continueSection.style.display = 'none'; // ELTŰNIK a választáskor
+                seriesPage.style.display = 'flex';
+            };
+            continueList.appendChild(chip);
+        });
+    } else {
+        continueSection.style.display = 'none';
+    }
+}
+
+// Navigáció javítása, hogy a főoldalra visszatérve újra megjelenjen a szekció
+homeBtn.onclick = backBtn.onclick = () => {
+    stopAndCleanupVideo();
+    seriesPage.style.display = 'none';
+    mainPage.style.display = 'flex';
+    
+    // Frissítjük és visszahozzuk a Folytatás szekciót, ha van mit mutatni
+    loadAllProgress(); 
+    
+    searchBtn.style.display = 'flex';
+    dynamicBackground.classList.remove('visible');
+    window.scrollTo(0, 0);
+};
+
+// A sorozat kártyák kattintásánál is el kell rejteni!
+document.querySelectorAll('.series-card').forEach(c => {
+    c.onclick = () => {
+        loadSeries(c.dataset.series);
+        mainPage.style.display = 'none';
+        document.getElementById('continueWatchingSection').style.display = 'none'; // ELREJTÉS
+        seriesPage.style.display = 'flex';
+    };
+});
+document.addEventListener('keydown', (e) => {
+    // Csak akkor fussanak, ha nem épp a keresőbe ír a felhasználó
+    if (document.activeElement.tagName === 'INPUT') return;
+
+    switch(e.key.toLowerCase()) {
+        case 'f': // Teljes képernyő ki/be
+            if (seriesPage.style.display === 'flex') {
+                const frame = document.getElementById('main-vid');
+                if (frame) {
+                    if (!document.fullscreenElement) {
+                        frame.requestFullscreen().catch(err => console.log(err));
+                    } else {
+                        document.exitFullscreen();
+                    }
                 }
-            }, { onlyOnce: true });
+            }
+            break;
+            
+        case 'm': // Mozi mód gyorsbillentyű
+            if (seriesPage.style.display === 'flex') {
+                theaterBtn.click();
+            }
+            break;
+
+        case 'escape': // Kilépés a sorozatból vissza a főoldalra
+        case 'backspace':
+            if (seriesPage.style.display === 'flex') {
+                backBtn.click();
+            }
+            break;
+    }
+});
+// Hívd meg ezt is a loadAllProgress-en belül!
+       function loadAllProgress() {
+    const user = auth.currentUser;
+    if (!user) return;
+    onValue(ref(db, `progress/${user.uid}`), (snapshot) => {
+        if (snapshot.exists()) {
+            allProgressData = snapshot.val();
+            populateWatchedList(allProgressData);
+            updateContinueWatching(allProgressData); // EZ HIÁNYZOTT: Meghívjuk a folytatás szekciót
+        } else {
+            watchedList.innerHTML = '<p style="font-size: 0.85rem; color: #777;">Még nem néztél sorozatot.</p>';
+            document.getElementById('continueWatchingSection').style.display = 'none';
         }
+    }, { onlyOnce: true });
+}
 
         function populateWatchedList(progressData) {
             watchedList.innerHTML = '';
@@ -1728,26 +2011,26 @@ html, body {
             } catch (err) { revealMsg(loginMsg, "❌ Hibás belépés.", "error"); }
         };
 
-// Segédfüggvény a lejátszó teljes takarításához
-function stopAndCleanupVideo() {
-    const videoContainer = document.querySelector('.video-frame-container');
-    const glowContainer = document.getElementById('ambilightGlowContainer');
-    
-    if (videoContainer) videoContainer.innerHTML = '';
-    if (glowContainer) glowContainer.innerHTML = '';
-    
-    // Mozi mód és fények kikapcsolása
-    document.body.classList.remove('theater-mode-on');
-    if (ambilightWrapper) ambilightWrapper.classList.remove('ambilight-active');
-}
+        // Segédfüggvény a lejátszó teljes takarításához
+        function stopAndCleanupVideo() {
+            const videoContainer = document.querySelector('.video-frame-container');
+            const glowContainer = document.getElementById('ambilightGlowContainer');
 
-// Vissza gomb és Home gomb
+            if (videoContainer) videoContainer.innerHTML = '';
+            if (glowContainer) glowContainer.innerHTML = '';
 
-// Kilépés gomb
-logoutBtn.onclick = () => {
-    stopAndCleanupVideo();
-    signOut(auth);
-};
+            // Mozi mód és fények kikapcsolása
+            document.body.classList.remove('theater-mode-on');
+            if (ambilightWrapper) ambilightWrapper.classList.remove('ambilight-active');
+        }
+
+        // Vissza gomb és Home gomb
+
+        // Kilépés gomb
+        logoutBtn.onclick = () => {
+            stopAndCleanupVideo();
+            signOut(auth);
+        };
 
         profileBtn.onclick = (e) => {
             e.stopPropagation();
@@ -1775,24 +2058,24 @@ logoutBtn.onclick = () => {
             }
         });
 
-homeBtn.onclick = backBtn.onclick = () => {
-    // 1. Megállítjuk a videót az iframe-ek ürítésével
-    const videoContainer = document.querySelector('.video-frame-container');
-    const glowContainer = document.getElementById('ambilightGlowContainer');
-    
-    if (videoContainer) videoContainer.innerHTML = '';
-    if (glowContainer) glowContainer.innerHTML = '';
+        homeBtn.onclick = backBtn.onclick = () => {
+            // 1. Megállítjuk a videót az iframe-ek ürítésével
+            const videoContainer = document.querySelector('.video-frame-container');
+            const glowContainer = document.getElementById('ambilightGlowContainer');
 
-    // 2. Visszaváltunk a főoldalra
-    seriesPage.style.display = 'none';
-    mainPage.style.display = 'flex';
-    searchBtn.style.display = 'flex';
-    dynamicBackground.classList.remove('visible');
-    
-    // 3. Kilépünk a mozi módból is, ha aktív volt
-    document.body.classList.remove('theater-mode-on');
-    ambilightWrapper.classList.remove('ambilight-active');
-};
+            if (videoContainer) videoContainer.innerHTML = '';
+            if (glowContainer) glowContainer.innerHTML = '';
+
+            // 2. Visszaváltunk a főoldalra
+            seriesPage.style.display = 'none';
+            mainPage.style.display = 'flex';
+            searchBtn.style.display = 'flex';
+            dynamicBackground.classList.remove('visible');
+
+            // 3. Kilépünk a mozi módból is, ha aktív volt
+            document.body.classList.remove('theater-mode-on');
+            ambilightWrapper.classList.remove('ambilight-active');
+        };
 
         theaterBtn.onclick = () => {
             const isOn = document.body.classList.toggle('theater-mode-on');
@@ -1906,51 +2189,51 @@ homeBtn.onclick = backBtn.onclick = () => {
             }
         };
         // Kereső gomb (Toggle funkció: nyit és zár)
-searchBtn.onclick = (e) => {
-    e.stopPropagation();
-    const isActive = searchContainer.classList.toggle('active');
-    
-    if (isActive) {
-        searchInput.focus();
-    } else {
-        // Ha bezárjuk a gombbal, töröljük a keresést és visszaállítunk mindent
-        searchInput.value = "";
-        searchClearBtn.style.display = 'none';
-        document.querySelectorAll('.series-card').forEach(card => {
-            card.style.display = 'flex';
-        });
-    }
-};
+        searchBtn.onclick = (e) => {
+            e.stopPropagation();
+            const isActive = searchContainer.classList.toggle('active');
 
-// Keresés gépelés közben
-searchInput.oninput = () => {
-    const q = searchInput.value.toLowerCase().trim();
+            if (isActive) {
+                searchInput.focus();
+            } else {
+                // Ha bezárjuk a gombbal, töröljük a keresést és visszaállítunk mindent
+                searchInput.value = "";
+                searchClearBtn.style.display = 'none';
+                document.querySelectorAll('.series-card').forEach(card => {
+                    card.style.display = 'flex';
+                });
+            }
+        };
 
-    // Az X gomb megjelenítése/elrejtése
-    searchClearBtn.style.display = q ? 'flex' : 'none';
+        // Keresés gépelés közben
+        searchInput.oninput = () => {
+            const q = searchInput.value.toLowerCase().trim();
 
-    document.querySelectorAll('.series-card').forEach(card => {
-        // Megkeressük a címet a kártyán belül
-        const titleText = card.querySelector('.series-title span').textContent.toLowerCase();
-        
-        if (titleText.includes(q)) {
-            card.style.display = 'flex';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-};
+            // Az X gomb megjelenítése/elrejtése
+            searchClearBtn.style.display = q ? 'flex' : 'none';
 
-// Törlés gomb (X) logikája
-searchClearBtn.onclick = (e) => {
-    e.stopPropagation();
-    searchInput.value = "";
-    searchClearBtn.style.display = 'none';
-    searchInput.focus();
-    document.querySelectorAll('.series-card').forEach(card => {
-        card.style.display = 'flex';
-    });
-};
+            document.querySelectorAll('.series-card').forEach(card => {
+                // Megkeressük a címet a kártyán belül
+                const titleText = card.querySelector('.series-title span').textContent.toLowerCase();
+
+                if (titleText.includes(q)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        };
+
+        // Törlés gomb (X) logikája
+        searchClearBtn.onclick = (e) => {
+            e.stopPropagation();
+            searchInput.value = "";
+            searchClearBtn.style.display = 'none';
+            searchInput.focus();
+            document.querySelectorAll('.series-card').forEach(card => {
+                card.style.display = 'flex';
+            });
+        };
     </script>
 </body>
 
