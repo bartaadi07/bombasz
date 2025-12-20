@@ -256,10 +256,11 @@ html, body {
             font-size: 0.8em;
             color: #777;
         }
-
-        #search-container {
-            position: relative;
-        }
+#search-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
 
         /* Ezt a részt cseréld a stílusaid között */
         #search-input {
@@ -276,6 +277,7 @@ html, body {
             background: #222;
             color: #fff;
             z-index: 10;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #search-container.active #search-input {
@@ -1726,7 +1728,26 @@ html, body {
             } catch (err) { revealMsg(loginMsg, "❌ Hibás belépés.", "error"); }
         };
 
-        logoutBtn.onclick = () => signOut(auth);
+// Segédfüggvény a lejátszó teljes takarításához
+function stopAndCleanupVideo() {
+    const videoContainer = document.querySelector('.video-frame-container');
+    const glowContainer = document.getElementById('ambilightGlowContainer');
+    
+    if (videoContainer) videoContainer.innerHTML = '';
+    if (glowContainer) glowContainer.innerHTML = '';
+    
+    // Mozi mód és fények kikapcsolása
+    document.body.classList.remove('theater-mode-on');
+    if (ambilightWrapper) ambilightWrapper.classList.remove('ambilight-active');
+}
+
+// Vissza gomb és Home gomb
+
+// Kilépés gomb
+logoutBtn.onclick = () => {
+    stopAndCleanupVideo();
+    signOut(auth);
+};
 
         profileBtn.onclick = (e) => {
             e.stopPropagation();
@@ -1754,12 +1775,24 @@ html, body {
             }
         });
 
-        homeBtn.onclick = backBtn.onclick = () => {
-            seriesPage.style.display = 'none';
-            mainPage.style.display = 'flex';
-            searchBtn.style.display = 'flex';
-            dynamicBackground.classList.remove('visible');
-        };
+homeBtn.onclick = backBtn.onclick = () => {
+    // 1. Megállítjuk a videót az iframe-ek ürítésével
+    const videoContainer = document.querySelector('.video-frame-container');
+    const glowContainer = document.getElementById('ambilightGlowContainer');
+    
+    if (videoContainer) videoContainer.innerHTML = '';
+    if (glowContainer) glowContainer.innerHTML = '';
+
+    // 2. Visszaváltunk a főoldalra
+    seriesPage.style.display = 'none';
+    mainPage.style.display = 'flex';
+    searchBtn.style.display = 'flex';
+    dynamicBackground.classList.remove('visible');
+    
+    // 3. Kilépünk a mozi módból is, ha aktív volt
+    document.body.classList.remove('theater-mode-on');
+    ambilightWrapper.classList.remove('ambilight-active');
+};
 
         theaterBtn.onclick = () => {
             const isOn = document.body.classList.toggle('theater-mode-on');
@@ -1772,23 +1805,7 @@ html, body {
 
             if (isOn) window.scrollTo({ top: 0, behavior: 'smooth' });
         };
-        searchBtn.onclick = (e) => { e.stopPropagation(); searchContainer.classList.add('active'); searchInput.focus(); };
 
-        // Kereső mező gépelés figyelése
-        searchInput.oninput = () => {
-            const q = searchInput.value.toLowerCase();
-
-            // Az X gomb megjelenítése/elrejtése
-            searchClearBtn.style.display = q ? 'flex' : 'none';
-
-            document.querySelectorAll('.series-card').forEach(card => {
-                const title = card.querySelector('.series-title span').textContent.toLowerCase();
-                card.style.display = title.includes(q) ? 'flex' : 'none';
-            });
-
-            // Újraellenőrizzük a hosszú címeket a találatoknál
-            checkTitleOverflow();
-        };
 
         // AZ X GOMB FUNKCIÓJA (Ez hiányzott):
         searchClearBtn.onclick = (e) => {
@@ -1888,6 +1905,52 @@ html, body {
                 glow.style.display = 'block';
             }
         };
+        // Kereső gomb (Toggle funkció: nyit és zár)
+searchBtn.onclick = (e) => {
+    e.stopPropagation();
+    const isActive = searchContainer.classList.toggle('active');
+    
+    if (isActive) {
+        searchInput.focus();
+    } else {
+        // Ha bezárjuk a gombbal, töröljük a keresést és visszaállítunk mindent
+        searchInput.value = "";
+        searchClearBtn.style.display = 'none';
+        document.querySelectorAll('.series-card').forEach(card => {
+            card.style.display = 'flex';
+        });
+    }
+};
+
+// Keresés gépelés közben
+searchInput.oninput = () => {
+    const q = searchInput.value.toLowerCase().trim();
+
+    // Az X gomb megjelenítése/elrejtése
+    searchClearBtn.style.display = q ? 'flex' : 'none';
+
+    document.querySelectorAll('.series-card').forEach(card => {
+        // Megkeressük a címet a kártyán belül
+        const titleText = card.querySelector('.series-title span').textContent.toLowerCase();
+        
+        if (titleText.includes(q)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+};
+
+// Törlés gomb (X) logikája
+searchClearBtn.onclick = (e) => {
+    e.stopPropagation();
+    searchInput.value = "";
+    searchClearBtn.style.display = 'none';
+    searchInput.focus();
+    document.querySelectorAll('.series-card').forEach(card => {
+        card.style.display = 'flex';
+    });
+};
     </script>
 </body>
 
