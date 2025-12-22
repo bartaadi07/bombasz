@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hu">
 
 <head>
@@ -68,24 +68,23 @@
             overflow-x: hidden;
         }
 
-        .series-page-bg {
-            pointer-events: none;
-            /* Átengedi a kattintást az alatta lévő elemekre */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            /* Az app mögött (ami 1), de a body felett */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            filter: blur(10px);
-            transform: scale(1.05);
-        }
+.series-page-bg {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    /* JAVÍTÁS: Hardware-es gyorsítás hozzáadása és kisebb blur */
+    filter: blur(40px); 
+    transform: translateZ(0); 
+    will-change: opacity;
+}
 
         .series-page-bg.visible {
             opacity: 0.6 !important;
@@ -990,21 +989,20 @@
         }
 
         /* AMBILIGHT: Extrém kiterjedés és intenzitás */
-        #ambilightGlowContainer {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            /* Scale: 1.25 elég, mert a videó már alapból hatalmas, 
-       így a fény pont a széleken fog ragyogni */
-            transform: translate(-50%, -50%) scale(1.25, 1.2);
-            filter: blur(150px) saturate(2.2) brightness(1.4);
-            pointer-events: none;
-            display: none;
-            transition: opacity 1s ease;
-        }
+       #ambilightGlowContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0;
+    /* JAVÍTÁS: 150px blur helyett próbáld meg a 60-80px-et */
+    filter: blur(60px) saturate(1.5);
+    pointer-events: none;
+    will-change: filter, transform; /* GPU segítség kérése */
+}
 
         /* Teljes fényerő bekapcsolva */
         .ambilight-active #ambilightGlowContainer {
@@ -1198,6 +1196,7 @@
             border: 1px solid transparent;
             /* Ez biztosítja a sima mozgást */
             transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.3s ease, border-color 0.3s ease;
+            will-change: transform;
         }
 
         /* Kurzus ráhúzáskor (Zoom effekt) */
@@ -1283,132 +1282,132 @@
 
         <div class="main-page" id="mainPage">
             <div class="series-card" data-series="chainsaw-movie">
-                <img src="./reze.png" alt="Chainsaw Man: Reze Arc" loading="lazy">
+                <img src="./reze.png" alt="Chainsaw Man: Reze Arc">
                 <div class="series-title"><span>Chainsaw Man - The Movie: Reze Arc</span></div>
             </div>
             <div class="series-card" data-series="chainsaw-series">
-                <img src="./chainsawman.webp" alt="Chainsaw Man" loading="lazy">
+                <img src="./chainsawman.webp" alt="Chainsaw Man">
                 <div class="series-title"><span>Chainsaw Man</span></div>
             </div>
             <div class="series-card" data-series="deathnote">
-                <img src="./deathnote.avif" alt="Death Note" loading="lazy">
+                <img src="./deathnote.avif" alt="Death Note">
                 <div class="series-title"><span>Death Note</span></div>
             </div>
             <div class="series-card" data-series="record-of-ragnarok-s1">
-                <img src="./recordofragnaroks1.jpg" alt="Record of Ragnarok: Season 1" loading="lazy">
+                <img src="./recordofragnaroks1.jpg" alt="Record of Ragnarok: Season 1">
                 <div class="series-title"><span>Record of Ragnarok: Season 1</span></div>
             </div>
             <div class="series-card" data-series="record-of-ragnarok-s2">
-                <img src="./recordofragnaroks2.jpg" alt="Record of Ragnarok: Season 2" loading="lazy">
+                <img src="./recordofragnaroks2.jpg" alt="Record of Ragnarok: Season 2" >
                 <div class="series-title"><span>Record of Ragnarok: Season 2</span></div>
             </div>
 
             <div class="series-card" data-series="record-of-ragnarok-s3">
-                <img src="./recordofragnaroks3.jpg" alt="Record of Ragnarok: Season 3" loading="lazy">
+                <img src="./recordofragnaroks3.jpg" alt="Record of Ragnarok: Season 3" >
                 <div class="series-title"><span>Record of Ragnarok: Season 3</span></div>
             </div>
 
             <div class="series-card" data-series="Evangelion">
-                <img src="./evangelion.jpg" alt="Neon Genesis Evangelion" loading="lazy">
+                <img src="./evangelion.jpg" alt="Neon Genesis Evangelion" >
                 <div class="series-title"><span>Neon Genesis Evangelion</span></div>
             </div>
 
             <div class="series-card" data-series="endofevangelion">
-                <img src="./endofevangelion.jpg" alt="Neon Genesis Evangelion" loading="lazy">
+                <img src="./endofevangelion.jpg" alt="Neon Genesis Evangelion" >
                 <div class="series-title"><span>Neon Genesis Evangelion: The End of Evangelion</span></div>
             </div>
             <div class="series-card" data-series="youarenotalone">
-                <img src="youarenptalone.webp" alt="Neon Genesis Evangelion: You Are Not Alone" loading="lazy">
+                <img src="youarenptalone.webp" alt="Neon Genesis Evangelion: You Are Not Alone" >
                 <div class="series-title"><span>Evangelion - 1.0 You Are (Not) Alone</span></div>
             </div>
             <div class="series-card" data-series="youcannotadvance">
-                <img src="youcannotadvance.jpg" alt="Evangelion - 2.0 You Can (Not) Advance" loading="lazy">
+                <img src="youcannotadvance.jpg" alt="Evangelion - 2.0 You Can (Not) Advance">
                 <div class="series-title"><span>Evangelion - 2.0 You Can (Not) Advance</span></div>
             </div>
             <div class="series-card" data-series="youcannotredo">
-                <img src="youcannotredo.jpg" alt="Evangelion 3.0 You Can (Not) Redo" loading="lazy">
+                <img src="youcannotredo.jpg" alt="Evangelion 3.0 You Can (Not) Redo" >
                 <div class="series-title"><span>Evangelion 3.0 You Can (Not) Redo</span></div>
             </div>
             <div class="series-card" data-series="thriceuponatime">
-                <img src="thriceuponatime.webp" alt="Evangelion 3.0 You Can (Not) Redo" loading="lazy">
+                <img src="thriceuponatime.webp" alt="Evangelion 3.0 You Can (Not) Redo" >
                 <div class="series-title"><span>Evangelion: 3.0+1.0 Thrice Upon a Time</span></div>
             </div>
             <div class="series-card" data-series="degeneration">
-                <img src="degeneration.jpg" alt="Resident Evil: Degeneration" loading="lazy">
+                <img src="degeneration.jpg" alt="Resident Evil: Degeneration" >
                 <div class="series-title"><span>Resident Evil: Degeneration</span></div>
             </div>
             <div class="series-card" data-series="infinitedarkness">
-                <img src="infinitedarkness.jpg" alt="Resident Evil: Infinite Darkness" loading="lazy">
+                <img src="infinitedarkness.jpg" alt="Resident Evil: Infinite Darkness">
                 <div class="series-title"><span>Resident Evil: Infinite Darkness</span></div>
             </div>
             <div class="series-card" data-series="damnation">
-                <img src="damnation.jpg" alt="Resident Evil: Damnation" loading="lazy">
+                <img src="damnation.jpg" alt="Resident Evil: Damnation" >
                 <div class="series-title"><span>Resident Evil: Damnation</span></div>
             </div>
             <div class="series-card" data-series="vendetta">
-                <img src="vendetta.jpg" alt="Resident Evil: Vendetta" loading="lazy">
+                <img src="vendetta.jpg" alt="Resident Evil: Vendetta" >
                 <div class="series-title"><span>Resident Evil: Vendetta</span></div>
             </div>
             <div class="series-card" data-series="deathisland">
-                <img src="deathisland.webp" alt="Resident Evil: Death Island" loading="lazy">
+                <img src="deathisland.webp" alt="Resident Evil: Death Island">
                 <div class="series-title"><span>Resident Evil: Death Island</span></div>
             </div>
             <div class="series-card" data-series="fallouts1">
-                <img src="fallouts1.jpg" alt="Fallout Season 1" loading="lazy">
+                <img src="fallouts1.jpg" alt="Fallout Season 1" >
                 <div class="series-title"><span>Fallout Season 1</span></div>
             </div>
             <div class="series-card" data-series="fallouts2">
-                <img src="fallouts2.jpg" alt="Fallout Season 2" loading="lazy">
+                <img src="fallouts2.jpg" alt="Fallout Season 2" >
                 <div class="series-title"><span>Fallout Season 2</span></div>
             </div>
             <div class="series-card" data-series="codegeasss1">
-                <img src="codegeasss1.jpg" alt="Code Geass Season 1" loading="lazy">
+                <img src="codegeasss1.jpg" alt="Code Geass Season 1" >
                 <div class="series-title"><span>Code Geass Season 1</span></div>
             </div>
             <div class="series-card" data-series="codegeasss2">
-                <img src="codegeasss2.png" alt="Code Geass Season 2" loading="lazy">
+                <img src="codegeasss2.png" alt="Code Geass Season 2">
                 <div class="series-title"><span>Code Geass Season 2</span></div>
             </div>
             <div class="series-card" data-series="realsteel">
-                <img src="realsteel.jpg" alt="Real Steel" loading="lazy">
+                <img src="realsteel.jpg" alt="Real Steel" >
                 <div class="series-title"><span>Real Steel</span></div>
             </div>
             <div class="series-card" data-series="alita">
-                <img src="alita.jpg" alt="Alita: Battle Angel" loading="lazy">
+                <img src="alita.jpg" alt="Alita: Battle Angel" >
                 <div class="series-title"><span>Alita: Battle Angel</span></div>
             </div>
 
             <div class="series-card" data-series="bladerunner1">
-                <img src="bladerunner1.jpg" alt="Blade Runner" loading="lazy">
+                <img src="bladerunner1.jpg" alt="Blade Runner" >
                 <div class="series-title"><span>Blade Runner</span></div>
             </div>
 
             <div class="series-card" data-series="bladerunner2049">
-                <img src="bladerunner2049.jpg" alt="Blade Runner 2049" loading="lazy">
+                <img src="bladerunner2049.jpg" alt="Blade Runner 2049" >
                 <div class="series-title"><span>Blade Runner 2049</span></div>
             </div>
             <div class="series-card" data-series="sw1">
-                <img src="sw1.jpg" alt="Star Wars I: Revenge of the Sith" loading="lazy">
+                <img src="sw1.jpg" alt="Star Wars I: Revenge of the Sith">
                 <div class="series-title"><span>Star Wars I: The Phantom Menace</span></div>
             </div>
             <div class="series-card" data-series="sw2">
-                <img src="sw2.jpg" alt="Star Wars II: Attack of the Clones" loading="lazy">
+                <img src="sw2.jpg" alt="Star Wars II: Attack of the Clones">
                 <div class="series-title"><span>Star Wars II: Attack of the Clones</span></div>
             </div>
             <div class="series-card" data-series="sw3">
-                <img src="sw3.jpg" alt="Star Wars III: Revenge of the Sith" loading="lazy">
+                <img src="sw3.jpg" alt="Star Wars III: Revenge of the Sith" >
                 <div class="series-title"><span>Star Wars III: Revenge of the Sith</span></div>
             </div>
             <div class="series-card" data-series="sw4">
-                <img src="sw4.jpg" alt="Star Wars IV: A New Hope" loading="lazy">
+                <img src="sw4.jpg" alt="Star Wars IV: A New Hope" >
                 <div class="series-title"><span>Star Wars IV: A New Hope</span></div>
             </div>
             <div class="series-card" data-series="sw5">
-                <img src="sw5.jpg" alt="Star Wars V: The Empire Strikes Back" loading="lazy">
+                <img src="sw5.jpg" alt="Star Wars V: The Empire Strikes Back" >
                 <div class="series-title"><span>Star Wars V: The Empire Strikes Back</span></div>
             </div>
             <div class="series-card" data-series="sw6">
-                <img src="sw6.jpg" alt="Star Wars VI: Return of the Jedi" loading="lazy">
+                <img src="sw6.jpg" alt="Star Wars VI: Return of the Jedi" >
                 <div class="series-title"><span>Star Wars VI: Return of the Jedi</span></div>
             </div>
             <!-- <div class="series-card" data-series="sw7">
@@ -1424,135 +1423,135 @@
                 <div class="series-title"><span>Star Wars IX: The Rise of Skywalker</span></div>
             </div> -->
             <div class="series-card" data-series="solo">
-                <img src="solo.jpg" alt="Solo: A Star Wars Story" loading="lazy">
+                <img src="solo.jpg" alt="Solo: A Star Wars Story" >
                 <div class="series-title"><span>Solo: A Star Wars Story</span></div>
             </div>
             <div class="series-card" data-series="rogueone">
-                <img src="rogueone.jpg" alt="Rogue One: A Star Wars Story" loading="lazy">
+                <img src="rogueone.jpg" alt="Rogue One: A Star Wars Story" >
                 <div class="series-title"><span>Rogue One: A Star Wars Story</span></div>
             </div>
             <div class="series-card" data-series="superman">
-                <img src="superman.webp" alt="Superman" loading="lazy">
+                <img src="superman.webp" alt="Superman" >
                 <div class="series-title"><span>Superman</span></div>
             </div>
             <div class="series-card" data-series="invincible1">
-                <img src="invincible1.jpg" alt="Invincible Season 1" loading="lazy">
+                <img src="invincible1.jpg" alt="Invincible Season 1" >
                 <div class="series-title"><span>Invincible Season 1</span></div>
             </div>
             <div class="series-card" data-series="invincible2">
-                <img src="invincible2.jpg" alt="Invincible Season 2" loading="lazy">
+                <img src="invincible2.jpg" alt="Invincible Season 2" >
                 <div class="series-title"><span>Invincible Season 2</span></div>
             </div>
             <div class="series-card" data-series="invincible3">
-                <img src="invincible3.jpg" alt="Invincible Season 3" loading="lazy">
+                <img src="invincible3.jpg" alt="Invincible Season 3" >
                 <div class="series-title"><span>Invincible Season 3</span></div>
             </div>
             <div class="series-card" data-series="re1">
-                <img src="re1.jpg" alt="Resident Evil" loading="lazy">
+                <img src="re1.jpg" alt="Resident Evil" >
                 <div class="series-title"><span>Resident Evil</span></div>
             </div>
             <div class="series-card" data-series="re2">
-                <img src="re2.jpg" alt="Resident Evil: Apocalypse" loading="lazy">
+                <img src="re2.jpg" alt="Resident Evil: Apocalypse">
                 <div class="series-title"><span>Resident Evil: Apocalypse</span></div>
             </div>
             <div class="series-card" data-series="re3">
-                <img src="re3.jpg" alt="Resident Evil: Extinction" loading="lazy">
+                <img src="re3.jpg" alt="Resident Evil: Extinction" >
                 <div class="series-title"><span>Resident Evil: Extinction</span></div>
             </div>
             <div class="series-card" data-series="re4">
-                <img src="re4.webp" alt="Resident Evil: Afterlife" loading="lazy">
+                <img src="re4.webp" alt="Resident Evil: Afterlife">
                 <div class="series-title"><span>Resident Evil: Afterlife</span></div>
             </div>
             <div class="series-card" data-series="re5">
-                <img src="re5.jpg" alt="Resident Evil: Retribution" loading="lazy">
+                <img src="re5.jpg" alt="Resident Evil: Retribution" >
                 <div class="series-title"><span>Resident Evil: Retribution</span></div>
             </div>
             <div class="series-card" data-series="re6">
-                <img src="re6.jpg" alt="Resident Evil: The Final Chapter" loading="lazy">
+                <img src="re6.jpg" alt="Resident Evil: The Final Chapter" >
                 <div class="series-title"><span>Resident Evil: The Final Chapter</span></div>
             </div>
             <div class="series-card" data-series="dune1">
-                <img src="dune1.jpg" alt="Dune" loading="lazy">
+                <img src="dune1.jpg" alt="Dune">
                 <div class="series-title"><span>Dune</span></div>
             </div>
             <div class="series-card" data-series="dune2">
-                <img src="dune2.jpg" alt="Dune: Part Two" loading="lazy">
+                <img src="dune2.jpg" alt="Dune: Part Two" >
                 <div class="series-title"><span>Dune: Part Two</span></div>
             </div>
             <div class="series-card" data-series="hungergames">
-                <img src="hungergames.jpg" alt="The Hunger Games" loading="lazy">
+                <img src="hungergames.jpg" alt="The Hunger Games">
                 <div class="series-title"><span>The Hunger Games</span></div>
             </div>
             <div class="series-card" data-series="hungergames2">
-                <img src="hungergames2.jpg" alt="The Hunger Games: Catching Fire" loading="lazy">
+                <img src="hungergames2.jpg" alt="The Hunger Games: Catching Fire">
                 <div class="series-title"><span>The Hunger Games: Catching Fire</span></div>
             </div>
             <div class="series-card" data-series="hungergames3">
-                <img src="hungergames3.jpg" alt="The Hunger Games: Mockingjay - Part 1" loading="lazy">
+                <img src="hungergames3.jpg" alt="The Hunger Games: Mockingjay - Part 1" >
                 <div class="series-title"><span>The Hunger Games: Mockingjay - Part 1</span></div>
             </div>
             <div class="series-card" data-series="hungergames4">
-                <img src="hungergames4.jpg" alt="The Hunger Games: Mockingjay - Part 2" loading="lazy">
+                <img src="hungergames4.jpg" alt="The Hunger Games: Mockingjay - Part 2" >
                 <div class="series-title"><span>The Hunger Games: Mockingjay - Part 2</span></div>
             </div>
             <div class="series-card" data-series="hungermid">
-                <img src="hungermid.jpg" alt="The Hunger Games: The Ballad of Songbirds & Snakes" loading="lazy">
+                <img src="hungermid.jpg" alt="The Hunger Games: The Ballad of Songbirds & Snakes" >
                 <div class="series-title"><span>The Hunger Games: The Ballad of Songbirds & Snakes</span></div>
             </div>
             <div class="series-card" data-series="interstellar">
-                <img src="interstellar.jpg" alt="Interstellar" loading="lazy">
+                <img src="interstellar.jpg" alt="Interstellar" >
                 <div class="series-title"><span>Interstellar</span></div>
             </div>
             <div class="series-card" data-series="sweetpea">
-                <img src="sweetpea.jpg" alt="Sweetpea" loading="lazy">
+                <img src="sweetpea.jpg" alt="Sweetpea" >
                 <div class="series-title"><span>Sweetpea</span></div>
             </div>
             <div class="series-card" data-series="fnaf">
-                <img src="fnaf.jpg" alt="Five Nights at Freddy's" loading="lazy">
+                <img src="fnaf.jpg" alt="Five Nights at Freddy's" >
                 <div class="series-title"><span>Five Nights at Freddy's</span></div>
             </div>
             <div class="series-card" data-series="prisonschool">
-                <img src="prisonschool.jpg" alt="Prison School" loading="lazy">
+                <img src="prisonschool.jpg" alt="Prison School" >
                 <div class="series-title"><span>Prison School</span></div>
             </div>
             <div class="series-card" data-series="twinpeaksmovie">
-                <img src="twinpeaksmovie.png" alt="Twin Peaks: Fire Walk with Me" loading="lazy">
+                <img src="twinpeaksmovie.png" alt="Twin Peaks: Fire Walk with Me" >
                 <div class="series-title"><span>Twin Peaks: Fire Walk with Me</span></div>
             </div>
             <div class="series-card" data-series="twinpeakss1">
-                <img src="twinpeakss1.jpg" alt="Twin Peaks Season 1" loading="lazy">
+                <img src="twinpeakss1.jpg" alt="Twin Peaks Season 1" >
                 <div class="series-title"><span>Twin Peaks Season 1</span></div>
             </div>
             <div class="series-card" data-series="twinpeakss2">
-                <img src="twinpeakss2.jpg" alt="Twin Peaks Season 2" loading="lazy">
+                <img src="twinpeakss2.jpg" alt="Twin Peaks Season 2" >
                 <div class="series-title"><span>Twin Peaks Season 2</span></div>
             </div>
             <div class="series-card" data-series="twinpeakss3">
-                <img src="twinpeakss3.jpg" alt="Twin Peaks Season 3" loading="lazy">
+                <img src="twinpeakss3.jpg" alt="Twin Peaks Season 3" >
                 <div class="series-title"><span>Twin Peaks Season 3</span></div>
             </div>
             <div class="series-card" data-series="dmc">
-                <img src="dmc.jpg" alt="Devil May Cry" loading="lazy">
+                <img src="dmc.jpg" alt="Devil May Cry" >
                 <div class="series-title"><span>Devil May Cry</span></div>
             </div>
             <div class="series-card" data-series="cyberpunkedgerunners">
-                <img src="cyberpunkedgerunners.jpg" alt="Cyberpunk: Edgerunners" loading="lazy">
+                <img src="cyberpunkedgerunners.jpg" alt="Cyberpunk: Edgerunners" >
                 <div class="series-title"><span>Cyberpunk: Edgerunners</span></div>
             </div>
             <div class="series-card" data-series="matrix1">
-                <img src="matrix1.jpg" alt="The Matrix" loading="lazy">
+                <img src="matrix1.jpg" alt="The Matrix" >
                 <div class="series-title"><span>The Matrix</span></div>
             </div>
             <div class="series-card" data-series="matrix2">
-                <img src="matrix2.jpg" alt="The Matrix: Reloaded" loading="lazy">
+                <img src="matrix2.jpg" alt="The Matrix: Reloaded" >
                 <div class="series-title"><span>The Matrix: Reloaded</span></div>
             </div>
             <div class="series-card" data-series="matrix3">
-                <img src="matrix3.jpg" alt="The Matrix: Revolutions" loading="lazy">
+                <img src="matrix3.jpg" alt="The Matrix: Revolutions" >
                 <div class="series-title"><span>The Matrix: Revolutions</span></div>
             </div>
             <div class="series-card" data-series="matrix4">
-                <img src="matrix4.jpg" alt="The Matrix: Resurrections" loading="lazy">
+                <img src="matrix4.jpg" alt="The Matrix: Resurrections" >
                 <div class="series-title"><span>The Matrix: Resurrections</span></div>
             </div>
         </div>
