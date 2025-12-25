@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="hu">
 
 <head>
@@ -68,23 +68,23 @@
             overflow-x: hidden;
         }
 
-.series-page-bg {
-    pointer-events: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    /* JAVÍTÁS: Hardware-es gyorsítás hozzáadása és kisebb blur */
-    filter: blur(40px); 
-    transform: translateZ(0); 
-    will-change: opacity;
-}
+        .series-page-bg {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            /* JAVÍTÁS: Hardware-es gyorsítás hozzáadása és kisebb blur */
+            filter: blur(40px);
+            transform: translateZ(0);
+            will-change: opacity;
+        }
 
         .series-page-bg.visible {
             opacity: 0.6 !important;
@@ -989,20 +989,21 @@
         }
 
         /* AMBILIGHT: Extrém kiterjedés és intenzitás */
-       #ambilightGlowContainer {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    transform: translate(-50%, -50%) scale(1.1);
-    opacity: 0;
-    /* JAVÍTÁS: 150px blur helyett próbáld meg a 60-80px-et */
-    filter: blur(60px) saturate(1.5);
-    pointer-events: none;
-    will-change: filter, transform; /* GPU segítség kérése */
-}
+        #ambilightGlowContainer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            transform: translate(-50%, -50%) scale(1.1);
+            opacity: 0;
+            /* JAVÍTÁS: 150px blur helyett próbáld meg a 60-80px-et */
+            filter: blur(60px) saturate(1.5);
+            pointer-events: none;
+            will-change: filter, transform;
+            /* GPU segítség kérése */
+        }
 
         /* Teljes fényerő bekapcsolva */
         .ambilight-active #ambilightGlowContainer {
@@ -1298,26 +1299,26 @@
                 <div class="series-title"><span>Record of Ragnarok: Season 1</span></div>
             </div>
             <div class="series-card" data-series="record-of-ragnarok-s2">
-                <img src="./recordofragnaroks2.jpg" alt="Record of Ragnarok: Season 2" >
+                <img src="./recordofragnaroks2.jpg" alt="Record of Ragnarok: Season 2">
                 <div class="series-title"><span>Record of Ragnarok: Season 2</span></div>
             </div>
 
             <div class="series-card" data-series="record-of-ragnarok-s3">
-                <img src="./recordofragnaroks3.jpg" alt="Record of Ragnarok: Season 3" >
+                <img src="./recordofragnaroks3.jpg" alt="Record of Ragnarok: Season 3">
                 <div class="series-title"><span>Record of Ragnarok: Season 3</span></div>
             </div>
 
             <div class="series-card" data-series="Evangelion">
-                <img src="./evangelion.jpg" alt="Neon Genesis Evangelion" >
+                <img src="./evangelion.jpg" alt="Neon Genesis Evangelion">
                 <div class="series-title"><span>Neon Genesis Evangelion</span></div>
             </div>
 
             <div class="series-card" data-series="endofevangelion">
-                <img src="./endofevangelion.jpg" alt="Neon Genesis Evangelion" >
+                <img src="./endofevangelion.jpg" alt="Neon Genesis Evangelion">
                 <div class="series-title"><span>Neon Genesis Evangelion: The End of Evangelion</span></div>
             </div>
             <div class="series-card" data-series="youarenotalone">
-                <img src="youarenptalone.webp" alt="Neon Genesis Evangelion: You Are Not Alone" >
+                <img src="youarenptalone.webp" alt="Neon Genesis Evangelion: You Are Not Alone">
                 <div class="series-title"><span>Evangelion - 1.0 You Are (Not) Alone</span></div>
             </div>
             <div class="series-card" data-series="youcannotadvance">
@@ -1325,15 +1326,15 @@
                 <div class="series-title"><span>Evangelion - 2.0 You Can (Not) Advance</span></div>
             </div>
             <div class="series-card" data-series="youcannotredo">
-                <img src="youcannotredo.jpg" alt="Evangelion 3.0 You Can (Not) Redo" >
+                <img src="youcannotredo.jpg" alt="Evangelion 3.0 You Can (Not) Redo">
                 <div class="series-title"><span>Evangelion 3.0 You Can (Not) Redo</span></div>
             </div>
             <div class="series-card" data-series="thriceuponatime">
-                <img src="thriceuponatime.webp" alt="Evangelion 3.0 You Can (Not) Redo" >
+                <img src="thriceuponatime.webp" alt="Evangelion 3.0 You Can (Not) Redo">
                 <div class="series-title"><span>Evangelion: 3.0+1.0 Thrice Upon a Time</span></div>
             </div>
             <div class="series-card" data-series="degeneration">
-                <img src="degeneration.jpg" alt="Resident Evil: Degeneration" >
+                <img src="degeneration.jpg" alt="Resident Evil: Degeneration">
                 <div class="series-title"><span>Resident Evil: Degeneration</span></div>
             </div>
             <div class="series-card" data-series="infinitedarkness">
@@ -1341,11 +1342,11 @@
                 <div class="series-title"><span>Resident Evil: Infinite Darkness</span></div>
             </div>
             <div class="series-card" data-series="damnation">
-                <img src="damnation.jpg" alt="Resident Evil: Damnation" >
+                <img src="damnation.jpg" alt="Resident Evil: Damnation">
                 <div class="series-title"><span>Resident Evil: Damnation</span></div>
             </div>
             <div class="series-card" data-series="vendetta">
-                <img src="vendetta.jpg" alt="Resident Evil: Vendetta" >
+                <img src="vendetta.jpg" alt="Resident Evil: Vendetta">
                 <div class="series-title"><span>Resident Evil: Vendetta</span></div>
             </div>
             <div class="series-card" data-series="deathisland">
@@ -1353,15 +1354,15 @@
                 <div class="series-title"><span>Resident Evil: Death Island</span></div>
             </div>
             <div class="series-card" data-series="fallouts1">
-                <img src="fallouts1.jpg" alt="Fallout Season 1" >
+                <img src="fallouts1.jpg" alt="Fallout Season 1">
                 <div class="series-title"><span>Fallout Season 1</span></div>
             </div>
             <div class="series-card" data-series="fallouts2">
-                <img src="fallouts2.jpg" alt="Fallout Season 2" >
+                <img src="fallouts2.jpg" alt="Fallout Season 2">
                 <div class="series-title"><span>Fallout Season 2</span></div>
             </div>
             <div class="series-card" data-series="codegeasss1">
-                <img src="codegeasss1.jpg" alt="Code Geass Season 1" >
+                <img src="codegeasss1.jpg" alt="Code Geass Season 1">
                 <div class="series-title"><span>Code Geass Season 1</span></div>
             </div>
             <div class="series-card" data-series="codegeasss2">
@@ -1369,21 +1370,21 @@
                 <div class="series-title"><span>Code Geass Season 2</span></div>
             </div>
             <div class="series-card" data-series="realsteel">
-                <img src="realsteel.jpg" alt="Real Steel" >
+                <img src="realsteel.jpg" alt="Real Steel">
                 <div class="series-title"><span>Real Steel</span></div>
             </div>
             <div class="series-card" data-series="alita">
-                <img src="alita.jpg" alt="Alita: Battle Angel" >
+                <img src="alita.jpg" alt="Alita: Battle Angel">
                 <div class="series-title"><span>Alita: Battle Angel</span></div>
             </div>
 
             <div class="series-card" data-series="bladerunner1">
-                <img src="bladerunner1.jpg" alt="Blade Runner" >
+                <img src="bladerunner1.jpg" alt="Blade Runner">
                 <div class="series-title"><span>Blade Runner</span></div>
             </div>
 
             <div class="series-card" data-series="bladerunner2049">
-                <img src="bladerunner2049.jpg" alt="Blade Runner 2049" >
+                <img src="bladerunner2049.jpg" alt="Blade Runner 2049">
                 <div class="series-title"><span>Blade Runner 2049</span></div>
             </div>
             <div class="series-card" data-series="sw1">
@@ -1395,19 +1396,19 @@
                 <div class="series-title"><span>Star Wars II: Attack of the Clones</span></div>
             </div>
             <div class="series-card" data-series="sw3">
-                <img src="sw3.jpg" alt="Star Wars III: Revenge of the Sith" >
+                <img src="sw3.jpg" alt="Star Wars III: Revenge of the Sith">
                 <div class="series-title"><span>Star Wars III: Revenge of the Sith</span></div>
             </div>
             <div class="series-card" data-series="sw4">
-                <img src="sw4.jpg" alt="Star Wars IV: A New Hope" >
+                <img src="sw4.jpg" alt="Star Wars IV: A New Hope">
                 <div class="series-title"><span>Star Wars IV: A New Hope</span></div>
             </div>
             <div class="series-card" data-series="sw5">
-                <img src="sw5.jpg" alt="Star Wars V: The Empire Strikes Back" >
+                <img src="sw5.jpg" alt="Star Wars V: The Empire Strikes Back">
                 <div class="series-title"><span>Star Wars V: The Empire Strikes Back</span></div>
             </div>
             <div class="series-card" data-series="sw6">
-                <img src="sw6.jpg" alt="Star Wars VI: Return of the Jedi" >
+                <img src="sw6.jpg" alt="Star Wars VI: Return of the Jedi">
                 <div class="series-title"><span>Star Wars VI: Return of the Jedi</span></div>
             </div>
             <!-- <div class="series-card" data-series="sw7">
@@ -1423,31 +1424,31 @@
                 <div class="series-title"><span>Star Wars IX: The Rise of Skywalker</span></div>
             </div> -->
             <div class="series-card" data-series="solo">
-                <img src="solo.jpg" alt="Solo: A Star Wars Story" >
+                <img src="solo.jpg" alt="Solo: A Star Wars Story">
                 <div class="series-title"><span>Solo: A Star Wars Story</span></div>
             </div>
             <div class="series-card" data-series="rogueone">
-                <img src="rogueone.jpg" alt="Rogue One: A Star Wars Story" >
+                <img src="rogueone.jpg" alt="Rogue One: A Star Wars Story">
                 <div class="series-title"><span>Rogue One: A Star Wars Story</span></div>
             </div>
             <div class="series-card" data-series="superman">
-                <img src="superman.webp" alt="Superman" >
+                <img src="superman.webp" alt="Superman">
                 <div class="series-title"><span>Superman</span></div>
             </div>
             <div class="series-card" data-series="invincible1">
-                <img src="invincible1.jpg" alt="Invincible Season 1" >
+                <img src="invincible1.jpg" alt="Invincible Season 1">
                 <div class="series-title"><span>Invincible Season 1</span></div>
             </div>
             <div class="series-card" data-series="invincible2">
-                <img src="invincible2.jpg" alt="Invincible Season 2" >
+                <img src="invincible2.jpg" alt="Invincible Season 2">
                 <div class="series-title"><span>Invincible Season 2</span></div>
             </div>
             <div class="series-card" data-series="invincible3">
-                <img src="invincible3.jpg" alt="Invincible Season 3" >
+                <img src="invincible3.jpg" alt="Invincible Season 3">
                 <div class="series-title"><span>Invincible Season 3</span></div>
             </div>
             <div class="series-card" data-series="re1">
-                <img src="re1.jpg" alt="Resident Evil" >
+                <img src="re1.jpg" alt="Resident Evil">
                 <div class="series-title"><span>Resident Evil</span></div>
             </div>
             <div class="series-card" data-series="re2">
@@ -1455,7 +1456,7 @@
                 <div class="series-title"><span>Resident Evil: Apocalypse</span></div>
             </div>
             <div class="series-card" data-series="re3">
-                <img src="re3.jpg" alt="Resident Evil: Extinction" >
+                <img src="re3.jpg" alt="Resident Evil: Extinction">
                 <div class="series-title"><span>Resident Evil: Extinction</span></div>
             </div>
             <div class="series-card" data-series="re4">
@@ -1463,11 +1464,11 @@
                 <div class="series-title"><span>Resident Evil: Afterlife</span></div>
             </div>
             <div class="series-card" data-series="re5">
-                <img src="re5.jpg" alt="Resident Evil: Retribution" >
+                <img src="re5.jpg" alt="Resident Evil: Retribution">
                 <div class="series-title"><span>Resident Evil: Retribution</span></div>
             </div>
             <div class="series-card" data-series="re6">
-                <img src="re6.jpg" alt="Resident Evil: The Final Chapter" >
+                <img src="re6.jpg" alt="Resident Evil: The Final Chapter">
                 <div class="series-title"><span>Resident Evil: The Final Chapter</span></div>
             </div>
             <div class="series-card" data-series="dune1">
@@ -1475,7 +1476,7 @@
                 <div class="series-title"><span>Dune</span></div>
             </div>
             <div class="series-card" data-series="dune2">
-                <img src="dune2.jpg" alt="Dune: Part Two" >
+                <img src="dune2.jpg" alt="Dune: Part Two">
                 <div class="series-title"><span>Dune: Part Two</span></div>
             </div>
             <div class="series-card" data-series="hungergames">
@@ -1487,72 +1488,76 @@
                 <div class="series-title"><span>The Hunger Games: Catching Fire</span></div>
             </div>
             <div class="series-card" data-series="hungergames3">
-                <img src="hungergames3.jpg" alt="The Hunger Games: Mockingjay - Part 1" >
+                <img src="hungergames3.jpg" alt="The Hunger Games: Mockingjay - Part 1">
                 <div class="series-title"><span>The Hunger Games: Mockingjay - Part 1</span></div>
             </div>
             <div class="series-card" data-series="hungergames4">
-                <img src="hungergames4.jpg" alt="The Hunger Games: Mockingjay - Part 2" >
+                <img src="hungergames4.jpg" alt="The Hunger Games: Mockingjay - Part 2">
                 <div class="series-title"><span>The Hunger Games: Mockingjay - Part 2</span></div>
             </div>
             <div class="series-card" data-series="hungermid">
-                <img src="hungermid.jpg" alt="The Hunger Games: The Ballad of Songbirds & Snakes" >
+                <img src="hungermid.jpg" alt="The Hunger Games: The Ballad of Songbirds & Snakes">
                 <div class="series-title"><span>The Hunger Games: The Ballad of Songbirds & Snakes</span></div>
             </div>
             <div class="series-card" data-series="interstellar">
-                <img src="interstellar.jpg" alt="Interstellar" >
+                <img src="interstellar.jpg" alt="Interstellar">
                 <div class="series-title"><span>Interstellar</span></div>
             </div>
             <div class="series-card" data-series="sweetpea">
-                <img src="sweetpea.jpg" alt="Sweetpea" >
+                <img src="sweetpea.jpg" alt="Sweetpea">
                 <div class="series-title"><span>Sweetpea</span></div>
             </div>
             <div class="series-card" data-series="fnaf">
-                <img src="fnaf.jpg" alt="Five Nights at Freddy's" >
+                <img src="fnaf.jpg" alt="Five Nights at Freddy's">
                 <div class="series-title"><span>Five Nights at Freddy's</span></div>
             </div>
             <div class="series-card" data-series="prisonschool">
-                <img src="prisonschool.jpg" alt="Prison School" >
+                <img src="prisonschool.jpg" alt="Prison School">
                 <div class="series-title"><span>Prison School</span></div>
             </div>
             <div class="series-card" data-series="twinpeaksmovie">
-                <img src="twinpeaksmovie.png" alt="Twin Peaks: Fire Walk with Me" >
+                <img src="twinpeaksmovie.png" alt="Twin Peaks: Fire Walk with Me">
                 <div class="series-title"><span>Twin Peaks: Fire Walk with Me</span></div>
             </div>
             <div class="series-card" data-series="twinpeakss1">
-                <img src="twinpeakss1.jpg" alt="Twin Peaks Season 1" >
+                <img src="twinpeakss1.jpg" alt="Twin Peaks Season 1">
                 <div class="series-title"><span>Twin Peaks Season 1</span></div>
             </div>
             <div class="series-card" data-series="twinpeakss2">
-                <img src="twinpeakss2.jpg" alt="Twin Peaks Season 2" >
+                <img src="twinpeakss2.jpg" alt="Twin Peaks Season 2">
                 <div class="series-title"><span>Twin Peaks Season 2</span></div>
             </div>
             <div class="series-card" data-series="twinpeakss3">
-                <img src="twinpeakss3.jpg" alt="Twin Peaks Season 3" >
+                <img src="twinpeakss3.jpg" alt="Twin Peaks Season 3">
                 <div class="series-title"><span>Twin Peaks Season 3</span></div>
             </div>
             <div class="series-card" data-series="dmc">
-                <img src="dmc.jpg" alt="Devil May Cry" >
+                <img src="dmc.jpg" alt="Devil May Cry">
                 <div class="series-title"><span>Devil May Cry</span></div>
             </div>
             <div class="series-card" data-series="cyberpunkedgerunners">
-                <img src="cyberpunkedgerunners.jpg" alt="Cyberpunk: Edgerunners" >
+                <img src="cyberpunkedgerunners.jpg" alt="Cyberpunk: Edgerunners">
                 <div class="series-title"><span>Cyberpunk: Edgerunners</span></div>
             </div>
             <div class="series-card" data-series="matrix1">
-                <img src="matrix1.jpg" alt="The Matrix" >
+                <img src="matrix1.jpg" alt="The Matrix">
                 <div class="series-title"><span>The Matrix</span></div>
             </div>
             <div class="series-card" data-series="matrix2">
-                <img src="matrix2.jpg" alt="The Matrix: Reloaded" >
+                <img src="matrix2.jpg" alt="The Matrix: Reloaded">
                 <div class="series-title"><span>The Matrix: Reloaded</span></div>
             </div>
             <div class="series-card" data-series="matrix3">
-                <img src="matrix3.jpg" alt="The Matrix: Revolutions" >
+                <img src="matrix3.jpg" alt="The Matrix: Revolutions">
                 <div class="series-title"><span>The Matrix: Revolutions</span></div>
             </div>
             <div class="series-card" data-series="matrix4">
-                <img src="matrix4.jpg" alt="The Matrix: Resurrections" >
+                <img src="matrix4.jpg" alt="The Matrix: Resurrections">
                 <div class="series-title"><span>The Matrix: Resurrections</span></div>
+            </div>
+            <div class="series-card" data-series="flashpointparadox">
+                <img src="flashpointparadox.jpg" alt="Justice League: The Flashpoint Paradox">
+                <div class="series-title"><span>Justice League: The Flashpoint Paradox</span></div>
             </div>
         </div>
 
@@ -1883,7 +1888,7 @@
                         title: "01. rész",
                         src: "https://vkvideo.ru/video_ext.php?oid=-234646183&id=456239036&hash=9c03a0bb706aed15&hd=3",
                         type: 'vkvideo',
-                        
+
                     },
                     { title: "02. rész", src: "https://vkvideo.ru/video_ext.php?oid=-234646183&id=456239078&hash=44c613dc577a672f&hd=3", type: 'vkvideo' },
 
@@ -2319,7 +2324,7 @@
 
                 ]
             },
-             "twinpeakss3": {
+            "twinpeakss3": {
                 title: "Twin Peaks Season 3",
                 videos: [
 
@@ -2420,6 +2425,15 @@
                 videos: [
 
                     { title: "01. rész", src: "/hamarosan.html", type: 'videa' },
+
+
+                ]
+            },
+            "flashpointparadox": {
+                title: "Justice League: The Flashpoint Paradox",
+                videos: [
+
+                    { title: "01. rész", src: "//videa.hu/player?v=Ky2FiXVZLep1frU1", type: 'videa' },
 
 
                 ]
