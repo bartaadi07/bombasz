@@ -4,93 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webshop 2.0</title>
-    <link rel="stylesheet" href="selenium.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="anyad.css">
 </head>
 <body>
 
-    <nav>
-        <button class="kezdolap" onclick="nyit_main_page()">Kezdőlap</button>
-        <button class="termes" onclick="nyit_products()">Termésünk</button>
-        <button class="kapcsolat" onclick="nyit_contacts()">Kapcsolat</button>
-    </nav>
+<nav>
+    <button class="home" onclick="nyit_main_page()">Kezdőlap</button>
+    <button id="termes" class="termes" onclick="nyit_products()">Termésünk</button>
+    <button class="kapcsolat" onclick="nyit_contacts()">Kapcsolat</button>
+</nav>
 
-    <div id="main_page">
-        <header class="hero">
-            <h1>Friss Kert Gyümölcsmanufaktúra</h1>
-            <p class="tagline">A természet legjava, egyenesen a fáról az Ön asztalára.</p>
-        </header>
-        
-        <section class="intro">
-            <h2>Miért válasszon minket?</h2>
-            <p>Családi gazdaságunkban hiszünk a vegyszermentes termesztésben és a napérlelte ízekben.</p><p> Nem csupán gyümölcsöt árulunk, hanem vitamint, egészséget és a vidéki reggelek frissességét hozzuk el otthonába.</p>
-            <div class="features">
-                <span>🌱 100% Bio szemlélet</span>
-                <span>🍎 Kézzel válogatott szemek</span>
-                <span>🚛 Akár 24 órás kiszállítás</span>
-            </div>
-        </section>
+<!-- KEZDŐLAP -->
+<div id="main_page">
+    <h1>Friss Kert Gyümölcsmanufaktúra</h1>
+    <p>
+        Családi gazdaságunk friss, szezonális gyümölcsöket kínál közvetlenül a termelőtől.
+        Vegyszermentes termesztés, gondosan válogatott minőség.
+    </p>
+    <p>
+        Válasszon kínálatunkból, és élvezze a természet ízeit otthonában!
+    </p>
+</div>
+
+<!-- TERMÉKEK -->
+<div id="products_page" style="display:none">
+
+    <h1>Szezonális kínálatunk</h1>
+
+    <div class="termek-kontener">
+
+        <!-- ALMA -->
+        <div class="kartya">
+            <img src="alma.jpg" alt="Alma">
+            <label>Termék neve:</label><br>
+            <input id="alma_nev_input">
+            <button class="mentnevalma" onclick="ment_nev('alma')">Módosítás</button>
+            <p>Ár: 500 Ft / kg</p>
+            <input type="number" id="alma_db" value="1" min="1">
+            <button id="addalma" onclick="kosarba('alma', 500)">Kosárba</button>
+        </div>
+
+        <!-- KÖRTE -->
+        <div class="kartya">
+            <img src="korte.jpg" alt="Körte">
+            <label>Termék neve:</label><br>
+            <input id="korte_nev_input">
+            <button class="mentnevkorte" onclick="ment_nev('korte')">Módosítás</button>
+            <p>Ár: 600 Ft / kg</p>
+            <input type="number" id="korte_db" value="1" min="1">
+            <button id="addkorte" onclick="kosarba('korte', 600)">Kosárba</button>
+        </div>
+
+        <!-- BANÁN -->
+        <div class="kartya">
+            <img src="banan.avif" alt="Banán">
+            <label>Termék neve:</label><br>
+            <input id="banan_nev_input">
+            <button class="mentnevbanan" onclick="ment_nev('banan')">Módosítás</button>
+            <p>Ár: 700 Ft / kg</p>
+            <input type="number" id="banan_db" value="1" min="1">
+            <button id="addbanan" onclick="kosarba('banan', 700)">Kosárba</button>
+        </div>
+
     </div>
 
-    <div id="products_page" style="display: none;">
-        <h1>Szezonális kínálatunk</h1>
-        <p class="sub-title">Válogasson kedvére a legfrissebb terméseink közül!</p>
-        
-        <div class="termek-kontener">
-            <div class="kartya">
-                <img src="img/alma.jpg" alt="Ropogós piros alma">
-                <div class="info">
-                    <h3>Alma</h3>
-                    <p class="desc">Édes-savanykás, ropogós húsú, hazai klasszikus.</p>
-                    <p class="price">500 Ft / kg</p>
-                    <input type="number" id="alma_mezo" value="0" min="0">
-                </div>
-            </div>
+    <h3>🛒 Kosár</h3>
+    <ul id="kosar_lista"></ul>
+    <h3 id="vegosszeg">Végösszeg: 0 Ft</h3>
+</div>
 
-            <div class="kartya">
-                <img src="img/korte.jpg" alt="Lédús körte">
-                <div class="info">
-                    <h3>Körte</h3>
-                    <p class="desc">Vajpuha, illatos és rendkívül lédús csemege.</p>
-                    <p class="price">600 Ft / kg</p>
-                    <input type="number" id="korte_mezo" value="0" min="0">
-                </div>
-            </div>
+<!-- KAPCSOLAT -->
+<div id="contacts_page" style="display:none">
+    <h1>Kapcsolat</h1>
+    <p>Vegye fel velünk a kapcsolatot bizalommal!</p>
+    <p><strong>Cím:</strong> 1234 Gyümölcsösfalva, Kertész utca 12.</p>
+    <p><strong>Email:</strong> alma@alma.alma</p>
+    <p><strong>Telefon:</strong> +36 70 123 4567</p>
+    <p><strong>Nyitvatartás:</strong> H–P 08:00–17:00</p>
+</div>
 
-            <div class="kartya">
-                <img src="img/banan.avif" alt="Érett banán">
-                <div class="info">
-                    <h3>Banán</h3>
-                    <p class="desc">Prémium minőségű, energiával teli egzotikus gyümölcs.</p>
-                    <p class="price">700 Ft / kg</p>
-                    <input type="number" id="banan_mezo" value="0" min="0">
-                </div>
-            </div>
-        </div>
-        
-        <div class="basket-section">
-            <button class="add-btn" onclick="hozzaad()">Kosárba helyezem</button>
-            <h3><span id="kosar_ikon">🛒</span> Az Ön kosara:</h3>
-            <ul id="kosar_lista">
-                <li class="empty-msg">A kosarad jelenleg még üres...</li>
-            </ul>
-        </div>
-    </div>
-
-    <div id="contacts_page" style="display: none;">
-        <h1>Keressen minket bizalommal!</h1>
-        <div class="contact-card">
-            <p>Kérdése van a termékekkel vagy a szállítással kapcsolatban? Ügyfélszolgálatunk örömmel segít!</p>
-            
-            <div class="contact-details">
-                <p><strong>📍 Címünk:</strong> 1234 Gyümölcsösfalva, Kertész utca 12.</p>
-                <p><strong>📧 Email:</strong> <a href="mailto:rendeles@frisskert.hu">alma@alma.alma</a></p>
-                <p><strong>📞 Telefonszám:</strong> +36 70 123 4567</p>
-                <p><strong>⏰ Nyitvatartás:</strong> H-P: 08:00 - 17:00</p>
-            </div>
-        </div>
-    </div>
-
-    <script src="selenium.js"></script>
+<script src="anyad.js"></script>
 </body>
 </html>
