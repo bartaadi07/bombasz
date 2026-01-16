@@ -1,365 +1,388 @@
- :root {
-            --bg-dark: #000000;
-            --ink: #FFFFFF;
-            --ink-muted: #A0A0A0;
+:root {
+    --bg-dark: #000000;
+    --neon-cyan: #00f3ff;
+    --neon-red: #ff003c;
+    --ink: #FFFFFF;
+}
 
-            --border: 1px solid rgba(255, 255, 255, .2);
-            --radius: 2px;
-        }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0
-        }
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-dark);
+    color: var(--ink);
+    overflow-x: hidden;
+}
 
-        html {
-            scroll-behavior: smooth
-        }
+/* BOMBASZ - DINAMIKUS MÉRETEZÉS */
+.main-title-display {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.5rem, 9.5vw, 6rem);
+    font-weight: 900;
+    color: var(--neon-cyan);
+    text-shadow: 3px 3px 0px var(--neon-red);
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    letter-spacing: clamp(-0.02em, 1.5vw, 0.5rem);
+    margin: 40px auto;
+    width: 100%;
+}
 
-        body {
-            font-family: 'Poppins', system-ui, sans-serif;
-            color: var(--ink);
-            background: var(--bg-dark);
-            min-height: 100vh;
-            overflow-x: hidden;
+/* KONTÉNER - A KÉT SZEKCIÓ EGYMÁS MELLETT */
+.container {
+    width: 95%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding-bottom: 120px;
+}
 
-            /* GÖRGETŐSÁV ELREJTÉSE - A LEGHATÉKONYABB SZABÁLYOK */
-            scrollbar-width: none;
-            /* Firefox */
-            -ms-overflow-style: none;
-            /* IE and Edge */
-        }
+.assets-container {
+    display: flex;
+    flex-direction: row; /* Monitoron egymás mellett */
+    gap: 50px;
+    width: 100%;
+}
 
-        body::-webkit-scrollbar {
-            width: 0px;
-            background: transparent;
-            display: none;
-        }
+.assets-sub-section {
+    flex: 1; /* Egyenlő szélesség a két szekciónak */
+}
 
-        .container {
-            width: min(1400px, 95vw);
-            margin-inline: auto;
-            height: auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 0;
-            min-height: 100vh;
-        }
-
-        a {
-            color: var(--ink);
-            text-decoration: none;
-            transition: color .2s
-        }
-
-        a:hover {
-            color: var(--ink-muted)
-        }
-
-        a:focus-visible,
-        button:focus-visible,
-        input:focus-visible {
-            outline: 2px solid var(--ink);
-            outline-offset: 2px;
-            border-radius: 2px;
-        }
-
-        .fa-solid,
-        .fa-brands {
-            color: var(--ink);
-        }
-
-        .bg-wrap {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
-                repeating-linear-gradient(0deg, var(--ink)05 0, var(--ink)05 1px, transparent 1px, transparent 50px),
-                repeating-linear-gradient(90deg, var(--ink)05 0, var(--ink)05 1px, transparent 1px, transparent 50px);
-            opacity: 0.8;
-            background-size: 50px 50px;
-            animation: bg-zoom 15s infinite alternate linear;
-        }
-
-        @keyframes bg-zoom {
-            from {
-                background-position: 0 0;
-            }
-
-            to {
-                background-position: 50px 50px;
-            }
-        }
-
-        .main-title-display {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1rem, 8vw, 6rem);
-            font-weight: 900;
-            color: var(--ink);
-            margin-bottom: 2rem;
-            text-align: center;
-            animation: title-pulse 2s infinite alternate;
-        }
-
-        @keyframes title-pulse {
-            from {
-                opacity: 0.8;
-                transform: scale(1);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1.02);
-            }
-        }
-
-        .main-content-grid {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 60px;
-            width: 100%;
-            padding: 0;
-            /* Fő tartalom beállítása, hogy a regisztráció fentről induljon (a left-panel helykihasználása miatt) */
-            align-items: flex-start;
-        }
-
-        .left-panel {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-        }
-
-        .assets-container {
-            margin-top: 0px;
-            /* Az UNCS/Lead törlése miatt a konténer feljebb tolódik, egy vonalban a Regisztrációval */
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-        }
-
-        .assets-sub-section h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            margin-bottom: 15px;
-            color: var(--ink);
-            text-transform: uppercase;
-            border-bottom: 1px dashed var(--ink-muted);
-            padding-bottom: 5px;
-        }
-
-        .assets-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 15px;
-        }
-
-        .asset-card {
-            background: rgba(255, 255, 255, .05);
-            border: var(--border);
-            padding: 15px;
-            border-radius: var(--radius);
-            text-align: center;
-            transition: all .3s;
-            display: block;
-            box-shadow: 0 0 5px rgba(0, 0, 0, .5);
-        }
-
-        .asset-card i {
-            font-size: 2rem;
-            margin-bottom: 10px
-        }
-
-        .asset-card h4 {
-            margin: 0;
-            color: var(--ink);
-            font-weight: 700;
-            font-size: 1rem
-        }
-
-        .asset-card small {
-            color: var(--ink-muted);
-            display: block;
-            margin-top: 3px;
-            font-size: .8rem
-        }
-
-        .asset-card:hover {
-            background: rgba(255, 255, 255, .15);
-            transform: translateY(-3px);
-        }
-
-        .auth-forms-wrap {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            gap: 30px;
-            padding-top: 0;
-        }
-
-        .form-card {
-            background: rgba(255, 255, 255, .05);
-            border: var(--border);
-            padding: 25px;
-            border-radius: var(--radius);
-        }
-
-        .form-card h3 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: var(--ink);
-            border-bottom: 1px dashed var(--ink-muted);
-            padding-bottom: 5px;
-        }
-
-        .form {
-            display: grid;
-            gap: 12px
-        }
-
-        .form label {
-            display: grid;
-            gap: 3px;
-            font-weight: 500;
-            color: var(--ink-muted);
-            font-size: .9rem;
-        }
-
-        .form input {
-            padding: 10px;
-            border-radius: 2px;
-            border: none;
-            background: rgba(255, 255, 255, .1);
-            color: var(--ink);
-            border-bottom: 2px solid var(--ink-muted);
-            transition: border-color .2s;
-        }
-
-        .form input:focus {
-            border-color: var(--ink);
-        }
-
-        .form input::placeholder {
-            color: var(--ink-muted)
-        }
-
-        .form .two {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px
-        }
-
-        .form-msg {
-            font-weight: 700;
-            margin-top: 10px;
-            padding: 8px;
-            border-radius: 2px;
-        }
-
-        .form-msg.success {
-            color: var(--bg-dark);
-            background: #90EE90;
-        }
-
-        .form-msg.error {
-            color: var(--bg-dark);
-            background: var(--ink);
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 15px;
-            border-radius: 2px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all .3s;
-            letter-spacing: .05em;
-            font-family: 'Orbitron', sans-serif;
-            margin-top: 10px;
-        }
-
-        .btn-fill {
-            background: var(--ink);
-            color: var(--bg-dark);
-        }
-
-        .btn-fill:hover {
-            background: var(--ink-muted);
-        }
-
-        .footer {
-            text-align: center;
-            padding: 10px 0;
-            border-top: 1px dashed rgba(255, 255, 255, .1);
-            position: relative;
-        }
-
-        .footer p {
-            font-size: .8rem;
-            color: var(--ink-muted);
-        }
-
-        .social-links {
-            margin-top: 5px
-        }
-
-        .social-links a {
-            font-size: 1.2rem;
-            color: var(--ink);
-            margin: 0 5px
-        }
-
-       @media (max-width: 1100px) {
-    .main-content-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
-    }
-
-    .container {
-        height: auto;
-        padding: 40px 0 60px 0;
-    }
-
-    .left-panel {
-        align-items: center;
-        text-align: center;
-    }
-
-    /* ÚJ SZABÁLY: a második gyermek (BOMBASZ FIÓK) középre igazítása */
-    .main-content-grid > div:nth-child(2) {
-        text-align: center;
-    }
-    /* ÚJ SZABÁLY VÉGE */
-
+/* MOBIL: Egymás alá kerülnek */
+@media (max-width: 900px) {
     .assets-container {
-        grid-template-columns: 1fr;
-    }
-
-    .auth-forms-wrap {
-        align-items: center;
-    }
-
-    .form-card {
-        max-width: 400px;
-        width: 90%;
+        flex-direction: column;
     }
 }
 
-        @media (max-width: 600px) {
-            .assets-grid {
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            }
+/* SZEKCIÓ CÍMEK */
+.assets-sub-section h2 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--neon-cyan);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--neon-red);
+    margin-bottom: 25px;
+    padding-bottom: 8px;
+}
 
-            .form .two {
-                grid-template-columns: 1fr;
-            }
-        }
+/* KÁRTYA RÁCSOK */
+.assets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+}
+
+/* KÁRTYÁK - TISZTA FEHÉR SZÖVEG */
+.asset-card {
+    background: rgba(0, 243, 255, 0.05);
+    border: 1px solid var(--neon-cyan);
+    padding: 25px 10px;
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: 0.2s;
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+}
+
+.asset-card i {
+    font-size: 2.2rem;
+    color: var(--neon-cyan);
+    margin-bottom: 12px;
+}
+
+/* SZÖVEGEK - NINCS LILA */
+.asset-card h4 {
+    color: #FFFFFF !important;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.asset-card small {
+    color: #FFFFFF !important;
+    opacity: 0.8;
+    font-size: 0.75rem;
+}
+
+/* HOVER ÁLLAPOT */
+.asset-card:hover {
+    background: var(--neon-cyan);
+}
+
+.asset-card:hover i, 
+.asset-card:hover h4, 
+.asset-card:hover small {
+    color: #000000 !important;
+}
+
+/* FOOTER + X_ */
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #000;
+    border-top: 2px solid var(--neon-red);
+    padding: 20px 0;
+    text-align: center;
+    z-index: 1000;
+}
+
+.social-links a {
+    color: var(--neon-cyan);
+    font-size: 2.2rem;
+    margin: 0 20px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.x-link::after {
+    content: '_';
+    color: var(--neon-red);
+    font-weight: bold;
+    margin-left: 5px;
+}
+:root {
+    --bg-dark: #000000;
+    --neon-cyan: #00f3ff;
+    --neon-red: #ff003c;
+    --ink: #FFFFFF; /* Kőkemény fehér */
+}
+
+/* KÁRTYA SZÍNEK JAVÍTÁSA */
+.asset-card {
+    /* Csak tiszta fekete és cián keveréke, lila kizárva */
+    background: rgba(0, 243, 255, 0.05); 
+    border: 1px solid var(--neon-cyan);
+    padding: 25px 10px;
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: 0.2s;
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+}
+
+.asset-card i {
+    font-size: 2.2rem;
+    color: var(--neon-cyan); /* Neon cián ikon */
+    margin-bottom: 12px;
+}
+
+/* MINDEN SZÖVEG TISZTA FEHÉR */
+.asset-card h4 {
+    color: #FFFFFF !important;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    text-shadow: none; /* Árnyék törölve, hogy ne legyen lilás aura */
+}
+
+.asset-card small {
+    color: #FFFFFF !important;
+    opacity: 0.9;
+    font-size: 0.75rem;
+}
+
+/* HOVER - KONTRASZTOS FEKETE SZÖVEG */
+.asset-card:hover {
+    background: var(--neon-cyan);
+}
+
+.asset-card:hover i, 
+.asset-card:hover h4, 
+.asset-card:hover small {
+    color: #000000 !important; /* Hovernél tiszta fekete */
+}
+
+/* SZEKCIÓ CÍMEK ÉS FOOTER SZÍNEK */
+.assets-sub-section h2 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--neon-cyan);
+    border-bottom: 2px solid var(--neon-red); /* Csak piros aláhúzás */
+}
+
+.footer {
+    background: #000000;
+    border-top: 2px solid var(--neon-red);
+}
+
+.social-links a {
+    color: var(--neon-cyan);
+}
+
+.x-link::after {
+    color: var(--neon-red); /* Piros alulvonás */
+}
+
+/* HÁTTÉR RÁCS JAVÍTÁSA */
+.bg-wrap {
+    background: linear-gradient(rgba(0,0,0,0.95), rgba(0,0,0,0.95)),
+        repeating-linear-gradient(0deg, rgba(0,243,255,0.02) 0, rgba(0,243,255,0.02) 1px, transparent 1px, transparent 40px);
+}
+:root {
+    --bg-dark: #000000;
+    --text-white: #FFFFFF;
+    --border-light: #555555;
+    --border-dim: #222222;
+}
+
+/* ────────────────────────────────────────────────
+   ALAPOK
+──────────────────────────────────────────────── */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-white);
+    overflow-x: hidden;
+}
+
+/* BOMBASZ FŐCÍM */
+.main-title-display {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.5rem, 9.5vw, 6rem);
+    font-weight: 900;
+    color: var(--text-white);
+    text-shadow: 3px 3px 0px var(--border-light);
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    letter-spacing: clamp(-0.02em, 1.5vw, 0.5rem);
+    margin: 40px auto;
+    width: 100%;
+}
+
+/* ELRENDEZÉS - MONITORON EGYMÁS MELLETT */
+.container {
+    width: 95%;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding-bottom: 120px;
+}
+
+.assets-container {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+    width: 100%;
+}
+
+.assets-sub-section {
+    flex: 1;
+}
+
+@media (max-width: 900px) {
+    .assets-container {
+        flex-direction: column;
+    }
+}
+
+/* ────────────────────────────────────────────────
+   KÁRTYÁK - FEHÉR SMALL ÉS KOMPLEMENTER HOVER
+──────────────────────────────────────────────── */
+.assets-sub-section h2 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--text-white);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--border-light);
+    margin-bottom: 25px;
+    padding-bottom: 8px;
+}
+
+.assets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+}
+
+.asset-card {
+    background: #000000;
+    border: 1px solid var(--border-dim);
+    padding: 25px 10px;
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.2s ease;
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+}
+
+/* ALAP HELYZET: MINDEN FEHÉR */
+.asset-card i {
+    font-size: 2.2rem;
+    color: #FFFFFF !important;
+    margin-bottom: 12px;
+}
+
+.asset-card h4 {
+    color: #FFFFFF !important;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.asset-card small {
+    color: #FFFFFF !important; /* Most már ez is tiszta fehér */
+    opacity: 0.8;
+    font-size: 0.75rem;
+}
+
+/* HOVER ÁLLAPOT: KOMPLEMENTER (INVERTÁLT) */
+.asset-card:hover {
+    background: #FFFFFF;
+    border-color: #FFFFFF;
+}
+
+.asset-card:hover i,
+.asset-card:hover h4,
+.asset-card:hover small {
+    color: #000000 !important;
+    opacity: 1;
+}
+
+/* ────────────────────────────────────────────────
+   FOOTER ÉS X_
+──────────────────────────────────────────────── */
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #000000;
+    border-top: 1px solid var(--border-light);
+    padding: 20px 0;
+    text-align: center;
+    z-index: 1000;
+}
+
+.social-links a {
+    color: var(--text-white);
+    font-size: 2.2rem;
+    margin: 0 20px;
+    text-decoration: none;
+    opacity: 0.7;
+}
+
+.x-link::after {
+    content: '_';
+    color: var(--border-light);
+    font-weight: bold;
+    margin-left: 5px;
+}
