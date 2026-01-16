@@ -23,6 +23,8 @@ import {
 const ADMIN_EMAILS = [
     "bartaadikonyv@gmail.com",
     "balazs.hajdu00@gmail.com",
+    "adam070702@gmail.com",
+
 ];
 
 // ============================================
