@@ -146,7 +146,8 @@
             margin-bottom: 6px;
         }
 
-        .form-group input {
+        .form-group input[type="email"],
+        .form-group input[type="password"] {
             width: 100%;
             padding: 12px 14px;
             background: rgba(255, 255, 255, .08);
@@ -159,7 +160,8 @@
             transition: all 0.3s ease;
         }
 
-        .form-group input:focus {
+        .form-group input[type="email"]:focus,
+        .form-group input[type="password"]:focus {
             outline: none;
             border-bottom-color: var(--ink);
             background: rgba(255, 255, 255, .12);
@@ -167,6 +169,51 @@
 
         .form-group input::placeholder {
             color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Checkbox stílus */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 18px 0;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, .08);
+            border: 2px solid var(--ink-muted);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-group input[type="checkbox"]:checked {
+            background: var(--ink);
+            border-color: var(--ink);
+        }
+
+        .checkbox-group input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--bg-dark);
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .checkbox-group label {
+            color: var(--ink-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            user-select: none;
         }
 
         .submit-btn {
@@ -220,18 +267,18 @@
             color: var(--bg-dark);
         }
 
-        /* Back link */
-        .back-link {
+        /* Forgot password link */
+        .forgot-link {
             display: block;
             text-align: center;
-            margin-top: 24px;
+            margin-top: 16px;
             color: var(--ink-muted);
             text-decoration: none;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             transition: color 0.3s ease;
         }
 
-        .back-link:hover {
+        .forgot-link:hover {
             color: var(--ink);
         }
 
@@ -287,7 +334,12 @@
                     <label for="login-password">Jelszó</label>
                     <input type="password" id="login-password" placeholder="••••••••" required>
                 </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="remember-me" checked>
+                    <label for="remember-me">Emlékezz rám ezen az eszközön</label>
+                </div>
                 <button type="submit" class="submit-btn">Belépés</button>
+                <a href="#" class="forgot-link" id="forgot-password">Elfelejtetted a jelszavad?</a>
             </form>
 
             <!-- Regisztráció form -->
@@ -316,7 +368,11 @@
             getAuth, 
             signInWithEmailAndPassword, 
             createUserWithEmailAndPassword,
-            onAuthStateChanged
+            onAuthStateChanged,
+            setPersistence,
+            browserLocalPersistence,
+            browserSessionPersistence,
+            sendPasswordResetEmail
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { 
             getFirestore, 
@@ -382,6 +438,7 @@
             
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
+            const rememberMe = document.getElementById('remember-me').checked;
             const btn = e.target.querySelector('.submit-btn');
             
             btn.disabled = true;
@@ -389,6 +446,10 @@
             hideMessage();
 
             try {
+                // Persistence beállítása a checkbox alapján
+                const persistence = rememberMe ? browserLocalPersistence : browserSessionPersistence;
+                await setPersistence(auth, persistence);
+                
                 await signInWithEmailAndPassword(auth, email, password);
                 showMessage('Sikeres bejelentkezés!', 'success');
                 
@@ -418,6 +479,34 @@
             }
         });
 
+        // Elfelejtett jelszó
+        document.getElementById('forgot-password').addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            
+            if (!email) {
+                showMessage('Írd be az email címed a mezőbe!', 'error');
+                return;
+            }
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                showMessage('Jelszó visszaállító link elküldve az email címedre!', 'success');
+            } catch (error) {
+                console.error('Password reset error:', error);
+                let errorMsg = 'Hiba történt.';
+                
+                if (error.code === 'auth/user-not-found') {
+                    errorMsg = 'Nincs ilyen email címmel regisztrált felhasználó.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMsg = 'Érvénytelen email cím.';
+                }
+                
+                showMessage(errorMsg, 'error');
+            }
+        });
+
         // Regisztráció
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -437,6 +526,9 @@
             hideMessage();
 
             try {
+                // Alapból local persistence (megjegyzi)
+                await setPersistence(auth, browserLocalPersistence);
+                
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 
                 // User mentése Firestore-ba

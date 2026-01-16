@@ -6,7 +6,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { 
     getAuth, 
     onAuthStateChanged,
-    signOut 
+    signOut,
+    setPersistence,
+    browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { 
     getFirestore, 
@@ -39,6 +41,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+
+// ============================================
+// Session persistence beállítása (megjegyzi a böngészőben)
+// ============================================
+setPersistence(auth, browserLocalPersistence).catch((error) => {
+    console.error("Persistence hiba:", error);
+});
 
 // ============================================
 // Globális változók exportálása
@@ -105,6 +114,55 @@ function setupDevToolsProtection(userEmail) {
 }
 
 // ============================================
+// Oldal elrejtése amíg auth check fut
+// ============================================
+function hidePageContent() {
+    // Loading overlay hozzáadása
+    if (!document.getElementById('auth-loading-overlay')) {
+        const overlay = document.createElement('div');
+        overlay.id = 'auth-loading-overlay';
+        overlay.innerHTML = `
+            <style>
+                #auth-loading-overlay {
+                    position: fixed;
+                    inset: 0;
+                    background: #000;
+                    z-index: 999999;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                    font-family: 'Orbitron', 'Poppins', sans-serif;
+                    color: #fff;
+                }
+                #auth-loading-overlay .spinner {
+                    width: 40px;
+                    height: 40px;
+                    border: 3px solid rgba(255,255,255,0.2);
+                    border-top-color: #fff;
+                    border-radius: 50%;
+                    animation: auth-spin 0.8s linear infinite;
+                    margin-bottom: 16px;
+                }
+                @keyframes auth-spin {
+                    to { transform: rotate(360deg); }
+                }
+            </style>
+            <div class="spinner"></div>
+            <div>Betöltés...</div>
+        `;
+        document.body.insertBefore(overlay, document.body.firstChild);
+    }
+}
+
+function showPageContent() {
+    const overlay = document.getElementById('auth-loading-overlay');
+    if (overlay) {
+        overlay.remove();
+    }
+}
+
+// ============================================
 // Bejelentkezés ellenőrzés és átirányítás
 // ============================================
 function checkAuthAndProtect() {
@@ -118,10 +176,16 @@ function checkAuthAndProtect() {
         return;
     }
 
+    // Elrejtjük az oldalt amíg nem tudjuk, be van-e jelentkezve
+    hidePageContent();
+
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             // Bejelentkezett felhasználó
             console.log("✅ Bejelentkezve:", user.email);
+            
+            // Megmutatjuk az oldalt
+            showPageContent();
             
             // DevTools védelem beállítása
             setupDevToolsProtection(user.email);
@@ -146,6 +210,8 @@ function checkAuthAndProtect() {
         } else {
             // Nincs bejelentkezve -> átirányítás login oldalra
             console.log("❌ Nincs bejelentkezve, átirányítás...");
+            // Elmentjük hova akart menni, hogy visszairányíthassuk
+            sessionStorage.setItem('returnUrl', window.location.href);
             window.location.href = 'login.html';
         }
     });
@@ -157,7 +223,7 @@ function checkAuthAndProtect() {
 window.logoutUser = async function() {
     try {
         await signOut(auth);
-        window.location.href = 'index.html';
+        window.location.href = 'login.html';
     } catch (error) {
         console.error("Kijelentkezési hiba:", error);
         alert("Hiba történt a kijelentkezéskor!");
