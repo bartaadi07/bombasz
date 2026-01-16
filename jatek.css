@@ -1,10 +1,12 @@
+*{
+    cursor: crosshair !important;
+}
 body {
     background-image: url("src/hatter1.jpg");
     overflow: hidden;
     user-select: none;
     background-size: cover;
     -webkit-user-select: none;
-    cursor: crosshair !important;
 }
 
 img {
