@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (document.visibilityState === 'hidden' && Notification.permission === 'granted') {
       if (!currentUser || senderName !== currentUserName) {
-        try { new Notification("Új üzenet", { body: `${senderName}: ${msg.text}`, icon: "/icon-192.png" }); } catch {}
+        try { new Notification("Új üzenet", { body: `${senderName}: ${msg.text}`, icon: "img/icon-192.png" }); } catch {}
       }
     }
   });
