@@ -351,154 +351,197 @@
         </div>
     </div>
 
-    <script type="module">
-        import { 
-            getFirestore, 
-            collection, 
-            getDocs,
-            query,
-            orderBy 
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+<script type="module">
+    // Firebase Modular imports – stabil verzió
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js';
+    import { getFirestore, collection, getDocs, query, orderBy } from 'https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js';
 
-        // Várjuk meg az auth betöltését
-        function waitForFirebase(callback, maxAttempts = 50) {
-            let attempts = 0;
-            const check = setInterval(() => {
-                attempts++;
-                if (window.firebaseAuth && window.firebaseDb || attempts >= maxAttempts) {
-                    clearInterval(check);
-                    if (window.firebaseAuth && window.firebaseDb) {
-                        callback();
-                    }
-                }
-            }, 100);
+    // === SAJÁT FIREBASE CONFIG ===
+const firebaseConfig = {
+    apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
+    authDomain: "konyv-93c63.firebaseapp.com",
+    projectId: "konyv-93c63",
+    storageBucket: "konyv-93c63.firebasestorage.app",
+    messagingSenderId: "349471560585",
+    appId: "1:349471560585:web:55c6e78499ebbca0540758",
+    measurementId: "G-NF07N36ETJ"
+};
+
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Admin emailek listája – ÍRD ÁT A SAJÁT EMAILJEIDRE!
+    const ADMIN_EMAILS = [
+    "bartaadikonyv@gmail.com",
+    "balazs.hajdu00@gmail.com",
+    ].map(e => e.toLowerCase().trim());
+
+    const isAdmin = (email) => {
+        if (!email) return false;
+        const lower = email.toLowerCase().trim();
+        const result = ADMIN_EMAILS.includes(lower);
+        console.log(`Admin ellenőrzés: ${email} → ${result ? 'IGEN' : 'NEM'}`);
+        return result;
+    };
+
+    function renderUserRow(user) {
+        const initial = user.email?.charAt(0).toUpperCase() || '?';
+        const userIsAdmin = isAdmin(user.email);
+        const createdAt = user.createdAt?.seconds 
+            ? new Date(user.createdAt.seconds * 1000).toLocaleDateString('hu-HU')
+            : (user.createdAt ? new Date(user.createdAt).toLocaleDateString('hu-HU') : '-');
+        const lastLogin = user.lastLogin?.seconds 
+            ? new Date(user.lastLogin.seconds * 1000).toLocaleDateString('hu-HU')
+            : (user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('hu-HU') : '-');
+
+        return `
+            <tr>
+                <td>
+                    <div class="user-email">
+                        <div class="user-avatar">${initial}</div>
+                        <span>${user.email || 'Ismeretlen'}</span>
+                    </div>
+                </td>
+                <td>
+                    <span class="badge ${userIsAdmin ? 'badge-admin' : 'badge-user'}">
+                        ${userIsAdmin ? 'Admin' : 'Felhasználó'}
+                    </span>
+                </td>
+                <td class="date">${createdAt}</td>
+                <td class="date">${lastLogin}</td>
+            </tr>
+        `;
+    }
+
+    // Debug: azonnali currentUser ellenőrzés
+    console.log("Inicializálás után azonnal currentUser:", auth.currentUser);
+
+    // Késleltetett ellenőrzés (néha az auth lassan tölt be localhoston)
+    setTimeout(() => {
+        console.log("3 másodperc múlva currentUser:", auth.currentUser);
+        if (auth.currentUser) {
+            console.log("Delayed email:", auth.currentUser.email);
+            console.log("Delayed isAdmin:", isAdmin(auth.currentUser.email));
+        }
+    }, 3000);
+
+    onAuthStateChanged(auth, async (user) => {
+        console.log("=== onAuthStateChanged meghívva ===");
+        console.log("Aktuális domain:", location.hostname);
+        console.log("User objektum:", user);
+
+        const contentDiv = document.getElementById('admin-content');
+
+        if (!user) {
+            console.log("❌ NINCS bejelentkezve (user = null)");
+            contentDiv.innerHTML = `
+                <div class="access-denied">
+                    <i class="fas fa-lock"></i>
+                    <h2>Bejelentkezés szükséges</h2>
+                    <p>Kérlek jelentkezz be az admin panel használatához.</p>
+                    <a href="index.html">Vissza a főoldalra</a>
+                </div>
+            `;
+            return;
         }
 
-        waitForFirebase(async () => {
-            const auth = window.firebaseAuth;
-            const db = window.firebaseDb;
+        console.log("✅ Bejelentkezve:", user.email, "UID:", user.uid);
 
-            onAuthStateChanged(auth, async (user) => {
-                if (!user) {
-                    // Nem vagyunk bejelentkezve
-                    return;
-                }
+        if (!isAdmin(user.email)) {
+            console.log("🚫 NEM ADMIN");
+            contentDiv.innerHTML = `
+                <div class="access-denied">
+                    <i class="fas fa-lock"></i>
+                    <h2>Hozzáférés megtagadva</h2>
+                    <p>Ez az oldal kizárólag adminisztrátorok számára elérhető.</p>
+                    <p>Bejelentkezett email: ${user.email}</p>
+                    <a href="index.html">Vissza a főoldalra</a>
+                </div>
+            `;
+            return;
+        }
 
-                // Ellenőrizzük, hogy admin-e
-                if (!window.isAdmin(user.email)) {
-                    document.getElementById('admin-content').innerHTML = `
-                        <div class="access-denied">
-                            <i class="fas fa-lock"></i>
-                            <h2>Hozzáférés megtagadva</h2>
-                            <p>Ez az oldal csak adminisztrátorok számára érhető el.</p>
-                            <a href="index.html">Vissza a főoldalra</a>
-                        </div>
-                    `;
-                    return;
-                }
+        console.log("🎉 ADMIN jogosultság OK – adatok betöltése indul");
 
-                // Admin vagyunk, töltsük be az adatokat
-                try {
-                    const usersRef = collection(db, "users");
-                    const q = query(usersRef, orderBy("createdAt", "desc"));
-                    const snapshot = await getDocs(q);
-                    
-                    const users = [];
-                    snapshot.forEach(doc => {
-                        users.push({ id: doc.id, ...doc.data() });
-                    });
+        try {
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, orderBy("createdAt", "desc"));
+            const snapshot = await getDocs(q);
 
-                    const totalUsers = users.length;
-                    const adminCount = users.filter(u => window.ADMIN_EMAILS.includes(u.email?.toLowerCase())).length;
-
-                    // Render content
-                    document.getElementById('admin-content').innerHTML = `
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-value">${totalUsers}</div>
-                                <div class="stat-label">Összes felhasználó</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value">${adminCount}</div>
-                                <div class="stat-label">Adminisztrátor</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-value">${totalUsers - adminCount}</div>
-                                <div class="stat-label">Normál felhasználó</div>
-                            </div>
-                        </div>
-
-                        <div class="users-section">
-                            <div class="section-header">
-                                <h2>👥 Felhasználók</h2>
-                                <div class="search-box">
-                                    <i class="fas fa-search"></i>
-                                    <input type="text" id="search-input" placeholder="Keresés email alapján...">
-                                </div>
-                            </div>
-
-                            <table class="users-table">
-                                <thead>
-                                    <tr>
-                                        <th>Felhasználó</th>
-                                        <th>Szerepkör</th>
-                                        <th>Regisztráció</th>
-                                        <th>Utolsó bejelentkezés</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="users-tbody">
-                                    ${users.map(u => renderUserRow(u)).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
-
-                    // Keresés funkció
-                    document.getElementById('search-input').addEventListener('input', (e) => {
-                        const searchTerm = e.target.value.toLowerCase();
-                        const filtered = users.filter(u => u.email?.toLowerCase().includes(searchTerm));
-                        document.getElementById('users-tbody').innerHTML = filtered.map(u => renderUserRow(u)).join('');
-                    });
-
-                } catch (error) {
-                    console.error('Error loading users:', error);
-                    document.getElementById('admin-content').innerHTML = `
-                        <div class="access-denied">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <h2>Hiba történt</h2>
-                            <p>Nem sikerült betölteni a felhasználókat. Ellenőrizd a Firestore beállításokat.</p>
-                            <a href="index.html">Vissza a főoldalra</a>
-                        </div>
-                    `;
-                }
+            const users = [];
+            snapshot.forEach(doc => {
+                users.push({ id: doc.id, ...doc.data() });
             });
-        });
 
-        function renderUserRow(user) {
-            const initial = user.email?.charAt(0).toUpperCase() || '?';
-            const isAdmin = window.ADMIN_EMAILS?.includes(user.email?.toLowerCase());
-            const createdAt = user.createdAt ? new Date(user.createdAt).toLocaleDateString('hu-HU') : '-';
-            const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('hu-HU') : '-';
+            console.log(`Betöltve ${users.length} felhasználó`);
 
-            return `
-                <tr>
-                    <td>
-                        <div class="user-email">
-                            <div class="user-avatar">${initial}</div>
-                            <span>${user.email || 'Ismeretlen'}</span>
+            const totalUsers = users.length;
+            const adminCount = users.filter(u => isAdmin(u.email)).length;
+
+            contentDiv.innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${totalUsers}</div>
+                        <div class="stat-label">Összes felhasználó</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${adminCount}</div>
+                        <div class="stat-label">Adminisztrátor</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${totalUsers - adminCount}</div>
+                        <div class="stat-label">Normál felhasználó</div>
+                    </div>
+                </div>
+
+                <div class="users-section">
+                    <div class="section-header">
+                        <h2>👥 Felhasználók</h2>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-input" placeholder="Keresés email alapján...">
                         </div>
-                    </td>
-                    <td>
-                        <span class="badge ${isAdmin ? 'badge-admin' : 'badge-user'}">
-                            ${isAdmin ? 'Admin' : 'Felhasználó'}
-                        </span>
-                    </td>
-                    <td class="date">${createdAt}</td>
-                    <td class="date">${lastLogin}</td>
-                </tr>
+                    </div>
+
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>Felhasználó</th>
+                                <th>Szerepkör</th>
+                                <th>Regisztráció</th>
+                                <th>Utolsó bejelentkezés</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-tbody">
+                            ${users.map(u => renderUserRow(u)).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            // Keresés
+            document.getElementById('search-input')?.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const filtered = users.filter(u => u.email?.toLowerCase().includes(term));
+                document.getElementById('users-tbody').innerHTML = filtered.map(u => renderUserRow(u)).join('');
+            });
+
+        } catch (error) {
+            console.error("HIBA az adatok betöltésekor:", error);
+            contentDiv.innerHTML = `
+                <div class="access-denied">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h2>Hiba történt</h2>
+                    <p>${error.message}</p>
+                    <p>Ellenőrizd a konzolt és a Firestore rules-t</p>
+                    <a href="index.html">Vissza</a>
+                </div>
             `;
         }
-    </script>
+    });
+</script>
 </body>
 </html>
