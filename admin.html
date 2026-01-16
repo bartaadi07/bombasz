@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel • BOMBASZ</title>
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" href="favicon.ico">
+    
+    <!-- Auth rendszer -->
+    <script type="module" src="auth.js"></script>
+    <script src="user-ui.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+            color: #fff;
+        }
+
+        /* Aurora háttér */
+        .aurora-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .blob-a {
+            width: 500px;
+            height: 500px;
+            background: #f59e0b;
+            top: -200px;
+            right: -100px;
+        }
+
+        .blob-b {
+            width: 400px;
+            height: 400px;
+            background: #6366f1;
+            bottom: -150px;
+            left: -100px;
+            animation-delay: -7s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        .admin-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px 40px;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .admin-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .admin-header p {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #6366f1;
+            margin-bottom: 4px;
+        }
+
+        .stat-card .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Users table */
+        .users-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.9rem;
+            width: 200px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .search-box i {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .users-table th,
+        .users-table td {
+            text-align: left;
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .users-table th {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .users-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .users-table .user-email {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .users-table .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-admin {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #fff;
+        }
+
+        .badge-user {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+        }
+
+        .users-table .date {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Access denied */
+        .access-denied {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .access-denied i {
+            font-size: 4rem;
+            color: #ef4444;
+            margin-bottom: 20px;
+        }
+
+        .access-denied h2 {
+            margin-bottom: 8px;
+        }
+
+        .access-denied p {
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 24px;
+        }
+
+        .access-denied a {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .access-denied a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .users-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Aurora háttér -->
+    <div class="aurora-bg">
+        <span class="blob blob-a"></span>
+        <span class="blob blob-b"></span>
+    </div>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>⚙️ Admin Panel</h1>
+            <p>Felhasználók kezelése</p>
+        </div>
+
+        <!-- Content will be loaded here -->
+        <div id="admin-content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Betöltés...</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { 
+            getFirestore, 
+            collection, 
+            getDocs,
+            query,
+            orderBy 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Várjuk meg az auth betöltését
+        function waitForFirebase(callback, maxAttempts = 50) {
+            let attempts = 0;
+            const check = setInterval(() => {
+                attempts++;
+                if (window.firebaseAuth && window.firebaseDb || attempts >= maxAttempts) {
+                    clearInterval(check);
+                    if (window.firebaseAuth && window.firebaseDb) {
+                        callback();
+                    }
+                }
+            }, 100);
+        }
+
+        waitForFirebase(async () => {
+            const auth = window.firebaseAuth;
+            const db = window.firebaseDb;
+
+            onAuthStateChanged(auth, async (user) => {
+                if (!user) {
+                    // Nem vagyunk bejelentkezve
+                    return;
+                }
+
+                // Ellenőrizzük, hogy admin-e
+                if (!window.isAdmin(user.email)) {
+                    document.getElementById('admin-content').innerHTML = `
+                        <div class="access-denied">
+                            <i class="fas fa-lock"></i>
+                            <h2>Hozzáférés megtagadva</h2>
+                            <p>Ez az oldal csak adminisztrátorok számára érhető el.</p>
+                            <a href="index.html">Vissza a főoldalra</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Admin vagyunk, töltsük be az adatokat
+                try {
+                    const usersRef = collection(db, "users");
+                    const q = query(usersRef, orderBy("createdAt", "desc"));
+                    const snapshot = await getDocs(q);
+                    
+                    const users = [];
+                    snapshot.forEach(doc => {
+                        users.push({ id: doc.id, ...doc.data() });
+                    });
+
+                    const totalUsers = users.length;
+                    const adminCount = users.filter(u => window.ADMIN_EMAILS.includes(u.email?.toLowerCase())).length;
+
+                    // Render content
+                    document.getElementById('admin-content').innerHTML = `
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value">${totalUsers}</div>
+                                <div class="stat-label">Összes felhasználó</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${adminCount}</div>
+                                <div class="stat-label">Adminisztrátor</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value">${totalUsers - adminCount}</div>
+                                <div class="stat-label">Normál felhasználó</div>
+                            </div>
+                        </div>
+
+                        <div class="users-section">
+                            <div class="section-header">
+                                <h2>👥 Felhasználók</h2>
+                                <div class="search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="search-input" placeholder="Keresés email alapján...">
+                                </div>
+                            </div>
+
+                            <table class="users-table">
+                                <thead>
+                                    <tr>
+                                        <th>Felhasználó</th>
+                                        <th>Szerepkör</th>
+                                        <th>Regisztráció</th>
+                                        <th>Utolsó bejelentkezés</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-tbody">
+                                    ${users.map(u => renderUserRow(u)).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+
+                    // Keresés funkció
+                    document.getElementById('search-input').addEventListener('input', (e) => {
+                        const searchTerm = e.target.value.toLowerCase();
+                        const filtered = users.filter(u => u.email?.toLowerCase().includes(searchTerm));
+                        document.getElementById('users-tbody').innerHTML = filtered.map(u => renderUserRow(u)).join('');
+                    });
+
+                } catch (error) {
+                    console.error('Error loading users:', error);
+                    document.getElementById('admin-content').innerHTML = `
+                        <div class="access-denied">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h2>Hiba történt</h2>
+                            <p>Nem sikerült betölteni a felhasználókat. Ellenőrizd a Firestore beállításokat.</p>
+                            <a href="index.html">Vissza a főoldalra</a>
+                        </div>
+                    `;
+                }
+            });
+        });
+
+        function renderUserRow(user) {
+            const initial = user.email?.charAt(0).toUpperCase() || '?';
+            const isAdmin = window.ADMIN_EMAILS?.includes(user.email?.toLowerCase());
+            const createdAt = user.createdAt ? new Date(user.createdAt).toLocaleDateString('hu-HU') : '-';
+            const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('hu-HU') : '-';
+
+            return `
+                <tr>
+                    <td>
+                        <div class="user-email">
+                            <div class="user-avatar">${initial}</div>
+                            <span>${user.email || 'Ismeretlen'}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge ${isAdmin ? 'badge-admin' : 'badge-user'}">
+                            ${isAdmin ? 'Admin' : 'Felhasználó'}
+                        </span>
+                    </td>
+                    <td class="date">${createdAt}</td>
+                    <td class="date">${lastLogin}</td>
+                </tr>
+            `;
+        }
+    </script>
+</body>
+</html>
