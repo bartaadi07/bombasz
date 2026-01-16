@@ -21,7 +21,6 @@ import {
 const ADMIN_EMAILS = [
     "bartaadikonyv@gmail.com",
     "balazs.hajdu00@gmail.com",
-    "balatyahajdu@gmail.com"
 ];
 
 // ============================================
