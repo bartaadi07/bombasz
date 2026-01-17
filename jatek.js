@@ -7,7 +7,9 @@ function removeUFO(ufo) {
     ufos = ufos.filter(x => x !== ufo);
 }
 function updateScore() {
-    document.querySelector("div").textContent = `Pontok: ${score}`;
+    let pontok = document.getElementById("pontok");
+    pontok.innerHTML = `Pontok: ${score}`;
+    
 }
 
 document.addEventListener("DOMContentLoaded", () => {
