@@ -43,7 +43,7 @@ driver.execute_cdp_cmd(
     },
 )
 try:
-    driver.get("https://bombasz.hu/selenium")
+    driver.get("https://bartaadi07.github.io/selenium/")
     time.sleep(2)
     elfogadas = driver.find_element(By.ID, "termes")
     elfogadas.click()
