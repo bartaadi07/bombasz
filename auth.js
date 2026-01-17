@@ -131,7 +131,7 @@ function checkAuthAndProtect() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     
     // Publikus oldalak - NEM kell bejelentkezés
-    const publicPages = ['login.html', 'index.html', 'hamarosan.html'];
+    const publicPages = ['login.html', 'index.html', 'hamarosan.html', 'konyv.html', 'vids.html', 'uncs.html', 'jatek.html', 'selenium.html'];
     
     // Admin oldal - külön kezeljük (saját auth logikája van)
     if (currentPage === 'admin.html') {
