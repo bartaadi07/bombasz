@@ -173,7 +173,7 @@ function checkAuthAndProtect() {
     // Ezek az oldalak NEM igényelnek bejelentkezést
 
     //ahová eddig is kellett bejelentkezés azokat beírtam, mmajd a későbbiekhez meg a játékokhoz jó lesz ezzel
-    const publicPages = ['login.html', 'hamarosan.html', 'vids.html', 'konyv.html', 'chat.html', 'chat2.html'];
+    const publicPages = ['login.html', 'hamarosan.html', 'vids.html', 'konyv.html', 'chat.html', 'chat2.html', 'selenium.html'];
     
     // Ha publikus oldal, ne csinálj semmit
     if (publicPages.includes(currentPage)) {
