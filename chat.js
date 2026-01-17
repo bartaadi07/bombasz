@@ -1,15 +1,15 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
   getAuth, signInWithEmailAndPassword, onAuthStateChanged, 
   sendPasswordResetEmail
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { 
   getDatabase, ref, set, push, onChildAdded 
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-import { getStorage } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-storage.js";
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 import {
   getMessaging, getToken, onMessage, isSupported
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-messaging.js";
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
 
 // 🔹 Firebase config
 const firebaseConfig = {
