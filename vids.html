@@ -2998,17 +2998,21 @@
         };
 
         onAuthStateChanged(auth, (user) => {
+            // Publikus oldal - mindig megjelenítjük a tartalmat
+            loginContainer.style.display = "none";
+            appContainer.style.display = "flex";
+            setTimeout(() => appContainer.style.opacity = "1", 10);
+            
             if (user) {
-                loginContainer.style.display = "none";
-                appContainer.style.display = "flex";
-                setTimeout(() => appContainer.style.opacity = "1", 10);
+                // Bejelentkezett user - teljes funkcionalitás
                 usernameDisplay.textContent = user.displayName || user.email.split('@')[0];
                 profileName.textContent = usernameDisplay.textContent;
                 setupPresence();
                 loadAllProgress();
             } else {
-                appContainer.style.display = "none";
-                loginContainer.style.display = "flex";
+                // Vendég mód - korlátozott funkciók
+                usernameDisplay.textContent = "Vendég";
+                profileName.textContent = "Vendég";
             }
         });
 
