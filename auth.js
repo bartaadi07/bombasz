@@ -170,13 +170,27 @@ function showPageContent() {
 function checkAuthAndProtect() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     
-    // Ezek az oldalak NEM igényelnek bejelentkezést
-
-    //ahová eddig is kellett bejelentkezés azokat beírtam, mmajd a későbbiekhez meg a játékokhoz jó lesz ezzel
-    const publicPages = ['login.html', 'hamarosan.html', 'vids.html', 'konyv.html', 'chat.html', 'chat2.html'];
+    // Ezek az oldalak NEM igényelnek bejelentkezést (publikusak)
+    const publicPages = ['login.html', 'hamarosan.html', 'vids.html', 'konyv.html', 'chat.html', 'chat2.html', 'selenium.html', 'index.html'];
     
-    // Ha publikus oldal, ne csinálj semmit
+    // Ha publikus oldal
     if (publicPages.includes(currentPage)) {
+        // Mégis figyeljük az auth státuszt a user bar megjelenítéséhez
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Bejelentkezett - mutassuk a user bar-t
+                if (typeof window.showUserUI === 'function') {
+                    window.showUserUI(user.email, isAdmin(user.email));
+                }
+                // DevTools védelem
+                setupDevToolsProtection(user.email);
+            } else {
+                // Vendég - mutassuk a vendég bar-t (ha nem login oldal)
+                if (currentPage !== 'login.html' && typeof window.showGuestUI === 'function') {
+                    window.showGuestUI();
+                }
+            }
+        });
         return;
     }
 
