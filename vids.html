@@ -27,8 +27,15 @@
             width: 100%;
             min-width: 100%;
             overflow-x: hidden;
-            /* Ez csak akkor ér valamit, ha a szülő nem tágul */
             position: relative;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar {
+            display: none;
+            width: 0;
         }
 
         #app {
@@ -1268,20 +1275,6 @@
                             d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </button>
-
-                <button id="profile-btn"><i class="fa-solid fa-user"></i> <span id="username-display"></span></button>
-
-                <div id="profile-dropdown">
-                    <h4>film/sorozat kérés: <br> dc: bartaadi</h4>
-                    <hr> <br><strong>Üdv,</strong> <span id="profile-name"></span></p>
-                    <p style="font-weight: 600; margin-top: 15px; border-top: 1px solid #444; padding-top: 10px;">
-                        Legutóbb nézettek:</p>
-                    <div id="watched-list" style="display: flex; flex-direction: column; gap: 5px;">
-                        <p style="font-size: 0.85rem; color: #777;">Betöltés...</p>
-                    </div>
-                    <br>
-                    <button id="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Kilépés</button>
-                </div>
             </div>
         </header>
 
@@ -1663,13 +1656,7 @@
         const loginMsg = document.getElementById("login-msg");
         const loginContainer = document.getElementById("login-container");
         const appContainer = document.getElementById("app");
-        const logoutBtn = document.getElementById("logout-btn");
-        const profileBtn = document.getElementById("profile-btn");
-        const profileDropdown = document.getElementById("profile-dropdown");
-        const usernameDisplay = document.getElementById("username-display");
-        const profileName = document.getElementById("profile-name");
         const homeBtn = document.getElementById('home-btn');
-        const watchedList = document.getElementById('watched-list');
         const searchBtn = document.getElementById('search-btn');
         const searchContainer = document.getElementById('search-container');
         const searchInput = document.getElementById('search-input');
@@ -2914,26 +2901,11 @@
         }
 
         function populateWatchedList(progressData) {
-            watchedList.innerHTML = '';
-            const watchedItems = Object.keys(progressData).map(key => {
-                const info = seriesData[key];
-                if (!info) return null;
-                return { key, ...info, watchedIndex: progressData[key].index, timestamp: progressData[key].timestamp };
-            }).filter(i => i).sort((a, b) => b.timestamp - a.timestamp).slice(0, 5);
-
-            watchedItems.forEach(item => {
-                const watchedCount = Math.min(item.watchedIndex + 1, item.videos.length);
-                const progressPercent = (watchedCount / item.videos.length) * 100;
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'watched-item';
-                itemDiv.innerHTML = `
-            <div class="watched-title">${item.title}</div>
-            <div class="watched-progress-text">${watchedCount}/${item.videos.length} rész</div>
-            <div class="progress-container"><div class="progress-bar" style="width: ${progressPercent}%"></div></div>
-        `;
-                itemDiv.onclick = () => { profileDropdown.style.display = 'none'; loadSeries(item.key); mainPage.style.display = 'none'; seriesPage.style.display = 'flex'; };
-                watchedList.appendChild(itemDiv);
-            });
+            // Exportáljuk a user-ui.js számára
+            window.allProgressData = progressData;
+            if (typeof window.updateBombaszWatchedList === 'function') {
+                window.updateBombaszWatchedList(progressData, seriesData);
+            }
         }
 
         function setupPresence() {
@@ -2978,22 +2950,7 @@
             if (ambilightWrapper) ambilightWrapper.classList.remove('ambilight-active');
         }
 
-        // Vissza gomb és Home gomb
-
-        // Kilépés gomb
-        logoutBtn.onclick = () => {
-            stopAndCleanupVideo();
-            signOut(auth);
-        };
-
-        profileBtn.onclick = (e) => {
-            e.stopPropagation();
-            loadAllProgress();
-            profileDropdown.style.display = profileDropdown.style.display === "block" ? "none" : "block";
-        };
-
         document.onclick = (e) => {
-            if (!profileDropdown.contains(e.target) && e.target !== profileBtn) profileDropdown.style.display = 'none';
             if (!searchContainer.contains(e.target) && e.target !== searchBtn && searchInput.value === "") searchContainer.classList.remove('active');
         };
 
@@ -3003,20 +2960,16 @@
             appContainer.style.display = "flex";
             setTimeout(() => appContainer.style.opacity = "1", 10);
             
+            // Exportáljuk a seriesData-t a user-ui.js számára
+            window.seriesData = seriesData;
+            
             if (user) {
                 // Bejelentkezett user - teljes funkcionalitás
-                usernameDisplay.textContent = user.displayName || user.email.split('@')[0];
-                profileName.textContent = usernameDisplay.textContent;
                 setupPresence();
                 loadAllProgress();
             } else {
-                // Vendég mód - korlátozott funkciók
-                usernameDisplay.textContent = "Vendég";
-                profileName.textContent = "Vendég";
-                // Vendég bar megmutatása (ha létezik)
-                if (typeof window.showGuestUI === 'function') {
-                    window.showGuestUI();
-                }
+                // Vendég mód
+                // A user-ui.js kezeli a vendég UI-t
             }
         });
 
@@ -3067,7 +3020,8 @@
             checkTitleOverflow();
         };
 
-        async function loadSeries(key) {
+        // Exportáljuk globálisan a user-ui.js számára
+        window.loadSeries = async function loadSeries(key) {
             const s = seriesData[key];
             if (!s) return;
             seriesTitle.textContent = s.title;
