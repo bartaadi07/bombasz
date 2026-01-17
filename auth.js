@@ -10,29 +10,23 @@ import {
     setPersistence,
     browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { 
-    getFirestore, 
-    doc, 
-    getDoc, 
-    setDoc 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // ============================================
-// ADMIN BEÁLLÍTÁSOK - IDE ÍRD BE AZ ADMIN EMAILEKET!
+// ADMIN BEÁLLÍTÁSOK
 // ============================================
 const ADMIN_EMAILS = [
     "bartaadikonyv@gmail.com",
     "balazs.hajdu00@gmail.com",
     "adam070702@gmail.com",
-
 ];
 
 // ============================================
-// Firebase konfiguráció (konyv-93c63 projekt)
+// Firebase konfiguráció
 // ============================================
 const firebaseConfig = {
     apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
     authDomain: "konyv-93c63.firebaseapp.com",
+    databaseURL: "https://konyv-93c63-default-rtdb.firebaseio.com",
     projectId: "konyv-93c63",
     storageBucket: "konyv-93c63.firebasestorage.app",
     messagingSenderId: "308577632498",
@@ -42,71 +36,40 @@ const firebaseConfig = {
 // Firebase inicializálás
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
 
-// ============================================
-// Session persistence beállítása (megjegyzi a böngészőben)
-// ============================================
+// Session persistence
 setPersistence(auth, browserLocalPersistence).catch((error) => {
     console.error("Persistence hiba:", error);
 });
 
-// ============================================
-// Globális változók exportálása
-// ============================================
+// Globális változók
 window.firebaseAuth = auth;
-window.firebaseDb = db;
 window.ADMIN_EMAILS = ADMIN_EMAILS;
 
-// ============================================
 // Admin ellenőrzés
-// ============================================
 function isAdmin(email) {
     return ADMIN_EMAILS.includes(email?.toLowerCase());
 }
-
 window.isAdmin = isAdmin;
 
 // ============================================
 // DevTools védelem (csak nem-adminoknak)
 // ============================================
 function setupDevToolsProtection(userEmail) {
-    // Ha admin, ne védjük
     if (isAdmin(userEmail)) {
         console.log("🔓 Admin mód - DevTools engedélyezve");
         return;
     }
 
-    // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, F12 letiltása
     document.addEventListener('keydown', function(e) {
-        // F12
-        if (e.key === 'F12') {
-            e.preventDefault();
-            return false;
-        }
-        // Ctrl+Shift+I (DevTools)
-        if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-            e.preventDefault();
-            return false;
-        }
-        // Ctrl+Shift+J (Console)
-        if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-            e.preventDefault();
-            return false;
-        }
-        // Ctrl+U (Forráskód)
-        if (e.ctrlKey && e.key === 'u') {
-            e.preventDefault();
-            return false;
-        }
-        // Ctrl+Shift+C (Inspect Element)
-        if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+        if (e.key === 'F12' || 
+            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+            (e.ctrlKey && e.key === 'u')) {
             e.preventDefault();
             return false;
         }
     });
 
-    // Jobb klikk letiltása
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
         return false;
@@ -116,10 +79,9 @@ function setupDevToolsProtection(userEmail) {
 }
 
 // ============================================
-// Oldal elrejtése amíg auth check fut
+// Loading overlay
 // ============================================
 function hidePageContent() {
-    // Loading overlay hozzáadása
     if (!document.getElementById('auth-loading-overlay')) {
         const overlay = document.createElement('div');
         overlay.id = 'auth-loading-overlay';
@@ -159,90 +121,74 @@ function hidePageContent() {
 
 function showPageContent() {
     const overlay = document.getElementById('auth-loading-overlay');
-    if (overlay) {
-        overlay.remove();
-    }
+    if (overlay) overlay.remove();
 }
 
 // ============================================
-// Bejelentkezés ellenőrzés és átirányítás
+// Auth védelem
 // ============================================
 function checkAuthAndProtect() {
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     
-    // Ezek az oldalak NEM igényelnek bejelentkezést
-
-    //ahová eddig is kellett bejelentkezés azokat beírtam, mmajd a későbbiekhez meg a játékokhoz jó lesz ezzel
-    const publicPages = ['login.html', 'hamarosan.html', 'vids.html', 'konyv.html', 'chat.html', 'chat2.html'];
+    // Publikus oldalak - NEM kell bejelentkezés
+    const publicPages = ['login.html', 'index.html', 'hamarosan.html'];
     
-    // Ha publikus oldal, ne csinálj semmit
+    // Admin oldal - külön kezeljük (saját auth logikája van)
+    if (currentPage === 'admin.html') {
+        return;
+    }
+    
+    // Publikus oldal
     if (publicPages.includes(currentPage)) {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if (typeof window.showUserUI === 'function') {
+                    window.showUserUI(user.email, isAdmin(user.email));
+                }
+                setupDevToolsProtection(user.email);
+            } else {
+                if (typeof window.showGuestUI === 'function') {
+                    window.showGuestUI();
+                }
+            }
+        });
         return;
     }
 
-    // Elrejtjük az oldalt amíg nem tudjuk, be van-e jelentkezve
+    // Védett oldal - elrejtjük amíg auth check fut
     hidePageContent();
 
-    onAuthStateChanged(auth, async (user) => {
+    onAuthStateChanged(auth, (user) => {
         if (user) {
-            // Bejelentkezett felhasználó
             console.log("✅ Bejelentkezve:", user.email);
-            
-            // Megmutatjuk az oldalt
             showPageContent();
-            
-            // DevTools védelem beállítása
             setupDevToolsProtection(user.email);
             
-            // Felhasználói adatok mentése/frissítése Firestore-ban
-            try {
-                const userRef = doc(db, "users", user.uid);
-                await setDoc(userRef, {
-                    email: user.email,
-                    lastLogin: new Date().toISOString(),
-                    isAdmin: isAdmin(user.email)
-                }, { merge: true });
-            } catch (error) {
-                console.error("Firestore hiba:", error);
-            }
-            
-            // User UI megjelenítése (ha létezik a függvény)
             if (typeof window.showUserUI === 'function') {
                 window.showUserUI(user.email, isAdmin(user.email));
             }
-            
         } else {
-            // Nincs bejelentkezve -> átirányítás login oldalra
             console.log("❌ Nincs bejelentkezve, átirányítás...");
-            // Elmentjük hova akart menni, hogy visszairányíthassuk
             sessionStorage.setItem('returnUrl', window.location.href);
             window.location.href = 'login.html';
         }
     });
 }
 
-// ============================================
 // Kijelentkezés
-// ============================================
 window.logoutUser = async function() {
     try {
         await signOut(auth);
         window.location.href = 'login.html';
     } catch (error) {
         console.error("Kijelentkezési hiba:", error);
-        alert("Hiba történt a kijelentkezéskor!");
     }
 };
 
-// ============================================
-// Automatikus futtatás oldal betöltésekor
-// ============================================
-document.addEventListener('DOMContentLoaded', function() {
-    checkAuthAndProtect();
-});
-
-// Azonnali futtatás is (ha a DOM már kész)
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
+// Futtatás
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkAuthAndProtect);
+} else {
     checkAuthAndProtect();
 }
 

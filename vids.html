@@ -3013,6 +3013,10 @@
                 // Vendég mód - korlátozott funkciók
                 usernameDisplay.textContent = "Vendég";
                 profileName.textContent = "Vendég";
+                // Vendég bar megmutatása (ha létezik)
+                if (typeof window.showGuestUI === 'function') {
+                    window.showGuestUI();
+                }
             }
         });
 
