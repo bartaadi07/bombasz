@@ -13,15 +13,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
 
     <style>
-        /* --- ÚJ HEADER STÍLUS --- */
+        /* --- REAL-TIME HEADER --- */
         .main-header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 60px;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             z-index: 1000;
             display: flex;
@@ -37,7 +37,7 @@
             align-items: center;
         }
 
-        /* Bal oldal: Profil infó */
+        /* Bal oldal: Real-time Profil */
         .user-profile-side {
             display: flex;
             align-items: center;
@@ -49,54 +49,61 @@
         .profile-icon {
             width: 32px;
             height: 32px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
+            background: #fff;
+            color: #000;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
-            border: 1px solid rgba(255,255,255,0.2);
+            font-weight: 900;
+            font-size: 0.85rem;
+            font-family: 'Orbitron';
+            /* Szögletes vágás (Admin Panel stílus) */
+            clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 70% 100%, 0% 100%);
+            box-shadow: 0 0 10px rgba(255,255,255,0.2);
         }
 
         .user-details {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .user-name {
             font-size: 0.9rem;
             font-weight: 500;
+            letter-spacing: 0.5px;
         }
 
+        /* Fehér Admin Badge */
         .admin-badge {
             font-size: 0.6rem;
-            background: #fff;
-            color: #000;
-            padding: 1px 5px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 2px 7px;
             font-weight: 900;
             font-family: 'Orbitron';
             text-transform: uppercase;
-            border-radius: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            letter-spacing: 1px;
         }
 
-        /* Admin ikon (Settings) */
+        /* Admin Settings Icon */
         .admin-settings-btn {
             color: #fff;
             font-size: 1.1rem;
             text-decoration: none;
             opacity: 0.7;
-            transition: 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             align-items: center;
         }
 
         .admin-settings-btn:hover {
             opacity: 1;
-            transform: rotate(45deg);
+            transform: rotate(90deg) scale(1.1);
         }
 
-        /* Jobb oldal: Kilépés */
+        /* Jobb oldal: Logout */
         .actions-side {
             display: flex;
             align-items: center;
@@ -104,32 +111,45 @@
 
         .btn-logout {
             background: transparent;
-            color: rgba(255,255,255,0.6);
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 6px 14px;
+            color: rgba(255,255,255,0.5);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 6px 16px;
             font-family: 'Orbitron';
             font-size: 0.65rem;
+            font-weight: 900;
             cursor: pointer;
             text-transform: uppercase;
             transition: 0.3s;
+            letter-spacing: 1px;
         }
 
         .btn-logout:hover {
             background: #fff;
             color: #000;
             border-color: #fff;
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
         }
 
         .container {
-            margin-top: 90px !important;
+            margin-top: 100px !important;
         }
+
+        /* Sync animáció */
+        .sync-loader {
+            font-family: 'Orbitron';
+            font-size: 0.6rem;
+            color: #555;
+            letter-spacing: 2px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
     </style>
 </head>
 
 <body>
     <header class="main-header">
         <div class="header-inner" id="auth-section">
-            <div style="color: #444; font-size: 0.7rem; font-family: 'Orbitron';">BOOTING SYSTEM...</div>
+            <div class="sync-loader">ESTABLISHING REAL-TIME CONNECTION...</div>
         </div>
     </header>
 
@@ -182,6 +202,7 @@
                             </a>
                         </div>
                     </div>
+                    
                     <div class="assets-sub-section">
                         <h2>> LETÖLTÉSEK</h2>
                         <div class="assets-grid">
@@ -220,16 +241,19 @@
     </main>
 
     <script>
+        // REAL-TIME UI FRISSÍTÉS
         window.showUserUI = function(user, isAdmin) {
             const container = document.getElementById('auth-section');
             if (!container) return;
             
             const name = user.displayName || user.email.split('@')[0];
+            const firstLetter = name.charAt(0).toUpperCase();
             
+            // Itt a real-time váltás kulcsa: a HTML-t azonnal frissítjük az új adatokkal
             container.innerHTML = `
                 <div class="user-profile-side">
                     <div class="profile-icon">
-                        <i class="fa-solid fa-user"></i>
+                        ${firstLetter}
                     </div>
                     <div class="user-details">
                         <span class="user-name">Szia, <b>${name}</b></span>
@@ -248,9 +272,10 @@
             if (!container) return;
             
             container.innerHTML = `
-                <div></div> <div class="actions-side">
+                <div></div>
+                <div class="actions-side">
                     <a href="login.html" style="text-decoration:none">
-                        <button class="btn-logout" style="color: #fff; border-color: #fff;">Bejelentkezés</button>
+                        <button class="btn-logout" style="color: #fff; border-color: #fff; opacity: 1;">Bejelentkezés</button>
                     </a>
                 </div>
             `;
