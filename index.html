@@ -1,80 +1,173 @@
 <!DOCTYPE html>
 <html lang="hu">
-<!-- git-test -->
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>BOMBASZ</title>
 
-    <!-- Auth rendszer -->
     <script type="module" src="auth.js"></script>
     <script src="user-ui.js"></script>
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Orbitron:wght@700;900&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
 
     <style>
+        /* --- ÚJ HEADER STÍLUS --- */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+        }
 
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 95%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Bal oldal: Profil infó */
+        .user-profile-side {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .profile-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .user-details {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .admin-badge {
+            font-size: 0.6rem;
+            background: #fff;
+            color: #000;
+            padding: 1px 5px;
+            font-weight: 900;
+            font-family: 'Orbitron';
+            text-transform: uppercase;
+            border-radius: 2px;
+        }
+
+        /* Admin ikon (Settings) */
+        .admin-settings-btn {
+            color: #fff;
+            font-size: 1.1rem;
+            text-decoration: none;
+            opacity: 0.7;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .admin-settings-btn:hover {
+            opacity: 1;
+            transform: rotate(45deg);
+        }
+
+        /* Jobb oldal: Kilépés */
+        .actions-side {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 6px 14px;
+            font-family: 'Orbitron';
+            font-size: 0.65rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+
+        .container {
+            margin-top: 90px !important;
+        }
     </style>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-        });
-    </script>
 </head>
 
 <body>
+    <header class="main-header">
+        <div class="header-inner" id="auth-section">
+            <div style="color: #444; font-size: 0.7rem; font-family: 'Orbitron';">BOOTING SYSTEM...</div>
+        </div>
+    </header>
 
     <div class="bg-wrap"></div>
 
     <main class="container">
-
         <h1 class="main-title-display">B O M B A S Z</h1>
 
         <section id="home" class="main-content-grid">
-
             <div class="left-panel">
-
-
                 <div class="assets-container">
                     <div class="assets-sub-section">
                         <h2>> ALOLDALAK</h2>
                         <div class="assets-grid">
-
                             <a href="https://www.bombasz.hu/chat" target="_blank" class="asset-card external">
                                 <i class="fa-solid fa-comments"></i>
                                 <h4>Chat</h4>
                             </a>
-
                             <a href="https://www.bombasz.hu/chat2" target="_blank" class="asset-card external">
                                 <i class="fa-solid fa-terminal"></i>
                                 <h4>Terminál</h4>
                             </a>
-
                             <a href="https://www.bombasz.hu/konyv" target="_blank" class="asset-card external">
                                 <i class="fa-solid fa-book-open"></i>
                                 <h4>Könyvek</h4>
                             </a>
-
                             <a href="https://www.bombasz.hu/vids" target="_blank" class="asset-card external">
                                 <i class="fa-solid fa-desktop"></i>
                                 <h4>Vids</h4>
                             </a>
-
                             <a href="https://www.bombasz.hu/mikulas" target="_blank" class="asset-card external">
                                 <i class="fa-solid fa-gift"></i>
                                 <h4>Mikulás</h4>
                             </a>
-
                             <a href="https://www.bombasz.hu/uncs" target="_blank" class="asset-card external">
                                 <i class="fa-solid fa-check"></i>
                                 <h4>UNCS</h4>
                             </a>
-
                             <a href="https://www.bombasz.hu/police" target="_blank" class="asset-card external">
                                 <i class="fa-solid fa-circle-play"></i>
                                 <h4>Police training</h4>
@@ -87,17 +180,9 @@
                                 <i class="fa-solid fa-book-open"></i>
                                 <h4>Történelem Tételek</h4>
                             </a>
-
-                            <!-- <a href="https://www.bombasz.hu/cbz" target="_blank" class="asset-card external">
-                                <i class="fa-solid fa-book-open"></i>
-                                <h4>CBZ</h4>
-                            </a> -->
-
                         </div>
                     </div>
-
                     <div class="assets-sub-section">
-
                         <h2>> LETÖLTÉSEK</h2>
                         <div class="assets-grid">
                             <a href="egyeb/sub.py" class="asset-card" download>
@@ -110,76 +195,67 @@
                                 <h4>.srt Időzítő</h4>
                                 <small>(exe)</small>
                             </a>
-
                             <a href="egyeb/bombasz.apk" class="asset-card" download>
                                 <i class="fa-solid fa-mobile-screen"></i>
-                                <h4>Bombasz <br> Chat</h4>
+                                <h4>Bombasz Chat</h4>
                                 <small>(apk)</small>
                             </a>
-
-                            <a href="https://drive.google.com/file/d/1Ly64r0g0RMKuSsabj9iegmRgCB5U_8Ea/view?usp=sharing"
-                                target="_blank" class="asset-card" download>
+                            <a href="https://drive.google.com/file/d/1Ly64r0g0RMKuSsabj9iegmRgCB5U_8Ea/view?usp=sharing" target="_blank" class="asset-card" download>
                                 <i class="fa-solid fa-music"></i>
                                 <h4>Zene Letöltő</h4>
                                 <small>(exe)</small>
-                                <small>Készítette: Hajdu Balázs</small>
-
                             </a>
-
-
-                            <a href="https://drive.google.com/file/d/1aXx2BVygw0597AC2ylmZfGAc7DeLTxo_/view?usp=sharing"
-                                target="_blank" class="asset-card" download>
-                                <i class="fa-solid fa-mobile-screen"></i>
-                                <h4>Magik</h4>
-                                <small>(apk)</small>
-                            </a>
-
-
-
                         </div>
                     </div>
-
                 </div>
             </div>
-            <!-- <div class="assets-sub-section">
-                <h2>> BOMBASZ FIÓK</h2>
-                <div class="auth-forms-wrap" id="register-access">
-                    <article id="register" class="form-card">
-                        <h3>> REGISZTRÁCIÓ</h3>
-                        <form id="register-form" novalidate class="form">
-                            <label>Megjelenő név<input type="text" id="regDisplayName" placeholder=""></label>
-                            <label>E-mail<input type="email" id="regEmail" placeholder="" required></label>
-                            <div class="two">
-                                <label>Jelszó (min. 6 karakter)<input type="password" id="regPassword" minlength="6"
-                                        placeholder="" required></label>
-                                <label>Jelszó újra<input type="password" id="regPassword2" minlength="6"
-                                        required></label>
-                            </div>
-                            <button type="submit" id="register-btn" class="btn btn-fill">FIÓK LÉTREHOZÁSA</button>
-                            <p id="register-msg" class="form-msg" role="status" aria-live="polite"></p>
-                        </form>
-                    </article>
-                </div>
-            </div> -->
         </section>
 
         <footer class="footer">
             <div class="social-links">
-                <a href="https://x.com/barta_adi" target="_blank" title="X / Twitter">
-                    <i class="fa-brands fa-x-twitter"></i>
-                </a>
-                <a href="https://instagram.com/bartaadi" target="_blank" title="Instagram">
-                    <i class="fa-brands fa-instagram"></i>
-                </a>
-
+                <a href="https://x.com/barta_adi" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="https://instagram.com/bartaadi" target="_blank"><i class="fa-brands fa-instagram"></i></a>
             </div>
-
         </footer>
-
     </main>
 
-    <script src="script.js" type="module"></script>
-    </script>
-</body>
+    <script>
+        window.showUserUI = function(user, isAdmin) {
+            const container = document.getElementById('auth-section');
+            if (!container) return;
+            
+            const name = user.displayName || user.email.split('@')[0];
+            
+            container.innerHTML = `
+                <div class="user-profile-side">
+                    <div class="profile-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name">Szia, <b>${name}</b></span>
+                        ${isAdmin ? '<span class="admin-badge">Admin</span>' : ''}
+                        ${isAdmin ? '<a href="admin.html" class="admin-settings-btn" title="Admin Panel"><i class="fa-solid fa-gear"></i></a>' : ''}
+                    </div>
+                </div>
+                <div class="actions-side">
+                    <button class="btn-logout" onclick="logoutUser()">Kilépés</button>
+                </div>
+            `;
+        };
 
+        window.showGuestUI = function() {
+            const container = document.getElementById('auth-section');
+            if (!container) return;
+            
+            container.innerHTML = `
+                <div></div> <div class="actions-side">
+                    <a href="login.html" style="text-decoration:none">
+                        <button class="btn-logout" style="color: #fff; border-color: #fff;">Bejelentkezés</button>
+                    </a>
+                </div>
+            `;
+        };
+    </script>
+    <script src="script.js" type="module"></script>
+</body>
 </html>

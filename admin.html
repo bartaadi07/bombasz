@@ -4,580 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel • BOMBASZ</title>
-    
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="icon" href="favicon.ico">
-    
-    <!-- NE töltsd be az auth.js-t, mert saját auth logikánk van -->
-    
     <style>
-        :root {
-            --bg-dark: #000000;
-            --text-white: #FFFFFF;
-            --text-dim: #888888;
-            --border-light: #555555;
-            --border-dim: #222222;
-        }
+        :root { --bg: #000; --card: #111; --text: #fff; --dim: #888; --green: #00ff00; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; display: none; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        h1, h2 { font-family: 'Orbitron'; letter-spacing: 1px; }
+        h2 { font-size: 1rem; color: var(--dim); margin-top: 40px; border-left: 3px solid #fff; padding-left: 10px; }
+        
+        .btn { cursor: pointer; border: 1px solid #333; background: transparent; color: #fff; padding: 8px 15px; font-family: 'Orbitron'; font-size: 0.7rem; }
+        .btn:hover { background: #fff; color: #000; }
+        
+        table { width: 100%; border-collapse: collapse; background: var(--card); margin-top: 10px; border: 1px solid #222; }
+        th { text-align: left; padding: 12px; color: var(--dim); font-size: 0.7rem; text-transform: uppercase; border-bottom: 1px solid #222; }
+        td { padding: 12px; border-bottom: 1px solid #222; font-size: 0.9rem; }
+        
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 30px; height: 30px; background: #222; display: flex; align-items: center; justify-content: center; font-weight: bold; clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 70% 100%, 0% 100%); }
+        .avatar.is-admin { background: #fff; color: #000; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            min-height: 100vh;
-            background: var(--bg-dark);
-            color: var(--text-white);
-        }
-
-        .admin-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .admin-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .admin-header h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
-            font-weight: 900;
-            color: var(--text-white);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 8px;
-        }
-
-        .admin-header p {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-        }
-
-        /* Stats cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-
-        .stat-card {
-            background: var(--bg-dark);
-            border: 1px solid var(--border-dim);
-            padding: 24px;
-            text-align: center;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
-        }
-
-        .stat-card .stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--text-white);
-            margin-bottom: 4px;
-        }
-
-        .stat-card .stat-label {
-            color: var(--text-dim);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Users section */
-        .users-section {
-            background: var(--bg-dark);
-            border: 1px solid var(--border-dim);
-            padding: 24px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 16px;
-            border-bottom: 1px solid var(--border-dim);
-            padding-bottom: 16px;
-        }
-
-        .section-header h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .search-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--bg-dark);
-            padding: 10px 16px;
-            border: 1px solid var(--border-dim);
-        }
-
-        .search-box input {
-            background: transparent;
-            border: none;
-            color: var(--text-white);
-            font-family: inherit;
-            font-size: 0.85rem;
-            width: 200px;
-        }
-
-        .search-box input:focus {
-            outline: none;
-        }
-
-        .search-box input::placeholder {
-            color: var(--text-dim);
-        }
-
-        .search-box i {
-            color: var(--text-dim);
-        }
-
-        /* Users table */
-        .users-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .users-table th,
-        .users-table td {
-            text-align: left;
-            padding: 14px 12px;
-            border-bottom: 1px solid var(--border-dim);
-        }
-
-        .users-table th {
-            color: var(--text-dim);
-            font-weight: 500;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .users-table tr:hover td {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .users-table .user-email {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .users-table .user-avatar {
-            width: 32px;
-            height: 32px;
-            background: var(--text-white);
-            color: var(--bg-dark);
-            clip-path: polygon(0 0, 100% 0, 100% 75%, 75% 100%, 0 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.85rem;
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-admin {
-            background: var(--text-white);
-            color: var(--bg-dark);
-            clip-path: polygon(0 0, 100% 0, 100% 70%, 85% 100%, 0 100%);
-        }
-
-        .badge-user {
-            background: transparent;
-            border: 1px solid var(--border-dim);
-            color: var(--text-dim);
-        }
-
-        .badge-online {
-            background: #00ff00;
-            color: #000;
-        }
-
-        .badge-offline {
-            background: transparent;
-            border: 1px solid var(--border-dim);
-            color: var(--text-dim);
-        }
-
-        .users-table .date {
-            color: var(--text-dim);
-            font-size: 0.8rem;
-        }
-
-        /* Loading state */
-        .loading {
-            text-align: center;
-            padding: 80px 20px;
-            color: var(--text-dim);
-        }
-
-        .loading .spinner {
-            width: 40px;
-            height: 40px;
-            border: 2px solid var(--border-dim);
-            border-top-color: var(--text-white);
-            border-radius: 0;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 16px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Access denied */
-        .access-denied {
-            text-align: center;
-            padding: 80px 20px;
-        }
-
-        .access-denied i {
-            font-size: 3rem;
-            color: var(--text-dim);
-            margin-bottom: 20px;
-        }
-
-        .access-denied h2 {
-            font-family: 'Orbitron', sans-serif;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .access-denied p {
-            color: var(--text-dim);
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-        }
-
-        .access-denied a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 24px;
-            background: var(--text-white);
-            color: var(--bg-dark);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.2s ease;
-            clip-path: polygon(0 0, 100% 0, 100% 70%, 85% 100%, 0 100%);
-        }
-
-        .access-denied a:hover {
-            background: #ccc;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .admin-container {
-                padding: 30px 15px;
-            }
-
-            .users-table {
-                display: block;
-                overflow-x: auto;
-            }
-
-            .section-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .search-box {
-                width: 100%;
-            }
-
-            .search-box input {
-                width: 100%;
-            }
-        }
+        .status-dot { width: 8px; height: 8px; background: #333; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        .status-dot.active { background: var(--green); box-shadow: 0 0 8px var(--green); }
+        .online-text { color: var(--green); font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
     </style>
 </head>
 <body>
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1>⚙ Admin Panel</h1>
-            <p>Felhasználók kezelése</p>
-        </div>
-
-        <div id="admin-content">
-            <div class="loading">
-                <div class="spinner"></div>
-                <p>Betöltés...</p>
+    <div class="container">
+        <div class="header">
+            <h1 onclick="window.open('index.html', '_blank')" style="cursor:pointer">⚙ ADMIN PANEL</h1>
+            <div id="admin-status-info" style="font-family:'Orbitron'; font-size:0.7rem; color:var(--dim);">
+                BOMBASZ.HU RENDSZERFELÜGYELET
             </div>
         </div>
+
+        <h2>> Jelenleg Online (<span id="count">0</span>)</h2>
+        <table>
+            <thead><tr><th>Felhasználó</th><th>E-mail</th><th>Státusz</th></tr></thead>
+            <tbody id="online-list"></tbody>
+        </table>
+
+        <h2>> Adminisztrátorok Állapota</h2>
+        <table>
+            <thead><tr><th>Admin neve</th><th>E-mail</th><th>Jelenlét</th></tr></thead>
+            <tbody id="admin-list"></tbody>
+        </table>
     </div>
 
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-    import { getDatabase, ref, get, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+    import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
     const firebaseConfig = {
         apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
         authDomain: "konyv-93c63.firebaseapp.com",
         databaseURL: "https://konyv-93c63-default-rtdb.firebaseio.com",
-        projectId: "konyv-93c63",
-        storageBucket: "konyv-93c63.firebasestorage.app",
-        messagingSenderId: "308577632498",
-        appId: "1:308577632498:web:yourappid"
+        projectId: "konyv-93c63"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
+    const ADMIN_EMAILS = ["bartaadikonyv@gmail.com", "balazs.hajdu00@gmail.com", "hajdub@kkszki.hu", "adam070702@gmail.com"];
 
-    // Admin emailek
-    const ADMIN_EMAILS = [
-        "bartaadikonyv@gmail.com",
-        "balazs.hajdu00@gmail.com",
-        "adam070702@gmail.com",
-    ].map(e => e.toLowerCase().trim());
+    function monitor() {
+        onValue(ref(db, 'users'), (uSnap) => {
+            const allUsers = uSnap.val() || {};
+            onValue(ref(db, 'status'), (sSnap) => {
+                const onlineIds = sSnap.val() ? Object.keys(sSnap.val()) : [];
+                
+                // 1. ONLINE LISTA FRISSÍTÉSE
+                const onlineTable = document.getElementById('online-list');
+                document.getElementById('count').innerText = onlineIds.length;
+                onlineTable.innerHTML = "";
 
-    const isAdmin = (email) => {
-        if (!email) return false;
-        return ADMIN_EMAILS.includes(email.toLowerCase().trim());
-    };
+                onlineIds.forEach(uid => {
+                    const u = allUsers[uid] || { username: "Vendég", email: "Ismeretlen" };
+                    onlineTable.innerHTML += `
+                        <tr>
+                            <td><div class="user-info"><div class="avatar">${u.username[0].toUpperCase()}</div>${u.username}</div></td>
+                            <td>${u.email}</td>
+                            <td><span class="online-text">● Aktív</span></td>
+                        </tr>`;
+                });
 
-    let onlineUsers = {};
+                // 2. ADMIN LISTA FRISSÍTÉSE
+                const adminTable = document.getElementById('admin-list');
+                adminTable.innerHTML = "";
 
-    function renderUserRow(user, isOnline) {
-        const initial = user.email?.charAt(0).toUpperCase() || '?';
-        const userIsAdmin = isAdmin(user.email);
+                ADMIN_EMAILS.forEach(adminEmail => {
+                    // Megkeressük az admint az összes regisztrált user között az email alapján
+                    const adminUserEntry = Object.entries(allUsers).find(([id, data]) => data.email?.toLowerCase() === adminEmail.toLowerCase());
+                    const adminName = adminUserEntry ? adminUserEntry[1].username : adminEmail.split('@')[0];
+                    const isOnline = adminUserEntry ? onlineIds.includes(adminUserEntry[0]) : false;
 
-        return `
-            <tr>
-                <td>
-                    <div class="user-email">
-                        <div class="user-avatar">${initial}</div>
-                        <span>${user.email || 'Ismeretlen'}</span>
-                    </div>
-                </td>
-                <td>
-                    <span class="badge ${userIsAdmin ? 'badge-admin' : 'badge-user'}">
-                        ${userIsAdmin ? 'Admin' : 'User'}
-                    </span>
-                </td>
-                <td>
-                    <span class="badge ${isOnline ? 'badge-online' : 'badge-offline'}">
-                        ${isOnline ? 'Online' : 'Offline'}
-                    </span>
-                </td>
-            </tr>
-        `;
-    }
-
-    async function loadUsers(contentDiv) {
-        try {
-            // Felhasználók betöltése a progress adatokból (akik használták a vids.html-t)
-            const progressRef = ref(db, 'progress');
-            const statusRef = ref(db, 'status');
-            
-            // Online státusz figyelése
-            onValue(statusRef, (snapshot) => {
-                onlineUsers = snapshot.val() || {};
-                updateUserList();
-            });
-
-            // Progress adatok (user ID-k)
-            const progressSnap = await get(progressRef);
-            const progressData = progressSnap.val() || {};
-            
-            // Auth-ból kinyerjük a felhasználókat
-            // Sajnos a client-side SDK nem tudja listázni az összes usert
-            // Ezért a progress alapján építjük fel a listát
-            
-            const users = [];
-            
-            // A status-ból is szedjük ki a usereket
-            const statusSnap = await get(statusRef);
-            const statusData = statusSnap.val() || {};
-            
-            // Kombináljuk a progress és status user ID-kat
-            const allUserIds = new Set([
-                ...Object.keys(progressData),
-                ...Object.keys(statusData)
-            ]);
-
-            // Minden user ID-hoz megpróbáljuk kinyerni az email-t
-            // (Ez a Realtime Database-ben tárolva lehet, vagy a progress-ben)
-            
-            allUserIds.forEach(uid => {
-                users.push({
-                    uid: uid,
-                    email: `User ${uid.substring(0, 8)}...`, // Alapértelmezett
-                    hasProgress: !!progressData[uid]
+                    adminTable.innerHTML += `
+                        <tr>
+                            <td><div class="user-info"><div class="avatar is-admin">A</div>${adminName}</div></td>
+                            <td>${adminEmail}</td>
+                            <td>
+                                <span class="status-dot ${isOnline ? 'active' : ''}"></span>
+                                <span style="font-size:0.8rem; color:${isOnline ? 'var(--green)' : '#444'}">
+                                    ${isOnline ? 'ONLINE' : 'OFFLINE'}
+                                </span>
+                            </td>
+                        </tr>`;
                 });
             });
-
-            window.allUsers = users;
-            window.onlineUsers = onlineUsers;
-            
-            updateUserList();
-            
-        } catch (error) {
-            console.error("Hiba:", error);
-            contentDiv.innerHTML = `
-                <div class="access-denied">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <h2>Hiba történt</h2>
-                    <p>${error.message}</p>
-                    <a href="index.html">Vissza</a>
-                </div>
-            `;
-        }
+        });
     }
 
-    function updateUserList() {
-        const contentDiv = document.getElementById('admin-content');
-        const users = window.allUsers || [];
-        const online = window.onlineUsers || {};
-        
-        const onlineCount = Object.keys(online).length;
-        const totalUsers = users.length;
-        const adminCount = users.filter(u => isAdmin(u.email)).length;
-
-        contentDiv.innerHTML = `
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value">${onlineCount}</div>
-                    <div class="stat-label">Online most</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${totalUsers}</div>
-                    <div class="stat-label">Összes user</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${ADMIN_EMAILS.length}</div>
-                    <div class="stat-label">Admin</div>
-                </div>
-            </div>
-
-            <div class="users-section">
-                <div class="section-header">
-                    <h2>> Online felhasználók</h2>
-                </div>
-
-                <table class="users-table">
-                    <thead>
-                        <tr>
-                            <th>User ID</th>
-                            <th>Szerepkör</th>
-                            <th>Státusz</th>
-                        </tr>
-                    </thead>
-                    <tbody id="users-tbody">
-                        ${Object.keys(online).length === 0 
-                            ? '<tr><td colspan="3" style="text-align:center; color:#666;">Nincs online felhasználó</td></tr>'
-                            : Object.keys(online).map(uid => `
-                                <tr>
-                                    <td>
-                                        <div class="user-email">
-                                            <div class="user-avatar">${uid.charAt(0).toUpperCase()}</div>
-                                            <span>${uid.substring(0, 12)}...</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-user">User</span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-online">Online</span>
-                                    </td>
-                                </tr>
-                            `).join('')
-                        }
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="users-section" style="margin-top: 20px;">
-                <div class="section-header">
-                    <h2>> Admin lista</h2>
-                </div>
-                <table class="users-table">
-                    <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>Szerepkör</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${ADMIN_EMAILS.map(email => `
-                            <tr>
-                                <td>
-                                    <div class="user-email">
-                                        <div class="user-avatar">${email.charAt(0).toUpperCase()}</div>
-                                        <span>${email}</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="badge badge-admin">Admin</span>
-                                </td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            </div>
-        `;
-    }
-
-    onAuthStateChanged(auth, async (user) => {
-        const contentDiv = document.getElementById('admin-content');
-
-        if (!user) {
-            contentDiv.innerHTML = `
-                <div class="access-denied">
-                    <i class="fas fa-lock"></i>
-                    <h2>Bejelentkezés szükséges</h2>
-                    <p>Jelentkezz be az admin panel használatához.</p>
-                    <a href="login.html">Bejelentkezés</a>
-                </div>
-            `;
-            return;
+    onAuthStateChanged(auth, (user) => {
+        if (user && ADMIN_EMAILS.includes(user.email.toLowerCase())) {
+            document.body.style.display = "block";
+            monitor();
+        } else {
+            window.location.href = "index.html";
         }
-
-        if (!isAdmin(user.email)) {
-            contentDiv.innerHTML = `
-                <div class="access-denied">
-                    <i class="fas fa-ban"></i>
-                    <h2>Hozzáférés megtagadva</h2>
-                    <p>Ez az oldal csak adminoknak elérhető.</p>
-                    <p style="color: #555; font-size: 0.8rem;">Bejelentkezve: ${user.email}</p>
-                    <a href="index.html">Vissza</a>
-                </div>
-            `;
-            return;
-        }
-
-        // Admin - betöltjük az adatokat
-        await loadUsers(contentDiv);
     });
 </script>
 </body>
