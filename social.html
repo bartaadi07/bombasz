@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BOMBASZ - Social Network</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
+
+    <style>
+        :root { --neon-white: #ffffff; --glass: rgba(255, 255, 255, 0.03); --border: rgba(255, 255, 255, 0.1); }
+        body { margin: 0; background-color: #050505; color: #fff; font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+        
+        /* HEADER */
+        .main-header { padding: 15px 5%; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
+        .user-profile-side { display: flex; align-items: center; gap: 10px; }
+        .profile-icon { width: 30px; height: 30px; background: #fff; color: #000; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: bold; font-family: 'Orbitron'; font-size: 0.8rem; }
+
+        /* TOAST (BLOB) ÉRTESÍTÉS STÍLUS */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-family: 'Orbitron';
+            font-size: 0.7rem;
+            font-weight: 900;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: slideUp 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+        /* LAYOUT */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .social-wrapper { display: grid; grid-template-columns: 350px 1fr; gap: 20px; height: 78vh; }
+        
+        /* SIDEBAR */
+        .social-sidebar { background: var(--glass); border: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; overflow-y: auto; }
+        .search-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border); padding: 12px; color: #fff; font-family: 'Orbitron'; outline: none; box-sizing: border-box; margin-bottom: 10px; font-size: 0.8rem; }
+        
+        .section-title { font-family: 'Orbitron'; font-size: 0.65rem; color: #666; margin: 25px 0 10px; text-transform: uppercase; letter-spacing: 2px; display: flex; align-items: center; justify-content: space-between; }
+        .notif-badge { background: #ff4b4b; color: white; padding: 2px 7px; border-radius: 10px; font-size: 0.6rem; font-weight: bold; }
+
+        .user-card { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); margin-bottom: 6px; border-radius: 2px; transition: 0.2s; }
+        .user-card:hover { background: rgba(255,255,255,0.06); }
+
+        .btn-action { background: none; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 5px 10px; font-family: 'Orbitron'; font-size: 0.55rem; cursor: pointer; }
+        .btn-action:hover { background: #fff; color: #000; }
+        .btn-accept { border-color: #4bff4b; color: #4bff4b; }
+        .btn-accept:hover { background: #4bff4b; color: #000; }
+
+        /* CHAT BOX */
+        .chat-container { background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border); display: flex; flex-direction: column; }
+        #chat-target-name { padding: 15px 20px; background: rgba(255,255,255,0.02); font-family: 'Orbitron'; font-size: 0.8rem; border-bottom: 1px solid var(--border); letter-spacing: 1px; }
+        
+        #chat-messages { flex-grow: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .message { max-width: 65%; padding: 12px 16px; font-size: 0.85rem; line-height: 1.4; border-radius: 4px; }
+        .message.sent { align-self: flex-end; background: #fff; color: #000; font-weight: 500; }
+        .message.received { align-self: flex-start; background: rgba(255,255,255,0.08); border: 1px solid var(--border); color: #fff; }
+
+        .chat-input-wrapper { display: flex; padding: 15px; background: rgba(0,0,0,0.3); border-top: 1px solid var(--border); }
+        #msg-input { flex-grow: 1; background: none; border: none; color: #fff; padding: 10px; outline: none; font-family: 'Poppins'; }
+        .btn-send { background: #fff; border: none; padding: 10px 25px; font-family: 'Orbitron'; font-weight: 900; font-size: 0.7rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="toast-container"></div>
+
+    <header class="main-header">
+        <div id="auth-section" style="display:flex; justify-content:space-between; width:100%; align-items:center;">
+            <div class="user-profile-side" id="header-user-info">
+                <div class="profile-icon">?</div>
+                <span style="font-size:0.8rem">Csatlakozás...</span>
+            </div>
+            <button onclick="location.href='index.html'" class="btn-action">FŐOLDAL</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="social-wrapper">
+            <aside class="social-sidebar">
+                <input type="text" id="user-search" class="search-input" placeholder="KERESÉS...">
+                <div id="search-results"></div>
+
+                <div class="section-title">Bejövő felkérések <span id="req-count" class="notif-badge" style="display:none">0</span></div>
+                <div id="requests-list"></div>
+
+                <div class="section-title">Barátok</div>
+                <div id="friends-list"></div>
+            </aside>
+
+            <section class="chat-container">
+                <div id="chat-target-name">VÁLASSZ EGY BARÁTOT</div>
+                <div id="chat-messages"></div>
+                <div class="chat-input-wrapper">
+                    <input type="text" id="msg-input" placeholder="Üzenet írása..." autocomplete="off">
+                    <button id="send-btn" class="btn-send">KÜLDÉS</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, set, push, onValue, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
+            authDomain: "konyv-93c63.firebaseapp.com",
+            databaseURL: "https://konyv-93c63-default-rtdb.firebaseio.com",
+            projectId: "konyv-93c63",
+            storageBucket: "konyv-93c63.firebasestorage.app",
+            messagingSenderId: "308577632498",
+            appId: "1:308577632498:web:yourappid"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        let currentUid, currentUsername, activeChatId;
+
+        // --- BLOB (TOAST) FÜGGVÉNY ---
+        window.showToast = function(msg) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${msg}`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUid = user.uid;
+                currentUsername = user.displayName || user.email.split('@')[0];
+                document.getElementById('header-user-info').innerHTML = `
+                    <div class="profile-icon">${currentUsername.charAt(0).toUpperCase()}</div>
+                    <span style="font-size:0.8rem">Szia, <b>${currentUsername}</b></span>
+                `;
+                loadRequests();
+                loadFriends();
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // 1. KERESÉS ÉS JELÖLÉS
+        document.getElementById('user-search').addEventListener('input', (e) => {
+            const val = e.target.value.trim().toLowerCase();
+            if (val.length < 2) { document.getElementById('search-results').innerHTML = ''; return; }
+
+            onValue(ref(db, 'users'), (snapshot) => {
+                const users = snapshot.val();
+                let html = '';
+                for (let uid in users) {
+                    const name = users[uid].username || users[uid].displayName || users[uid].email.split('@')[0];
+                    if (uid !== currentUid && name.toLowerCase().includes(val)) {
+                        html += `<div class="user-card"><span>${name}</span><button class="btn-action" onclick="sendRequest('${uid}', '${name}')">JELÖLÉS</button></div>`;
+                    }
+                }
+                document.getElementById('search-results').innerHTML = html;
+            }, { onlyOnce: true });
+        });
+
+        window.sendRequest = function(targetUid, targetName) {
+            set(ref(db, `friend_requests/${targetUid}/${currentUid}`), {
+                fromName: currentUsername,
+                timestamp: serverTimestamp()
+            }).then(() => {
+                showToast(`FELKÉRÉS ELKÜLDVE: ${targetName.toUpperCase()}`);
+                document.getElementById('user-search').value = '';
+                document.getElementById('search-results').innerHTML = '';
+            });
+        };
+
+        // 2. KÉRÉSEK ÉS KÉTOLDALÚ ELFOGADÁS
+        function loadRequests() {
+            onValue(ref(db, `friend_requests/${currentUid}`), (snapshot) => {
+                const reqs = snapshot.val();
+                const container = document.getElementById('requests-list');
+                const badge = document.getElementById('req-count');
+                container.innerHTML = '';
+                if (!reqs) { badge.style.display = 'none'; return; }
+                badge.innerText = Object.keys(reqs).length;
+                badge.style.display = 'inline';
+                for (let senderUid in reqs) {
+                    const name = reqs[senderUid].fromName;
+                    container.innerHTML += `
+                        <div class="user-card">
+                            <span style="font-size:0.75rem">${name}</span>
+                            <button class="btn-action btn-accept" onclick="acceptFriend('${senderUid}', '${name}')">ELFOGAD</button>
+                        </div>`;
+                }
+            });
+        }
+
+        window.acceptFriend = function(senderUid, senderName) {
+            set(ref(db, `friends/${currentUid}/${senderUid}`), { username: senderName });
+            set(ref(db, `friends/${senderUid}/${currentUid}`), { username: currentUsername });
+            remove(ref(db, `friend_requests/${currentUid}/${senderUid}`));
+            showToast(`MOSTRÓL BARÁTOK VAGYTOK: ${senderName.toUpperCase()}`);
+        };
+
+        // 3. BARÁTOK ÉS SZIMMETRIKUS CHAT
+        function loadFriends() {
+            onValue(ref(db, `friends/${currentUid}`), (snapshot) => {
+                const friends = snapshot.val();
+                const container = document.getElementById('friends-list');
+                container.innerHTML = '';
+                if (!friends) return;
+                for (let uid in friends) {
+                    container.innerHTML += `
+                        <div class="user-card" style="cursor:pointer" onclick="openChat('${uid}', '${friends[uid].username}')">
+                            <b>${friends[uid].username}</b>
+                        </div>`;
+                }
+            });
+        }
+
+        window.openChat = function(friendUid, friendName) {
+            document.getElementById('chat-target-name').innerText = `CHAT: ${friendName.toUpperCase()}`;
+            const ids = [currentUid, friendUid].sort();
+            activeChatId = ids[0] + "_" + ids[1];
+            onValue(ref(db, `chats/${activeChatId}`), (snapshot) => {
+                const messages = snapshot.val();
+                const container = document.getElementById('chat-messages');
+                container.innerHTML = '';
+                if (!messages) return;
+                for (let id in messages) {
+                    const side = messages[id].senderId === currentUid ? 'sent' : 'received';
+                    container.innerHTML += `<div class="message ${side}">${messages[id].text}</div>`;
+                }
+                container.scrollTop = container.scrollHeight;
+            });
+        };
+
+        const sendMessage = () => {
+            const input = document.getElementById('msg-input');
+            if (!input.value.trim() || !activeChatId) return;
+            push(ref(db, `chats/${activeChatId}`), {
+                senderId: currentUid,
+                text: input.value,
+                timestamp: serverTimestamp()
+            });
+            input.value = '';
+        };
+
+        document.getElementById('send-btn').addEventListener('click', sendMessage);
+        document.getElementById('msg-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+    </script>
+</body>
+</html>

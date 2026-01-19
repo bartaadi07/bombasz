@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="hu">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,7 +11,9 @@
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Orbitron:wght@700;900&display=swap"
+        rel="stylesheet" />
 
     <style>
         /* --- REAL-TIME HEADER --- */
@@ -59,7 +62,7 @@
             font-family: 'Orbitron';
             /* Szögletes vágás (Admin Panel stílus) */
             clip-path: polygon(0% 0%, 100% 0%, 100% 70%, 70% 100%, 0% 100%);
-            box-shadow: 0 0 10px rgba(255,255,255,0.2);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
 
         .user-details {
@@ -111,8 +114,8 @@
 
         .btn-logout {
             background: transparent;
-            color: rgba(255,255,255,0.5);
-            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             padding: 6px 16px;
             font-family: 'Orbitron';
             font-size: 0.65rem;
@@ -127,7 +130,7 @@
             background: #fff;
             color: #000;
             border-color: #fff;
-            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
         .container {
@@ -142,7 +145,20 @@
             letter-spacing: 2px;
             animation: pulse 1.5s infinite;
         }
-        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 1; } 100% { opacity: 0.3; } }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.3;
+            }
+        }
     </style>
 </head>
 
@@ -164,9 +180,13 @@
                     <div class="assets-sub-section">
                         <h2>> ALOLDALAK</h2>
                         <div class="assets-grid">
+                            <a href="https://www.bombasz.hu/social" target="_blank" class="asset-card external">
+                                <i class="fa-solid fa-comments"></i>
+                                <h4>Social</h4>
+                            </a>
                             <a href="https://www.bombasz.hu/chat" target="_blank" class="asset-card external">
                                 <i class="fa-solid fa-comments"></i>
-                                <h4>Chat</h4>
+                                <h4>Group chat</h4>
                             </a>
                             <a href="https://www.bombasz.hu/chat2" target="_blank" class="asset-card external">
                                 <i class="fa-solid fa-terminal"></i>
@@ -202,7 +222,7 @@
                             </a>
                         </div>
                     </div>
-                    
+
                     <div class="assets-sub-section">
                         <h2>> LETÖLTÉSEK</h2>
                         <div class="assets-grid">
@@ -221,7 +241,8 @@
                                 <h4>Bombasz Chat</h4>
                                 <small>(apk)</small>
                             </a>
-                            <a href="https://drive.google.com/file/d/1Ly64r0g0RMKuSsabj9iegmRgCB5U_8Ea/view?usp=sharing" target="_blank" class="asset-card" download>
+                            <a href="https://drive.google.com/file/d/1Ly64r0g0RMKuSsabj9iegmRgCB5U_8Ea/view?usp=sharing"
+                                target="_blank" class="asset-card" download>
                                 <i class="fa-solid fa-music"></i>
                                 <h4>Zene Letöltő</h4>
                                 <small>(exe)</small>
@@ -242,13 +263,13 @@
 
     <script>
         // REAL-TIME UI FRISSÍTÉS
-        window.showUserUI = function(user, isAdmin) {
+        window.showUserUI = function (user, isAdmin) {
             const container = document.getElementById('auth-section');
             if (!container) return;
-            
+
             const name = user.displayName || user.email.split('@')[0];
             const firstLetter = name.charAt(0).toUpperCase();
-            
+
             // Itt a real-time váltás kulcsa: a HTML-t azonnal frissítjük az új adatokkal
             container.innerHTML = `
                 <div class="user-profile-side">
@@ -267,10 +288,10 @@
             `;
         };
 
-        window.showGuestUI = function() {
+        window.showGuestUI = function () {
             const container = document.getElementById('auth-section');
             if (!container) return;
-            
+
             container.innerHTML = `
                 <div></div>
                 <div class="actions-side">
@@ -283,4 +304,5 @@
     </script>
     <script src="script.js" type="module"></script>
 </body>
+
 </html>
