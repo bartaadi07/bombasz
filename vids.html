@@ -35,9 +35,7 @@
             overflow-x: hidden;
         }
 
-        body * {
-            cursor: default !important;
-        }
+
 
         .progress-container {
             width: 100%;
@@ -1226,6 +1224,892 @@
             text-align: left;
             /* Így jobban néz ki a kép mellett */
         }
+
+
+
+
+
+
+        .video-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    text-align: left;
+    background: rgba(10, 10, 10, 0.7);
+    border-left: 3px solid transparent; /* Neon csík helye */
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+.video-card:hover {
+    background: rgba(40, 40, 40, 0.9);
+    border-left: 3px solid #4cff7f; /* Aktív neon zöld sáv */
+    transform: translateX(5px); /* Kicsit "beugrik" a képbe */
+}
+
+.video-card.active {
+    background: rgba(76, 255, 127, 0.1);
+    border-left: 3px solid #4cff7f;
+    box-shadow: inset 5px 0 15px rgba(76, 255, 127, 0.15);
+}
+.continue-chip {
+    /* ... marad az alap ... */
+    background: #0d0d0d;
+    border: 1px solid #222;
+    position: relative;
+}
+
+/* Kis dekorációs sarok a chipre */
+.continue-chip::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background: linear-gradient(45deg, transparent 50%, #4cff7f 50%);
+}
+
+.continue-chip:hover {
+    border-color: #4cff7f;
+    box-shadow: 0 0 10px rgba(76, 255, 127, 0.2);
+}
+.theater-mode-on .video-frame-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.1) 50%
+    );
+    background-size: 100% 4px;
+    z-index: 5;
+    pointer-events: none; /* Ne zavarja a videóra kattintást */
+    opacity: 0.5;
+}
+/* --- INTERACTIVE MODERN CARDS --- */
+
+:root {
+    --accent: #00f3ff;
+    --card-width: 200px;
+    --card-ratio: 2 / 3;
+    --card-radius: 12px;
+}
+
+.main-page {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+/* 1. KÁRTYA ALAPOK */
+.series-card {
+    width: var(--card-width) !important;
+    aspect-ratio: var(--card-ratio) !important;
+    height: auto !important;
+    background: #000 !important;
+    border-radius: var(--card-radius) !important;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.series-card img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+/* 2. CÍM PANEL - ALAPHELYZETBEN REJTVE (MONITORON) */
+.series-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px 10px 15px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 30%, transparent);
+    
+    /* Rejtés monitoron */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.35s ease-out;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.series-title span {
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+    display: block;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+/* 3. HOVER EFFEKT (MONITORON) */
+@media (min-width: 769px) {
+    .series-card:hover {
+        transform: scale(1.06);
+        border-color: var(--accent) !important;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6);
+        z-index: 10;
+    }
+
+    .series-card:hover img {
+        transform: scale(1.1);
+        filter: brightness(0.7); /* Kicsit besötétítjük a képet, hogy a fehér cím jobban látszódjon */
+    }
+
+    .series-card:hover .series-title {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 4. MOBIL NÉZET - CÍMEK FIXEN OTT VANNAK */
+@media (max-width: 768px) {
+    .main-page {
+        gap: 15px;
+        padding: 20px 10px;
+    }
+
+    .series-card {
+        width: calc(50% - 15px) !important; /* 2 oszlopos elrendezés */
+        border-radius: 8px !important;
+    }
+
+    .series-title {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        padding: 20px 8px 8px !important;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 50%, transparent) !important;
+    }
+
+    .series-title span {
+        font-size: 0.85rem !important;
+    }
+}
+/* --- VÉGLEGES MODERN STREAMING UI (ALL-IN-ONE) --- */
+
+:root {
+    --accent: #00f3ff;
+    --card-width: 200px;
+    --card-ratio: 2 / 3;
+    --card-radius: 12px;
+    --bg-dark: #050505;
+    --glass-bg: rgba(10, 10, 10, 0.7);
+}
+
+/* 1. DINAMIKUS HÁTTÉR ÉS ALAPOK */
+body {
+    background-color: var(--bg-dark);
+    /* Nagyon halvány, mozgó fények érzete a háttérben */
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 243, 255, 0.03) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(255, 0, 85, 0.03) 0px, transparent 50%);
+    background-attachment: fixed;
+    margin: 0;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: white;
+}
+
+/* 2. GLASSMORPHISM FEJLÉC */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    padding: 15px 40px;
+}
+
+/* 3. FŐ RÁCSSZERKEZET */
+.main-page {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+/* 4. PRÉMIUM KÁRTYA DESIGN */
+.series-card {
+    width: var(--card-width) !important;
+    aspect-ratio: var(--card-ratio) !important;
+    height: auto !important;
+    background: #111 !important;
+    border-radius: var(--card-radius) !important;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Torzításmentes képkezelés */
+.series-card img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+/* Play ikon (hoverre) */
+.series-card::after {
+    content: '▶';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    font-size: 40px;
+    color: white;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 3;
+}
+
+/* 5. CÍM PANEL (Monitoron alapból rejtve) */
+.series-title {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%;
+    padding: 35px 10px 15px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 40%, transparent);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.35s ease-out;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.series-title span {
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+    display: block;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 6. MONITOR HOVER EFFEKTEK */
+@media (min-width: 769px) {
+    .series-card:hover {
+        transform: scale(1.06) translateY(-5px);
+        border-color: var(--accent) !important;
+        box-shadow: 0 15px 35px rgba(0, 243, 255, 0.15);
+        z-index: 10;
+    }
+
+    .series-card:hover img {
+        transform: scale(1.1);
+        filter: brightness(0.6);
+    }
+
+    .series-card:hover .series-title {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .series-card:hover::after {
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* 7. MOBIL NÉZET (Fix címek és 2 oszlop) */
+@media (max-width: 768px) {
+    .main-page {
+        gap: 15px;
+        padding: 20px 10px;
+    }
+
+    .series-card {
+        width: calc(50% - 15px) !important;
+        border-radius: 8px !important;
+    }
+
+    .series-title {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+        padding: 25px 8px 8px !important;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 50%, transparent) !important;
+    }
+
+    .series-title span {
+        font-size: 0.85rem !important;
+    }
+}
+
+/* 8. MODERN SIDEBAR FINOMÍTÁS */
+.sidebar {
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 15px !important;
+}
+
+.video-card {
+    transition: 0.3s ease;
+    border-radius: 8px !important;
+    margin-bottom: 4px;
+}
+
+.video-card.active {
+    background: rgba(0, 243, 255, 0.1) !important;
+    color: var(--accent) !important;
+}
+/* --- MINIMALIST GREY EPISODE LIST --- */
+
+/* Sidebar háttér finomítása */
+.sidebar {
+    background: rgba(15, 15, 15, 0.8) !important;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 16px !important;
+}
+
+/* Epizód kártyák - Neon helyett szürke skála */
+.video-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    border-radius: 8px !important;
+    color: #999 !important; /* Alapértelmezett középszürke szöveg */
+    transition: all 0.2s ease;
+    cursor: pointer;
+    clip-path: none !important; /* Töröljük a vágott sarkokat */
+    text-align: left;
+}
+
+/* Hover állapot - Világosabb szürke */
+.video-card:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #fff !important;
+    padding-left: 18px !important; /* Kis mozgás az interakcióhoz */
+}
+
+/* Aktív epizód - Fehér/Világosszürke kiemelés */
+.video-card.active {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    font-weight: 600;
+}
+
+/* Az epizódok címei és számai a listában */
+.video-card span {
+    font-size: 0.9rem;
+    letter-spacing: 0;
+    text-transform: none !important; /* Ne legyen minden nagybetűs */
+    text-shadow: none !important; /* Töröljük a neon ragyogást */
+}
+
+/* Sidebar címe (pl. "Epizódok") */
+.sidebar h2 {
+    color: #eee !important;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+    text-shadow: none !important;
+}
+
+/* Következő rész gomb - Monokróm stílus */
+#nextEpisodeBtn {
+    background: #222 !important;
+    color: #eee !important;
+    border: 1px solid #333 !important;
+    border-radius: 8px !important;
+    padding: 12px 20px !important;
+    font-weight: 500;
+    text-transform: none;
+    transition: 0.3s;
+    clip-path: none !important;
+}
+
+#nextEpisodeBtn:hover {
+    background: #eee !important;
+    color: #000 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+/* --- ULTRALIGHT MINIMALIST CARDS --- */
+
+:root {
+    --card-width: 200px;
+    --card-ratio: 2 / 3;
+    --card-radius: 10px;
+}
+
+/* 1. KÁRTYA ALAPOK - Nincs alapkeret */
+.series-card {
+    width: var(--card-width) !important;
+    aspect-ratio: var(--card-ratio) !important;
+    height: auto !important;
+    background: #111 !important;
+    border-radius: var(--card-radius) !important;
+    overflow: hidden;
+    position: relative;
+    border: none !important; /* Keret törlése */
+    transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Lágyabb animáció */
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.series-card img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 2. HOVER EFFEKT - Csak emelkedés és finom árnyék */
+.series-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); /* Erősebb árnyék, hogy kiemelkedjen */
+    border: none !important; /* Itt sem lesz keret */
+}
+
+.series-card:hover img {
+    transform: scale(1.08);
+    filter: brightness(0.85); /* Enyhe sötétítés, hogy a cím olvasható legyen */
+}
+
+/* 3. PLAY BUTTON ELTÁVOLÍTÁSA */
+.series-card::after {
+    display: none !important; /* Töröljük a korábbi Play ikont */
+}
+
+/* 4. CÍM PANEL - Tisztán szürke/fehér skála */
+.series-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px 10px 15px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 20%, transparent);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.series-title span {
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    color: #ffffff !important;
+    text-align: center !important;
+    display: block;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Hoverre megjelenő cím */
+.series-card:hover .series-title {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 5. MOBIL NÉZET - Egyszerűsítve */
+@media (max-width: 768px) {
+    .series-card {
+        width: calc(50% - 15px) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+    
+    .series-card:hover {
+        transform: none; /* Mobilon ne mozogjon */
+    }
+}
+/* --- THE ULTIMATE TEXT-BREAK FIX --- */
+
+/* 1. A tároló doboz táguljon a szöveghez */
+#app .series-title {
+    display: block !important; /* A flex néha akadályozza a törést, a block biztosabb */
+    height: auto !important;   /* Engedjük tágulni felfelé */
+    min-height: 80px !important; 
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease !important;
+    padding: 40px 10px 15px !important;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 40%, transparent) !important;
+}
+
+/* 2. A szöveg kényszerítése a törésre */
+#app .series-title span {
+    display: block !important;    /* Legyen külön blokk */
+    white-space: normal !important; /* KÖTELEZŐ TÖRÉS */
+    overflow: visible !important;   /* Semmit ne rejtsen el */
+    text-overflow: clip !important; /* Ne legyen három pont */
+    
+    /* Betűk és sorközök */
+    font-size: 0.95rem !important;
+    line-height: 1.3 !important;    /* Kényelmes távolság a sorok közt */
+    text-align: center !important;
+    color: #ffffff !important;
+    
+    /* Biztosíték: ne legyen sehol tiltás */
+    max-width: 100% !important;
+    position: relative !important;
+}
+
+/* 3. Hoverre jelenjen meg minden */
+#app .series-card:hover .series-title {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+/* 1. EPIZÓD KÁRTYA TELJES RESET */
+#app .video-card {
+    /* Minden korábbi háttér-beállítást (gradiens, kép) törlünk */
+    background-image: none !important;
+    background-color: #1a1a1a !important; /* Fix sötétszürke */
+    
+    /* Minden korábbi keret és ragyogás törlése */
+    border: 1px solid #333 !important;
+    box-shadow: none !important;
+    clip-path: none !important;
+    
+    /* Szöveg és elrendezés */
+    color: #eee !important;
+    display: block !important; /* Hogy a cím tudjon törni */
+    height: auto !important;
+    padding: 12px 15px !important;
+    margin-bottom: 8px !important;
+    border-radius: 8px !important;
+}
+
+/* 2. SZÖVEG TÖRÉSE (Hogy ne lógjon ki a hosszú cím) */
+#app .video-card span {
+    display: block !important;
+    white-space: normal !important; /* Ez kényszeríti a több sort */
+    word-wrap: break-word !important;
+    line-height: 1.4 !important;
+    text-shadow: none !important;
+    color: inherit !important;
+}
+
+/* 3. HOVER ÁLLAPOT (Csak világosabb szürke) */
+#app .video-card:hover {
+    background-color: #252525 !important;
+    border-color: #444 !important;
+    transform: none !important; /* Ne ugráljon cyberpunkosan */
+}
+
+/* 4. AKTÍV RÉSZ (Kiemelt szürke) */
+#app .video-card.active {
+    background-color: #333 !important;
+    border-color: #666 !important;
+    color: #fff !important;
+}
+/* --- A VIDEÓ SZÍNES, A KÖRNYEZET TISZTA --- */
+
+/* 1. A fő videólejátszó védelme (Mindig színes!) */
+#main-vid, .video-frame-container iframe {
+    filter: none !important;
+    -webkit-filter: none !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important;
+}
+
+/* 2. A háttérfény (Ambilight) szigorú színtelenítése */
+#ambilightGlowContainer iframe {
+    filter: grayscale(100%) brightness(0.2) blur(50px) !important;
+    opacity: 0.5 !important;
+}
+
+/* 3. Minden gomb és kártya tiszta szürke, zöld nélkül */
+.video-card, .series-card, #back-btn, #theaterBtn, #nextEpisodeBtn {
+    background: #1a1a1a !important;
+    border: 1px solid #333 !important;
+    color: #eee !important;
+    box-shadow: none !important; /* Itt öltük meg a zöld ragyogást */
+    text-shadow: none !important;
+    clip-path: none !important;
+}
+
+/* 4. Aktív és Hover állapotok - Zöld helyett fehér/világosszürke */
+.video-card.active, .video-card:hover {
+    background: #333 !important;
+    border-color: #666 !important;
+    color: #fff !important;
+}
+
+/* 5. A címek több sorba törése */
+.series-title span, .video-card-title span {
+    white-space: normal !important;
+    display: block !important;
+    line-height: 1.2 !important;
+}
+/* KIZÁRÓLAG A VISSZA GOMB MÓDOSÍTÁSA */
+#back-btn, #home-btn {
+    /* Alapstílus: Sötétszürke, neon nélkül */
+    background-color: #222 !important;
+    background-image: none !important;
+    color: #eee !important;
+    border: 1px solid #333 !important;
+    border-radius: 8px !important;
+    
+    /* Cyberpunk elemek törlése */
+    clip-path: none !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    text-transform: none !important; /* Ne legyen kényszerített nagybetű */
+    
+    /* Méretezés és igazítás */
+    padding: 10px 20px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+/* Hover állapot: Világos kiemelés */
+#back-btn:hover, #home-btn:hover {
+    background-color: #eee !important;
+    color: #000 !important;
+    border-color: #fff !important;
+    transform: translateY(-2px);
+}
+/* HOME GOMB: CYBERPUNK BETŰSTÍLUS, SEMMI MÁS */
+#home-btn {
+    /* Alapok törlése */
+    background: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    clip-path: none !important;
+    text-shadow: none !important;
+    
+    /* Cyberpunk szöveg stílus */
+    color: #ffffff !important;
+    font-family: 'Orbitron', 'Rajdhani', 'Roboto Mono', 'Courier New', monospace !important;
+    font-weight: 900 !important;      /* Extra vastag */
+    font-size: 1.3rem !important;      /* Kicsit nagyobb, hogy érvényesüljön a stílus */
+    letter-spacing: 3px !important;    /* Széthúzott betűk a sci-fi hatáshoz */
+    text-transform: uppercase !important;
+    
+    /* Fix állapot, hover nélkül */
+    cursor: pointer !important;
+    transition: none !important;
+    padding: 10px 0 !important;
+}
+
+/* Hover tiltása - maradjon minden ugyanúgy */
+#home-btn:hover {
+    background: transparent !important;
+    color: #ffffff !important;
+    transform: none !important;
+    opacity: 1 !important;
+}
+/* --- HEADER TISZTÍTÁS: NINCS HOMÁLYOSÍTÁS, NINCS KERET --- */
+
+header, .header, #header {
+    /* Minden homályosítás (blur) eltávolítása */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+    
+    /* Keretek és hátterek pucolása */
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Home gomb fixálása (Vastag, Cyberpunk, semmi extra) */
+#home-btn {
+    background: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-family: 'Orbitron', 'Rajdhani', 'Roboto Mono', monospace !important;
+    font-weight: 900 !important;
+    letter-spacing: 3px !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+}
+
+#home-btn:hover {
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+/* AMOLED alap */
+body {
+    background-color: #000000 !important;
+}
+/* --- KÁRTYA ÉS HEADER KERETEK TELJES ELTÜNTETÉSE --- */
+
+/* 1. Kártyák (sorozat és epizód) keretének és hátterének pucolása */
+.series-card, .video-card, .card {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+/* 2. Header homályosítás és keret stop */
+header, .header, #header {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* 3. Home gomb (Marad a vastag Cyberpunk szöveg) */
+#home-btn {
+    background: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-family: 'Orbitron', 'Rajdhani', 'Roboto Mono', monospace !important;
+    font-weight: 900 !important;
+    letter-spacing: 3px !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+}
+
+#home-btn:hover {
+    color: #ffffff !important;
+}
+
+/* 4. AMOLED alap */
+body {
+    background-color: #000000 !important;
+}
+#search-input, #profile-dropdown {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    color: white !important;
+}
+.series-card {
+    transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1), filter 0.4s ease !important;
+}
+
+.series-card:hover {
+    transform: translateY(-8px) scale(1.02) !important;
+    filter: brightness(1.2) !important;
+}
+::-webkit-scrollbar {
+    width: 5px !important;
+}
+
+::-webkit-scrollbar-track {
+    background: #000 !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #222 !important;
+    border-radius: 10px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #444 !important;
+}
+@keyframes skeleton-pulse {
+    0% { background-color: #050505; }
+    50% { background-color: #111; }
+    100% { background-color: #050505; }
+}
+
+.card-placeholder {
+    animation: skeleton-pulse 1.5s infinite ease-in-out;
+    border-radius: 8px;
+}
+#search-input, #profile-dropdown, .glass-panel {
+    background: rgba(10, 10, 10, 0.85) !important; /* Sötétebb, 85%-os fedés */
+    backdrop-filter: blur(20px) !important; /* Erősebb homályosítás */
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important; /* Alig észrevehető él */
+    color: #ffffff !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+/* Ha van pipa vagy szöveg, hogy "Nézett" */
+.watched-tag, .is-watched {
+    color: #ff4d4d !important; /* Élénk vörös */
+    font-weight: bold !important;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+}
+
+/* Ha a kártya alján van a progress bar */
+.watched-progress-bar {
+    background: rgba(255, 255, 255, 0.1) !important; /* Sötét alap */
+    height: 4px !important;
+    border-radius: 2px;
+}
+
+.watched-progress-fill {
+    background: #ff0000 !important; /* Tiszta vörös töltés */
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.6) !important; /* Enyhe izzás */
+}
+
+/* Opcionális: A már nézett kártyák borítója legyen picit sötétebb */
+.series-card.watched img {
+    filter: grayscale(0.3) brightness(0.7) !important;
+}
+#search-input:focus {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    outline: none;
+    background: rgba(15, 15, 15, 0.95) !important;
+}
+video::-webkit-media-controls-panel {
+    background-image: linear-gradient(transparent, rgba(0,0,0,0.8)) !important;
+}
+
+video::-webkit-media-controls-play-button,
+video::-webkit-media-controls-timeline {
+    filter: invert(1) brightness(2); /* Fehér gombok */
+}
+.series-card h3 {
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    color: #efefef;
+    margin-top: 10px;
+}
+/* Ha a kereső aktív, a tartalom elhalványul */
+body:has(#search-input:focus) .series-grid,
+body:has(#search-input:focus) .header-content {
+    opacity: 0.3;
+    filter: blur(2px);
+    transition: all 0.4s ease;
+}
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* A 60% miatt sokkal kijjebb kezdődik a sötétedés, a 0.5 pedig csak enyhe árnyékot ad */
+    background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.5) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+#app {
+    position: relative;
+    z-index: 2; /* Ez így a vignette réteg fölé kerül, tehát a vignette csak a legalsó háttérképet sötétíti */
+}
+.series-card:active, #home-btn:active {
+    transform: scale(0.97) !important;
+    transition: transform 0.1s ease !important;
+}
+
     </style>
 </head>
 
@@ -3184,6 +4068,7 @@
                 card.style.display = 'flex';
             });
         };
+        
     </script>
 </body>
 
