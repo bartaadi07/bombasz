@@ -2109,7 +2109,16 @@ body::after {
     transform: scale(0.97) !important;
     transition: transform 0.1s ease !important;
 }
+.series-card {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease-out !important;
+}
 
+.series-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
     </style>
 </head>
 
@@ -4068,7 +4077,13 @@ body::after {
                 card.style.display = 'flex';
             });
         };
-        
+        // Ezt a kártyák legenerálása után hívd meg:
+const cards = document.querySelectorAll('.series-card');
+cards.forEach((card, index) => {
+    setTimeout(() => {
+        card.classList.add('visible');
+    }, index * 50); // 50ms késleltetés kártyánként
+});
     </script>
 </body>
 
