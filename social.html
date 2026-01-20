@@ -281,14 +281,12 @@
         const db = getDatabase(app);
 
         let currentUid, currentUsername, activeChatId;
-        
-        // Ez a változó segít abban, hogy csak az alkalmazás betöltése után érkező új üzenetekre küldjünk értesítést
         const appStartTime = Date.now(); 
         
         let currentChatFriendUid = null;
         let currentChatOriginalName = null;
 
-        // Globális állapot a pöttyöknek, hogy ne tűnjenek el status frissítéskor
+        // Globális állapot a pöttyöknek
         let unreadStates = {}; 
 
         function sendBrowserNotification(title, body) {
@@ -416,6 +414,19 @@
             }
         });
 
+        // --- ABLAK FÓKUSZ ÉRZÉKELÉSE (ÉRTESÍTÉS FIX) ---
+        document.addEventListener("visibilitychange", () => {
+            if (!document.hidden && currentChatFriendUid) {
+                // Ha visszajött a user a tabra, és van nyitva chat, frissítjük a lastSeen-t
+                set(ref(db, `chat_meta/${currentUid}/${currentChatFriendUid}/lastSeen`), serverTimestamp());
+                
+                // Lokális pötty eltüntetése
+                unreadStates[currentChatFriendUid] = false;
+                const badge = document.getElementById(`unread-${currentChatFriendUid}`);
+                if(badge) badge.style.display = 'none';
+            }
+        });
+
         document.getElementById('login-form').addEventListener('submit', async (e) => { e.preventDefault(); const email = document.getElementById('login-email').value; const pass = document.getElementById('login-password').value; const btn = e.target.querySelector('.submit-btn'); btn.disabled=true; btn.innerHTML='...'; try { await setPersistence(auth, document.getElementById('remember-me').checked ? browserLocalPersistence : browserSessionPersistence); await signInWithEmailAndPassword(auth, email, pass); } catch(err) { showAuthMessage("Hiba: " + err.message, 'error'); btn.disabled=false; btn.textContent='Belépés'; } });
         document.getElementById('register-form').addEventListener('submit', async (e) => { e.preventDefault(); const u = document.getElementById('reg-username').value; const em = document.getElementById('register-email').value; const p = document.getElementById('register-password').value; if(p!==document.getElementById('register-password2').value){showAuthMessage("Nem egyezik a jelszó",'error');return;} try { const uc = await createUserWithEmailAndPassword(auth, em, p); await updateProfile(uc.user, {displayName:u}); await set(ref(db,'users/'+uc.user.uid),{username:u,email:em}); } catch(err) { showAuthMessage("Hiba: "+err.message,'error'); } });
         document.getElementById('forgot-password').addEventListener('click', async(e)=>{e.preventDefault(); try{await sendPasswordResetEmail(auth,document.getElementById('login-email').value);showAuthMessage("Email elküldve",'success');}catch(e){showAuthMessage("Add meg az emailt!",'error');}});
@@ -444,18 +455,15 @@
                     card.setAttribute('data-name', displayName + ' ' + friendData.username);
                     cont.appendChild(card);
 
-                    // Inicializáljuk az állapotot ha még nincs
                     if (unreadStates[uid] === undefined) unreadStates[uid] = false;
 
-                    // Státusz figyelés
                     onValue(ref(db, `status/${uid}`), (sSnap) => {
                         const online = sSnap.val()?.state === 'online';
                         const dot = online ? '#4bff4b' : '#444';
-                        // Ez a frissítés most már figyelembe veszi az unreadStates tömböt
                         updateFriendCardContent(uid, displayName, dot);
                     });
 
-                    // OLVASATLAN ÜZENET & ÉRTESÍTÉS FIGYELÉSE
+                    // OLVASATLAN ÜZENET & ÉRTESÍTÉS LOGIKA (VISIBILITY FIX)
                     const chatId = [currentUid, uid].sort().join('_');
                     onValue(query(ref(db, `chats/${chatId}`), limitToLast(1)), (msgSnap) => {
                         const msgs = msgSnap.val();
@@ -465,12 +473,15 @@
                             
                             onValue(ref(db, `chat_meta/${currentUid}/${uid}/lastSeen`), (seenSnap) => {
                                 const lastSeen = seenSnap.val() || 0;
-                                let isUnread = (lastMsg.timestamp > lastSeen) && (lastMsg.senderId !== currentUid);
+                                const isIncoming = lastMsg.senderId !== currentUid;
+                                let isUnread = (lastMsg.timestamp > lastSeen) && isIncoming;
                                 
-                                // JAVÍTÁS: Ha épp nyitva van a chat, akkor KÉNYSZERÍTETTEN olvasott!
-                                if (currentChatFriendUid === uid) {
+                                const isChatOpen = (currentChatFriendUid === uid);
+                                const isWindowVisible = !document.hidden;
+
+                                // Csak akkor tekintjük olvasottnak, ha nyitva a chat ÉS látszik is az ablak
+                                if (isChatOpen && isWindowVisible) {
                                     isUnread = false;
-                                    // Ha épp jön az üzenet miközben nézem, frissítsük a lastSeen-t
                                     if(lastMsg.timestamp > lastSeen) {
                                         set(ref(db, `chat_meta/${currentUid}/${uid}/lastSeen`), serverTimestamp());
                                     }
@@ -483,10 +494,9 @@
                                     indicator.style.display = isUnread ? 'inline-block' : 'none';
                                 }
 
-                                // ÉRTESÍTÉS logika
+                                // Értesítés küldése ha olvasatlan (akkor is ha nyitva van, de rejtett az ablak)
                                 if (isUnread && lastMsg.timestamp > appStartTime) {
-                                    // Csak akkor küld, ha NEM vele beszélek, vagy háttérben van
-                                    if (currentChatFriendUid !== uid || document.hidden) {
+                                    if (!isChatOpen || (isChatOpen && !isWindowVisible)) {
                                         sendBrowserNotification("Új üzenet", `${displayName}: ${lastMsg.text}`);
                                     }
                                 }
@@ -503,7 +513,6 @@
             if(el) {
                 const isUnread = unreadStates[uid] === true;
                 const unreadDisplay = isUnread ? 'inline-block' : 'none';
-
                 el.innerHTML = `
                     <div class="user-info-click" onclick="openChat('${uid}', '${name}'); openChatUI();">
                         <div style="display:flex; align-items:center;">
@@ -516,18 +525,20 @@
             }
         }
 
-        // --- CHAT LOGIKA ---
+        // --- CHAT LOGIKA (LIMIT FIX) ---
         window.openChat = function(uid, name, originalName) {
             document.getElementById('active-chat-user').innerText = name.toUpperCase();
             
             currentChatFriendUid = uid;
             currentChatOriginalName = originalName || name; 
 
-            // JAVÍTÁS: Azonnal töröljük a pöttyöt vizuálisan és adatbázisban is
-            unreadStates[uid] = false;
-            const badge = document.getElementById(`unread-${uid}`);
-            if(badge) badge.style.display = 'none';
-            set(ref(db, `chat_meta/${currentUid}/${uid}/lastSeen`), serverTimestamp());
+            // Ha látható az ablak, töröljük a pöttyöt
+            if (!document.hidden) {
+                unreadStates[uid] = false;
+                const badge = document.getElementById(`unread-${uid}`);
+                if(badge) badge.style.display = 'none';
+                set(ref(db, `chat_meta/${currentUid}/${uid}/lastSeen`), serverTimestamp());
+            }
 
             const actions = document.getElementById('chat-actions');
             actions.style.display = 'flex';
@@ -537,7 +548,8 @@
 
             const ids = [currentUid, uid].sort(); activeChatId = ids[0] + "_" + ids[1];
             
-            onValue(ref(db, `chats/${activeChatId}`), (snap) => {
+            // OPTIMALIZÁLÁS: Csak az utolsó 50 üzenet
+            onValue(query(ref(db, `chats/${activeChatId}`), limitToLast(50)), (snap) => {
                 const cont = document.getElementById('chat-messages'); 
                 const wasAtBottom = cont.scrollHeight - cont.scrollTop <= cont.clientHeight + 100;
                 
@@ -548,9 +560,8 @@
                 if (msgs) {
                     const msgKeys = Object.keys(msgs);
                     
-                    // Ha nyitva a chat, folyamatosan frissítsük a lastSeen-t, hogy ne villanjon fel a pötty
                     const lastMsg = msgs[msgKeys[msgKeys.length - 1]];
-                    if(lastMsg && lastMsg.senderId !== currentUid) {
+                    if(lastMsg && lastMsg.senderId !== currentUid && !document.hidden) {
                          set(ref(db, `chat_meta/${currentUid}/${uid}/lastSeen`), serverTimestamp());
                     }
 
@@ -592,6 +603,11 @@
                 if (wasAtBottom) {
                     cont.scrollTop = cont.scrollHeight;
                 }
+                
+                // Mobil billentyűzet fix
+                setTimeout(() => {
+                    cont.scrollTop = cont.scrollHeight;
+                }, 100);
             });
         };
 
