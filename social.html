@@ -22,7 +22,6 @@
         
         html, body { height: 100%; font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); color: var(--ink); overflow: hidden; }
 
-        /* --- UTILS --- */
         .noselect { -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
 
         /* --- LOGIN STYLES --- */
@@ -54,8 +53,6 @@
         .message { padding: 10px; margin-bottom: 15px; border-radius: var(--radius); font-size: 0.85rem; font-weight: 600; display: none; text-align: center; }
         .message.error { display: block; background: rgba(255, 68, 68, 0.2); border: 1px solid #ff4444; color: #ff4444; }
         .message.success { display: block; background: rgba(75, 255, 75, 0.2); border: 1px solid #4bff4b; color: #4bff4b; }
-        .spinner { width: 20px; height: 20px; border: 2px solid #555; border-top-color: #000; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
         /* --- APP VIEW STYLES --- */
         #app-view { display: none; flex-direction: column; width: 100%; height: 100%; position: relative; z-index: 10; }
@@ -79,6 +76,14 @@
         .btn-icon-logout { background: transparent; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; padding: 8px; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
         .btn-icon-logout:hover { color: #ff4444; transform: scale(1.1); }
 
+        /* Notification Enable Button */
+        .btn-notif { background: transparent; border: 1px solid #4bff4b; color: #4bff4b; font-size: 1rem; cursor: pointer; padding: 8px 12px; margin-right: 10px; border-radius: 4px; transition: 0.3s; display: flex; align-items: center; gap: 6px; }
+        .btn-notif:hover { background: rgba(75, 255, 75, 0.1); }
+        .btn-notif.enabled { border-color: #4bff4b; color: #4bff4b; }
+        .btn-notif.denied { border-color: #ff4444; color: #ff4444; }
+        .btn-notif.unsupported { border-color: #666; color: #666; }
+        .btn-notif i { font-size: 0.9rem; }
+
         /* --- CHAT HEADER --- */
         #chat-target-name { height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0 15px; background: rgba(255,255,255,0.03); font-family: 'Orbitron'; font-size: 0.75rem; border-bottom: 1px solid var(--border); flex-shrink: 0; }
         .chat-header-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 10px; }
@@ -86,23 +91,13 @@
         .btn-header-icon { background: transparent; border: 1px solid transparent; color: #fff; font-size: 0.9rem; cursor: pointer; padding: 6px; border-radius: 4px; transition: 0.3s; }
         .btn-header-icon:hover { background: rgba(255,255,255,0.1); }
 
-        /* Chat Üzenetek */
         #chat-messages { flex-grow: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
         
         .message-wrapper { display: flex; align-items: center; gap: 8px; max-width: 80%; }
         .message-wrapper.sent { align-self: flex-end; flex-direction: row-reverse; }
         .message-wrapper.received { align-self: flex-start; }
 
-        .message-bubble { 
-            padding: 10px 14px; 
-            font-size: 0.85rem; 
-            border-radius: 4px; 
-            line-height: 1.4; 
-            word-wrap: break-word; 
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
+        .message-bubble { padding: 10px 14px; font-size: 0.85rem; border-radius: 4px; line-height: 1.4; word-wrap: break-word; position: relative; cursor: pointer; transition: transform 0.1s; }
         .message-bubble:active { transform: scale(0.98); }
         .message-bubble.sent { background: #fff; color: #000; }
         .message-bubble.received { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: #fff; }
@@ -121,19 +116,9 @@
         #toast-container { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 90%; max-width: 300px; }
         .toast { background: #fff; color: #000; padding: 10px 20px; border-radius: 4px; font-family: 'Orbitron'; font-size: 0.65rem; font-weight: 900; margin-bottom: 5px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
 
-        /* --- OLVASATLAN ÜZENET JELZŐ --- */
-        .unread-badge {
-            width: 8px; height: 8px; 
-            background: #fff; 
-            border-radius: 50%; 
-            display: inline-block; 
-            margin-right: 10px;
-            box-shadow: 0 0 5px rgba(255,255,255,0.8);
-            animation: pulse 2s infinite;
-        }
+        .unread-badge { width: 8px; height: 8px; background: #fff; border-radius: 50%; display: inline-block; margin-right: 10px; box-shadow: 0 0 5px rgba(255,255,255,0.8); animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 0.7; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.7; transform: scale(1); } }
 
-        /* --- CUSTOM MODALS --- */
         .modal-overlay { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
         .modal-overlay.open { opacity: 1; pointer-events: all; }
         .modal-box { background: #111; border: 1px solid #333; padding: 25px; border-radius: 12px; width: 90%; max-width: 320px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: scale(0.9); transition: 0.3s; }
@@ -153,6 +138,7 @@
             body.chat-open .chat-container { left: 0; }
             body.chat-open .mobile-back { display: block; }
             .msg-options-pc { display: none; } 
+            .btn-notif span { display: none; }
         }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
@@ -226,7 +212,13 @@
         <header class="main-header">
             <button class="mobile-back" onclick="closeChat()"><i class="fa-solid fa-arrow-left"></i></button>
             <div class="user-profile-side" id="header-user-info"><div class="profile-icon">?</div></div>
-            <button onclick="logoutUser()" class="btn-icon-logout" title="Kijelentkezés"><i class="fa-solid fa-right-from-bracket"></i></button>
+            <div style="display:flex; align-items:center;">
+                <button id="notif-btn" class="btn-notif" onclick="requestNotificationPermission()" title="Értesítések engedélyezése">
+                    <i class="fa-solid fa-bell"></i>
+                    <span>Értesítések</span>
+                </button>
+                <button onclick="logoutUser()" class="btn-icon-logout" title="Kijelentkezés"><i class="fa-solid fa-right-from-bracket"></i></button>
+            </div>
         </header>
 
         <main class="container">
@@ -285,17 +277,89 @@
         
         let currentChatFriendUid = null;
         let currentChatOriginalName = null;
-
-        // Globális állapot a pöttyöknek
         let unreadStates = {}; 
 
-        function sendBrowserNotification(title, body) {
-            if (Notification.permission === "granted") { 
-                try { new Notification(title, { body: body, icon: '' }); } catch(e) { console.log(e); }
+        // ========================================
+        // NOTIFICATION SYSTEM (Böngésző API)
+        // ========================================
+        
+        function updateNotifButton() {
+            const btn = document.getElementById('notif-btn');
+            if (!btn) return;
+            
+            if (!('Notification' in window)) {
+                btn.innerHTML = '<i class="fa-solid fa-bell-slash"></i><span>Nem támogatott</span>';
+                btn.className = 'btn-notif unsupported';
+                btn.disabled = true;
+                return;
+            }
+            
+            const perm = Notification.permission;
+            if (perm === 'granted') {
+                btn.innerHTML = '<i class="fa-solid fa-bell"></i><span>Bekapcsolva</span>';
+                btn.className = 'btn-notif enabled';
+            } else if (perm === 'denied') {
+                btn.innerHTML = '<i class="fa-solid fa-bell-slash"></i><span>Tiltva</span>';
+                btn.className = 'btn-notif denied';
+                btn.title = 'Engedélyezd a böngésző beállításaiban';
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-bell"></i><span>Értesítések</span>';
+                btn.className = 'btn-notif';
+            }
+        }
+        
+        window.requestNotificationPermission = async function() {
+            if (!('Notification' in window)) {
+                showToast('A böngésződ nem támogatja az értesítéseket');
+                return;
+            }
+            
+            if (Notification.permission === 'denied') {
+                showToast('Értesítések tiltva! Engedélyezd a böngésző beállításaiban.');
+                return;
+            }
+            
+            if (Notification.permission === 'granted') {
+                showToast('Értesítések már engedélyezve!');
+                return;
+            }
+            
+            const permission = await Notification.requestPermission();
+            updateNotifButton();
+            
+            if (permission === 'granted') {
+                showToast('Értesítések bekapcsolva!');
+            } else {
+                showToast('Értesítések elutasítva');
+            }
+        };
+        
+        function sendNotification(title, body) {
+            if (Notification.permission === 'granted' && document.hidden) {
+                try {
+                    const notif = new Notification(title, {
+                        body: body,
+                        icon: 'img/icon-192.png',
+                        tag: 'bombasz-msg-' + Date.now(),
+                        renotify: true
+                    });
+                    
+                    notif.onclick = () => {
+                        window.focus();
+                        notif.close();
+                    };
+                    
+                    setTimeout(() => notif.close(), 5000);
+                } catch (e) {
+                    console.log('Notification error:', e);
+                }
             }
         }
 
-        // --- CUSTOM MODALS & ACTIONS ---
+        // ========================================
+        // MODALS
+        // ========================================
+        
         function showConfirm(text, onConfirm) {
             const modal = document.getElementById('confirm-modal');
             document.getElementById('modal-text').innerText = text;
@@ -346,8 +410,7 @@
 
         function addLongPressEvent(element, callback) {
             let timer;
-            const duration = 600; 
-            const start = (e) => { timer = setTimeout(() => callback(), duration); };
+            const start = () => { timer = setTimeout(callback, 600); };
             const cancel = () => { clearTimeout(timer); };
             element.addEventListener('touchstart', start);
             element.addEventListener('touchend', cancel);
@@ -370,8 +433,8 @@
             const val = e.target.value.trim().toLowerCase();
             const friendCards = document.querySelectorAll('#friends-list .user-card');
             friendCards.forEach(card => {
-                const name = card.getAttribute('data-name').toLowerCase();
-                if (name.includes(val)) card.style.display = 'flex'; else card.style.display = 'none';
+                const name = card.getAttribute('data-name')?.toLowerCase() || '';
+                card.style.display = name.includes(val) ? 'flex' : 'none';
             });
 
             if (val.length < 2) { searchResults.innerHTML = ''; return; }
@@ -388,7 +451,8 @@
         });
 
         // --- AUTH UI ---
-        const tabs = document.querySelectorAll('.auth-tab'); const forms = document.querySelectorAll('.auth-form');
+        const tabs = document.querySelectorAll('.auth-tab'); 
+        const forms = document.querySelectorAll('.auth-form');
         function showAuthMessage(text, type) { const msg = document.getElementById('auth-message'); msg.textContent = text; msg.className = `message ${type}`; }
         function hideAuthMessage() { document.getElementById('auth-message').className = 'message'; }
         tabs.forEach(tab => { tab.addEventListener('click', () => { tabs.forEach(t => t.classList.remove('active')); forms.forEach(f => f.classList.remove('active')); tab.classList.add('active'); document.getElementById(`${tab.dataset.tab}-form`).classList.add('active'); hideAuthMessage(); }); });
@@ -398,56 +462,126 @@
             if (user) {
                 document.getElementById('login-view').style.display = 'none';
                 document.getElementById('app-view').style.display = 'flex';
-                if ("Notification" in window && Notification.permission !== "granted") Notification.requestPermission();
+                
                 currentUid = user.uid;
+                updateNotifButton();
+                
                 onValue(ref(db, 'users/' + currentUid), (snap) => {
                     const data = snap.val();
                     currentUsername = (data && data.username) ? data.username : (user.displayName || user.email.split('@')[0]);
                     document.getElementById('header-user-info').innerHTML = `<div class="profile-icon">${currentUsername.charAt(0).toUpperCase()}</div><span style="font-size:0.75rem; margin-left:8px;"><b>${currentUsername}</b></span>`;
                 }, { onlyOnce: true });
+                
                 set(ref(db, `status/${currentUid}`), { state: 'online', last_changed: serverTimestamp() });
                 onDisconnect(ref(db, `status/${currentUid}`)).set({ state: 'offline', last_changed: serverTimestamp() });
-                loadRequests(); loadFriends();
+                loadRequests(); 
+                loadFriends();
             } else {
                 document.getElementById('login-view').style.display = 'flex';
                 document.getElementById('app-view').style.display = 'none';
             }
         });
 
-        // --- ABLAK FÓKUSZ ÉRZÉKELÉSE (ÉRTESÍTÉS FIX) ---
         document.addEventListener("visibilitychange", () => {
             if (!document.hidden && currentChatFriendUid) {
-                // Ha visszajött a user a tabra, és van nyitva chat, frissítjük a lastSeen-t
                 set(ref(db, `chat_meta/${currentUid}/${currentChatFriendUid}/lastSeen`), serverTimestamp());
-                
-                // Lokális pötty eltüntetése
                 unreadStates[currentChatFriendUid] = false;
                 const badge = document.getElementById(`unread-${currentChatFriendUid}`);
                 if(badge) badge.style.display = 'none';
             }
         });
 
-        document.getElementById('login-form').addEventListener('submit', async (e) => { e.preventDefault(); const email = document.getElementById('login-email').value; const pass = document.getElementById('login-password').value; const btn = e.target.querySelector('.submit-btn'); btn.disabled=true; btn.innerHTML='...'; try { await setPersistence(auth, document.getElementById('remember-me').checked ? browserLocalPersistence : browserSessionPersistence); await signInWithEmailAndPassword(auth, email, pass); } catch(err) { showAuthMessage("Hiba: " + err.message, 'error'); btn.disabled=false; btn.textContent='Belépés'; } });
-        document.getElementById('register-form').addEventListener('submit', async (e) => { e.preventDefault(); const u = document.getElementById('reg-username').value; const em = document.getElementById('register-email').value; const p = document.getElementById('register-password').value; if(p!==document.getElementById('register-password2').value){showAuthMessage("Nem egyezik a jelszó",'error');return;} try { const uc = await createUserWithEmailAndPassword(auth, em, p); await updateProfile(uc.user, {displayName:u}); await set(ref(db,'users/'+uc.user.uid),{username:u,email:em}); } catch(err) { showAuthMessage("Hiba: "+err.message,'error'); } });
-        document.getElementById('forgot-password').addEventListener('click', async(e)=>{e.preventDefault(); try{await sendPasswordResetEmail(auth,document.getElementById('login-email').value);showAuthMessage("Email elküldve",'success');}catch(e){showAuthMessage("Add meg az emailt!",'error');}});
+        document.getElementById('login-form').addEventListener('submit', async (e) => { 
+            e.preventDefault(); 
+            const email = document.getElementById('login-email').value; 
+            const pass = document.getElementById('login-password').value; 
+            const btn = e.target.querySelector('.submit-btn'); 
+            btn.disabled=true; btn.innerHTML='...'; 
+            try { 
+                await setPersistence(auth, document.getElementById('remember-me').checked ? browserLocalPersistence : browserSessionPersistence); 
+                await signInWithEmailAndPassword(auth, email, pass); 
+            } catch(err) { 
+                showAuthMessage("Hiba: " + err.message, 'error'); 
+                btn.disabled=false; btn.textContent='Belépés'; 
+            } 
+        });
         
-        window.logoutUser = function() { if(currentUid) set(ref(db, `status/${currentUid}`), { state: 'offline', last_changed: serverTimestamp() }); signOut(auth); };
+        document.getElementById('register-form').addEventListener('submit', async (e) => { 
+            e.preventDefault(); 
+            const u = document.getElementById('reg-username').value; 
+            const em = document.getElementById('register-email').value; 
+            const p = document.getElementById('register-password').value; 
+            if(p!==document.getElementById('register-password2').value){
+                showAuthMessage("Nem egyezik a jelszó",'error');
+                return;
+            } 
+            try { 
+                const uc = await createUserWithEmailAndPassword(auth, em, p); 
+                await updateProfile(uc.user, {displayName:u}); 
+                await set(ref(db,'users/'+uc.user.uid),{username:u,email:em}); 
+            } catch(err) { 
+                showAuthMessage("Hiba: "+err.message,'error'); 
+            } 
+        });
+        
+        document.getElementById('forgot-password').addEventListener('click', async(e)=>{
+            e.preventDefault(); 
+            try{
+                await sendPasswordResetEmail(auth,document.getElementById('login-email').value);
+                showAuthMessage("Email elküldve",'success');
+            }catch(e){
+                showAuthMessage("Add meg az emailt!",'error');
+            }
+        });
+        
+        window.logoutUser = function() { 
+            if(currentUid) set(ref(db, `status/${currentUid}`), { state: 'offline', last_changed: serverTimestamp() }); 
+            signOut(auth); 
+        };
+        
         window.openChatUI = function() { if (window.innerWidth <= 768) document.getElementById('body-tag').classList.add('chat-open'); };
         window.closeChat = function() { document.getElementById('body-tag').classList.remove('chat-open'); };
 
-        window.sendRequest = function(uid, name) { set(ref(db, `friend_requests/${uid}/${currentUid}`), { fromName: currentUsername, timestamp: serverTimestamp() }).then(() => { showToast("KÉRÉS ELKÜLDVE!"); searchResults.innerHTML = ''; searchInput.value = ''; }); };
-        function loadRequests() { onValue(ref(db, `friend_requests/${currentUid}`), (snap) => { const reqs = snap.val(); const cont = document.getElementById('requests-list'); const badge = document.getElementById('req-count'); cont.innerHTML = ''; if (!reqs) { badge.style.display='none'; return; } badge.style.display='inline'; for (let id in reqs) { cont.innerHTML += `<div class="user-card"><span>${reqs[id].fromName}</span><button class="btn-action" onclick="acceptFriend('${id}', '${reqs[id].fromName}')">ELFOGAD</button></div>`; } }); }
-        window.acceptFriend = function(uid, name) { set(ref(db, `friends/${currentUid}/${uid}`), { username: name }); set(ref(db, `friends/${uid}/${currentUid}`), { username: currentUsername }); remove(ref(db, `friend_requests/${currentUid}/${uid}`)); };
+        window.sendRequest = function(uid, name) { 
+            set(ref(db, `friend_requests/${uid}/${currentUid}`), { fromName: currentUsername, timestamp: serverTimestamp() })
+            .then(() => { 
+                showToast("KÉRÉS ELKÜLDVE!"); 
+                searchResults.innerHTML = ''; 
+                searchInput.value = ''; 
+            }); 
+        };
+        
+        function loadRequests() { 
+            onValue(ref(db, `friend_requests/${currentUid}`), (snap) => { 
+                const reqs = snap.val(); 
+                const cont = document.getElementById('requests-list'); 
+                const badge = document.getElementById('req-count'); 
+                cont.innerHTML = ''; 
+                if (!reqs) { badge.style.display='none'; return; } 
+                badge.style.display='inline'; 
+                for (let id in reqs) { 
+                    cont.innerHTML += `<div class="user-card"><span>${reqs[id].fromName}</span><button class="btn-action" onclick="acceptFriend('${id}', '${reqs[id].fromName}')">ELFOGAD</button></div>`; 
+                } 
+            }); 
+        }
+        
+        window.acceptFriend = function(uid, name) { 
+            set(ref(db, `friends/${currentUid}/${uid}`), { username: name }); 
+            set(ref(db, `friends/${uid}/${currentUid}`), { username: currentUsername }); 
+            remove(ref(db, `friend_requests/${currentUid}/${uid}`)); 
+        };
 
-        // --- BARÁT LISTA & OLVASATLAN PÖTTY JAVÍTVA ---
+        // --- BARÁT LISTA ---
         function loadFriends() {
             onValue(ref(db, `friends/${currentUid}`), (snap) => {
-                const friends = snap.val(); const cont = document.getElementById('friends-list');
-                cont.innerHTML = ''; if (!friends) return;
+                const friends = snap.val(); 
+                const cont = document.getElementById('friends-list');
+                cont.innerHTML = ''; 
+                if (!friends) return;
                 
                 for (let uid in friends) {
                     const friendData = friends[uid];
-                    const displayName = friendData.nickname ? friendData.nickname : friendData.username;
+                    const displayName = friendData.nickname || friendData.username;
                     
                     const card = document.createElement('div'); 
                     card.id = `f-${uid}`; 
@@ -463,7 +597,7 @@
                         updateFriendCardContent(uid, displayName, dot);
                     });
 
-                    // OLVASATLAN ÜZENET & ÉRTESÍTÉS LOGIKA (VISIBILITY FIX)
+                    // Olvasatlan üzenetek figyelése
                     const chatId = [currentUid, uid].sort().join('_');
                     onValue(query(ref(db, `chats/${chatId}`), limitToLast(1)), (msgSnap) => {
                         const msgs = msgSnap.val();
@@ -479,7 +613,6 @@
                                 const isChatOpen = (currentChatFriendUid === uid);
                                 const isWindowVisible = !document.hidden;
 
-                                // Csak akkor tekintjük olvasottnak, ha nyitva a chat ÉS látszik is az ablak
                                 if (isChatOpen && isWindowVisible) {
                                     isUnread = false;
                                     if(lastMsg.timestamp > lastSeen) {
@@ -494,11 +627,9 @@
                                     indicator.style.display = isUnread ? 'inline-block' : 'none';
                                 }
 
-                                // Értesítés küldése ha olvasatlan (akkor is ha nyitva van, de rejtett az ablak)
-                                if (isUnread && lastMsg.timestamp > appStartTime) {
-                                    if (!isChatOpen || (isChatOpen && !isWindowVisible)) {
-                                        sendBrowserNotification("Új üzenet", `${displayName}: ${lastMsg.text}`);
-                                    }
+                                // Értesítés küldése
+                                if (isUnread && lastMsg.timestamp > appStartTime && !isChatOpen) {
+                                    sendNotification(displayName, lastMsg.text);
                                 }
 
                             }, { onlyOnce: true });
@@ -512,11 +643,10 @@
             const el = document.getElementById(`f-${uid}`);
             if(el) {
                 const isUnread = unreadStates[uid] === true;
-                const unreadDisplay = isUnread ? 'inline-block' : 'none';
                 el.innerHTML = `
                     <div class="user-info-click" onclick="openChat('${uid}', '${name}'); openChatUI();">
                         <div style="display:flex; align-items:center;">
-                            <span id="unread-${uid}" class="unread-badge" style="display:${unreadDisplay};"></span>
+                            <span id="unread-${uid}" class="unread-badge" style="display:${isUnread ? 'inline-block' : 'none'};"></span>
                             <b>${name}</b>
                         </div>
                         <span style="width:7px; height:7px; border-radius:50%; background:${statusColor}; margin-right:10px;"></span>
@@ -525,14 +655,13 @@
             }
         }
 
-        // --- CHAT LOGIKA (LIMIT FIX) ---
-        window.openChat = function(uid, name, originalName) {
+        // --- CHAT ---
+        window.openChat = function(uid, name) {
             document.getElementById('active-chat-user').innerText = name.toUpperCase();
             
             currentChatFriendUid = uid;
-            currentChatOriginalName = originalName || name; 
+            currentChatOriginalName = name; 
 
-            // Ha látható az ablak, töröljük a pöttyöt
             if (!document.hidden) {
                 unreadStates[uid] = false;
                 const badge = document.getElementById(`unread-${uid}`);
@@ -540,76 +669,62 @@
                 set(ref(db, `chat_meta/${currentUid}/${uid}/lastSeen`), serverTimestamp());
             }
 
-            const actions = document.getElementById('chat-actions');
-            actions.style.display = 'flex';
-            
+            document.getElementById('chat-actions').style.display = 'flex';
             document.getElementById('delete-friend-btn').onclick = () => removeCurrentFriend(name);
             document.getElementById('rename-friend-btn').onclick = () => changeNickname();
 
-            const ids = [currentUid, uid].sort(); activeChatId = ids[0] + "_" + ids[1];
+            const ids = [currentUid, uid].sort(); 
+            activeChatId = ids[0] + "_" + ids[1];
             
-            // OPTIMALIZÁLÁS: Csak az utolsó 50 üzenet
             onValue(query(ref(db, `chats/${activeChatId}`), limitToLast(50)), (snap) => {
                 const cont = document.getElementById('chat-messages'); 
-                const wasAtBottom = cont.scrollHeight - cont.scrollTop <= cont.clientHeight + 100;
-                
                 const msgs = snap.val();
-                let htmlContent = '';
-                const messagesToAttach = [];
+                let html = '';
+                const toAttach = [];
 
                 if (msgs) {
-                    const msgKeys = Object.keys(msgs);
-                    
-                    const lastMsg = msgs[msgKeys[msgKeys.length - 1]];
+                    const keys = Object.keys(msgs);
+                    const lastMsg = msgs[keys[keys.length - 1]];
                     if(lastMsg && lastMsg.senderId !== currentUid && !document.hidden) {
-                         set(ref(db, `chat_meta/${currentUid}/${uid}/lastSeen`), serverTimestamp());
+                        set(ref(db, `chat_meta/${currentUid}/${uid}/lastSeen`), serverTimestamp());
                     }
 
-                    for (let id of msgKeys) {
+                    for (let id of keys) {
                         const m = msgs[id];
                         const side = m.senderId === currentUid ? 'sent' : 'received';
                         const date = new Date(m.timestamp);
                         const timeStr = date.toLocaleString('hu-HU', { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' });
                         const isMine = side === 'sent';
 
-                        let pcOptionsHtml = `
-                            <div class="msg-options-pc">
-                                <i class="fa-solid fa-copy btn-msg-icon" onclick="copyText('${m.text}')" title="Másolás"></i>
-                                ${isMine ? `<i class="fa-solid fa-trash btn-msg-icon delete" onclick="deleteMessage('${id}')" title="Törlés"></i>` : ''}
-                            </div>
-                        `;
-
-                        htmlContent += `
+                        html += `
                             <div class="message-wrapper ${side}">
-                                <div id="msg-${id}" class="message-bubble ${side} noselect" title="Küldve: ${timeStr}">
-                                    ${m.text}
+                                <div id="msg-${id}" class="message-bubble ${side} noselect" title="${timeStr}">
+                                    ${escapeHtml(m.text)}
                                 </div>
-                                ${pcOptionsHtml}
+                                <div class="msg-options-pc">
+                                    <i class="fa-solid fa-copy btn-msg-icon" onclick="copyText(\`${m.text.replace(/`/g, '\\`')}\`)" title="Másolás"></i>
+                                    ${isMine ? `<i class="fa-solid fa-trash btn-msg-icon delete" onclick="deleteMessage('${id}')" title="Törlés"></i>` : ''}
+                                </div>
                             </div>
                         `;
-                        messagesToAttach.push({ id: id, text: m.text, isMine: isMine });
+                        toAttach.push({ id, text: m.text, isMine });
                     }
                 }
                 
-                cont.innerHTML = htmlContent;
-
-                messagesToAttach.forEach(item => {
+                cont.innerHTML = html;
+                toAttach.forEach(item => {
                     const el = document.getElementById(`msg-${item.id}`);
-                    if (el) {
-                        addLongPressEvent(el, () => showMessageOptions(item.id, item.text, item.isMine));
-                    }
+                    if (el) addLongPressEvent(el, () => showMessageOptions(item.id, item.text, item.isMine));
                 });
-
-                if (wasAtBottom) {
-                    cont.scrollTop = cont.scrollHeight;
-                }
-                
-                // Mobil billentyűzet fix
-                setTimeout(() => {
-                    cont.scrollTop = cont.scrollHeight;
-                }, 100);
+                cont.scrollTop = cont.scrollHeight;
             });
         };
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
 
         window.copyText = function(text) {
             navigator.clipboard.writeText(text).then(() => showToast("Másolva!"));
@@ -617,10 +732,9 @@
 
         window.changeNickname = function() {
             if (!currentChatFriendUid) return;
-            showInput("Becenév beállítása", "Írj be egy új nevet...", (newNick) => {
-                update(ref(db, `friends/${currentUid}/${currentChatFriendUid}`), {
-                    nickname: newNick
-                }).then(() => {
+            showInput("Becenév beállítása", "Új név...", (newNick) => {
+                update(ref(db, `friends/${currentUid}/${currentChatFriendUid}`), { nickname: newNick })
+                .then(() => {
                     showToast("Becenév mentve!");
                     document.getElementById('active-chat-user').innerText = newNick.toUpperCase();
                 });
@@ -629,19 +743,17 @@
 
         window.deleteMessage = function(msgId) {
             if (!activeChatId) return;
-            showConfirm("Biztosan törölni szeretnéd ezt az üzenetet?", () => {
-                remove(ref(db, `chats/${activeChatId}/${msgId}`))
-                .then(() => showToast("Üzenet törölve."));
+            showConfirm("Törlöd az üzenetet?", () => {
+                remove(ref(db, `chats/${activeChatId}/${msgId}`)).then(() => showToast("Törölve"));
             });
         };
 
         window.removeCurrentFriend = function(name) {
             if (!currentChatFriendUid) return;
-            showConfirm(`Biztosan törölni szeretnéd a beszélgetést és ${name}-t a barátok közül?`, () => {
+            showConfirm(`Törlöd ${name}-t a barátok közül?`, () => {
                 remove(ref(db, `friends/${currentUid}/${currentChatFriendUid}`));
                 remove(ref(db, `friends/${currentChatFriendUid}/${currentUid}`));
-                showToast("Barát törölve.");
-
+                showToast("Törölve");
                 document.getElementById('chat-messages').innerHTML = '';
                 document.getElementById('active-chat-user').innerText = 'VÁLASSZ VALAKIT';
                 document.getElementById('chat-actions').style.display = 'none';
@@ -654,7 +766,7 @@
         const sendMsg = () => {
             const i = document.getElementById('msg-input');
             if (!i.value.trim() || !activeChatId) return;
-            push(ref(db, `chats/${activeChatId}`), { senderId: currentUid, text: i.value, timestamp: serverTimestamp() });
+            push(ref(db, `chats/${activeChatId}`), { senderId: currentUid, text: i.value.trim(), timestamp: serverTimestamp() });
             i.value = '';
         };
         document.getElementById('send-btn').onclick = sendMsg;
