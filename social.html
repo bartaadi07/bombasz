@@ -97,7 +97,7 @@
         .message-wrapper.sent { align-self: flex-end; flex-direction: row-reverse; }
         .message-wrapper.received { align-self: flex-start; }
 
-        .message-bubble { padding: 10px 14px; font-size: 0.85rem; border-radius: 4px; line-height: 1.4; word-wrap: break-word; position: relative; cursor: pointer; transition: transform 0.1s; }
+        .message-bubble { padding: 10px 14px; font-size: 0.85rem; border-radius: 4px; line-height: 1.4; word-wrap: break-word; word-break: break-word; overflow-wrap: break-word; max-width: 100%; position: relative; cursor: pointer; transition: transform 0.1s; }
         .message-bubble:active { transform: scale(0.98); }
         .message-bubble.sent { background: #fff; color: #000; }
         .message-bubble.received { background: rgba(255,255,255,0.1); border: 1px solid var(--border); color: #fff; }
