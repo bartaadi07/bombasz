@@ -334,13 +334,21 @@
             }
         };
         
-        function sendNotification(title, body) {
-            if (Notification.permission === 'granted' && document.hidden) {
+        // Már értesített üzenetek (dupla értesítés elkerülése)
+        let notifiedMessages = new Set();
+        
+        function sendNotification(title, body, msgKey) {
+            // Ha már értesítettünk erről, skip
+            if (msgKey && notifiedMessages.has(msgKey)) return;
+            if (msgKey) notifiedMessages.add(msgKey);
+            
+            if (Notification.permission === 'granted') {
                 try {
+                    console.log('🔔 Értesítés küldése:', title, body);
                     const notif = new Notification(title, {
                         body: body,
                         icon: 'img/icon-192.png',
-                        tag: 'bombasz-msg-' + Date.now(),
+                        tag: 'bombasz-' + (msgKey || Date.now()),
                         renotify: true
                     });
                     
@@ -353,6 +361,8 @@
                 } catch (e) {
                     console.log('Notification error:', e);
                 }
+            } else {
+                console.log('❌ Notification permission:', Notification.permission);
             }
         }
 
@@ -597,23 +607,27 @@
                         updateFriendCardContent(uid, displayName, dot);
                     });
 
-                    // Olvasatlan üzenetek figyelése
+                    // Olvasatlan üzenetek figyelése - VALÓS IDŐBEN
                     const chatId = [currentUid, uid].sort().join('_');
                     onValue(query(ref(db, `chats/${chatId}`), limitToLast(1)), (msgSnap) => {
                         const msgs = msgSnap.val();
                         if (msgs) {
                             const lastMsgKey = Object.keys(msgs)[0];
                             const lastMsg = msgs[lastMsgKey];
+                            const isIncoming = lastMsg.senderId !== currentUid;
+                            const isChatOpen = (currentChatFriendUid === uid) && !document.hidden;
                             
+                            // Értesítés küldése - ha bejövő üzenet és nem ez a chat van nyitva
+                            if (isIncoming && lastMsg.timestamp > appStartTime && !isChatOpen) {
+                                sendNotification(displayName, lastMsg.text, lastMsgKey);
+                            }
+                            
+                            // Olvasatlan státusz frissítése
                             onValue(ref(db, `chat_meta/${currentUid}/${uid}/lastSeen`), (seenSnap) => {
                                 const lastSeen = seenSnap.val() || 0;
-                                const isIncoming = lastMsg.senderId !== currentUid;
                                 let isUnread = (lastMsg.timestamp > lastSeen) && isIncoming;
-                                
-                                const isChatOpen = (currentChatFriendUid === uid);
-                                const isWindowVisible = !document.hidden;
 
-                                if (isChatOpen && isWindowVisible) {
+                                if (isChatOpen) {
                                     isUnread = false;
                                     if(lastMsg.timestamp > lastSeen) {
                                         set(ref(db, `chat_meta/${currentUid}/${uid}/lastSeen`), serverTimestamp());
@@ -626,12 +640,6 @@
                                 if(indicator) {
                                     indicator.style.display = isUnread ? 'inline-block' : 'none';
                                 }
-
-                                // Értesítés küldése
-                                if (isUnread && lastMsg.timestamp > appStartTime && !isChatOpen) {
-                                    sendNotification(displayName, lastMsg.text);
-                                }
-
                             }, { onlyOnce: true });
                         }
                     });
