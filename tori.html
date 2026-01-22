@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Történelem Érettségi Tételek</title>
 <style>
-    /* Sötét téma alapbeállításai */
+    /* AMOLED (Pure Black) téma beállításai */
     :root { 
-        --p: #62686d2c;          /* Sötétebb kék a fejléchez */
-        --a: #00eeff;          /* Narancs kiemelés */
-        --bg: #121212;         /* Nagyon sötét háttér */
-        --card-bg: #1e1e1e;    /* Kártyák háttere */
-        --text: #e0e0e0;       /* Világosszürke szöveg */
-        --select-border: #444;
+        --p: #000000;          /* Fejléc is fekete */
+        --a: #00eeff;          /* Marad a cián kiemelés, jól mutat a feketén */
+        --bg: #000000;         /* Tiszta fekete háttér */
+        --card-bg: #000000;    /* Kártyák is feketék legyenek */
+        --text: #ffffff;       /* Hófehér szöveg a maximális kontrasztért */
+        --select-border: #333; /* Finom szürke keret az elemeknek */
     }
 
     body { 
@@ -24,14 +24,15 @@
     }
 
     header { 
-        background: var(--p); 
+        background: var(--bg); 
         color: white; 
         text-align: center; 
         padding: 1rem; 
         position: sticky; 
         top: 0; 
         z-index: 1000; 
-        box-shadow: 0 2px 10px rgba(0,0,0,0.5); 
+        /* Egy vékony alsó vonal választja el a fejlécet, mivel minden fekete */
+        border-bottom: 1px solid #222; 
     }
 
     .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
@@ -44,7 +45,7 @@
         font-size: 1rem; 
         margin-bottom: 20px; 
         outline: none; 
-        background: #343535; 
+        background: #000000; /* Legördülő háttér is fekete */
         color: white; 
     }
     
@@ -52,7 +53,8 @@
         background: var(--card-bg); 
         padding: 25px; 
         border-radius: 12px; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
+        /* Erősebb keret a kártyának, hogy elváljon a háttértől */
+        border: 1px solid #222;
         display: none; 
     }
     
@@ -60,7 +62,7 @@
     
     .formatted-text { white-space: pre-wrap; font-size: 1.1rem; word-wrap: break-word; }
 
-    /* Képek sötét módhoz igazítva */
+    /* Képek AMOLED módhoz */
     .embedded-img {
         display: block;
         max-width: 100%;
@@ -68,13 +70,20 @@
         margin: 20px auto;
         border-radius: 6px;
         border: 1px solid #333;
-        filter: brightness(0.8); /* Kicsit leveszi a kép fényerejét, hogy ne vakítson */
+        /* Kicsit sötétítve, hogy ne "égesse" a szemet a fekete háttéren */
+        filter: brightness(0.7); 
         transition: filter 0.3s;
     }
 
     .embedded-img:hover {
-        filter: brightness(1); /* Ha ráközelítesz/ráviszed az egeret, kivilágosodik */
+        filter: brightness(1); 
     }
+
+    /* Görgetősáv (Scrollbar) AMOLED stílusban */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #000; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--a); }
 
     @media (max-width: 600px) { .formatted-text { font-size: 1rem; } }
 </style>
