@@ -93,7 +93,7 @@
             letter-spacing: 2px;
             padding: 10px 20px;
             border: 1px solid var(--text);
-            background: transparent;
+            background: black;
             color: var(--text);
             cursor: pointer;
             transition: all 0.3s ease;
@@ -126,6 +126,7 @@
             line-height: 1;
             position: relative;
             z-index: 2;
+            white-space: nowrap;
         }
 
         .hero-title .char {
@@ -444,6 +445,11 @@
                 gap: 30px;
                 text-align: center;
             }
+
+            .hero-title {
+                font-size: clamp(20px, 10vw, 50px);
+                letter-spacing: 0.02em;
+            }
         }
     </style>
 </head>
@@ -468,7 +474,7 @@
             <span class="char" style="animation-delay: 0.35s">S</span>
             <span class="char" style="animation-delay: 0.4s">Z</span>
         </h1>
-        <p class="hero-subtitle">DIGITAL EXPERIENCE PLATFORM</p>
+        <p class="hero-subtitle" id="real-time-clock"></p>
         <div class="scroll-indicator">
             <span class="scroll-text">SCROLL</span>
             <div class="scroll-line"></div>
@@ -778,6 +784,29 @@
                 </a>
             `;
         };
+
+        // ═══════════════════════════════════════════════════════════════
+        // REAL-TIME CLOCK
+        // ═══════════════════════════════════════════════════════════════
+        function updateClock() {
+            const now = new Date();
+            const options = {
+                timeZone: 'Europe/Budapest',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            };
+            const formattedTime = new Intl.DateTimeFormat('hu-HU', options).format(now);
+            document.getElementById('real-time-clock').textContent = formattedTime;
+        }
+
+        // Update clock every second
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial call
     </script>
     <script src="script.js" type="module"></script>
 </body>
