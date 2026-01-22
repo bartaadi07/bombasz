@@ -330,3 +330,52 @@ mark {
   padding: 0 3px;
   border-radius: 4px;
 }
+/* ===== AMOLED TÉMA MÓDOSÍTÁSOK ===== */
+
+body {
+    background-color: #000000; /* Tiszta fekete */
+    color: #ffffff;           /* Hófehér a jobb kontrasztért */
+}
+
+/* Kártyák, legördülők és panelek sötétítése */
+select, 
+#book-selector-section, 
+#cbzSelector, 
+#cbzPartSelector, 
+#chat-section, 
+#profile-section, 
+.popup-content {
+    background-color: #000000 !important;
+    border: 1px solid #333 !important; /* Finom keret, hogy elváljanak az elemek */
+    color: #eee;
+}
+
+/* Chat üzenetküldő sáv */
+#chat-input-area input {
+    background-color: #121212; /* Nagyon sötét szürke, hogy látsszon az input mező */
+    border: 1px solid #444;
+}
+
+/* Popuphoz különleges igazítás, hogy ne legyen teljesen láthatatlan */
+.popup-content {
+    background-color: #000000;
+    border: 1px solid #2196f3; /* Egy kis kék szegély a figyelemfelkeltésért */
+}
+
+/* Scrollbar (csúszka) testreszabása az AMOLED élményért */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}
