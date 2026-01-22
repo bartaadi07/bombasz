@@ -330,8 +330,3 @@ mark {
   padding: 0 3px;
   border-radius: 4px;
 }
-body {
-    /* ... egyéb dolgok ... */
-    overflow-y: auto; /* Ez engedi a görgetést */
-    height: auto;     /* Ne legyen 100% vagy 100vh fixen! */
-}
