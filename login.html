@@ -6,57 +6,45 @@
     <title>Bejelentkezés • BOMBASZ</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="favicon.ico">
     
     <style>
-        :root {
-            --bg-dark: #000000;
-            --ink: #FFFFFF;
-            --ink-muted: #A0A0A0;
-            --border: 1px solid rgba(255, 255, 255, .2);
-            --radius: 2px;
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
+        :root {
+            --bg: #000;
+            --text: #fff;
+            --gray: #888;
+            --dark: #111;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
-            font-family: 'Poppins', system-ui, sans-serif;
-            color: var(--ink);
-            background: var(--bg-dark);
-            min-height: 100vh;
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--text);
+            background: var(--bg);
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
         }
 
-        body::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Grid háttér */
-        .bg-wrap {
+        #bg-canvas {
             position: fixed;
-            inset: 0;
-            z-index: -1;
-            background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)),
-                repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 50px),
-                repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 50px);
-            opacity: 0.8;
-            background-size: 50px 50px;
-            animation: bg-zoom 15s infinite alternate linear;
-        }
-
-        @keyframes bg-zoom {
-            from { background-position: 0 0; }
-            to { background-position: 50px 50px; }
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
         }
 
         .login-container {
@@ -64,52 +52,56 @@
             z-index: 1;
             width: 100%;
             max-width: 420px;
-            margin: 20px;
+            padding: 20px;
         }
 
         .main-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(1.8rem, 6vw, 3rem);
+            font-size: clamp(2rem, 8vw, 3.5rem);
             font-weight: 900;
-            color: var(--ink);
+            color: var(--text);
             text-align: center;
             margin-bottom: 2rem;
-            animation: title-pulse 2s infinite alternate;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.3em;
+            opacity: 0;
+            animation: titleReveal 1s ease 0.5s forwards;
         }
 
-        @keyframes title-pulse {
-            from { opacity: 0.8; transform: scale(1); }
-            to { opacity: 1; transform: scale(1.02); }
+        @keyframes titleReveal {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .form-card {
-            background: rgba(255, 255, 255, .05);
-            border: var(--border);
-            padding: 30px;
-            border-radius: var(--radius);
-            box-shadow: 0 0 30px rgba(0, 0, 0, .5);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 30px;
+            opacity: 0;
+            animation: cardReveal 1s ease 0.8s forwards;
         }
 
-        /* Tab gombok */
+        @keyframes cardReveal {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .auth-tabs {
             display: flex;
-            gap: 0;
-            margin-bottom: 25px;
-            border-bottom: 1px dashed var(--ink-muted);
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .auth-tab {
             flex: 1;
-            padding: 12px;
+            padding: 15px;
             border: none;
             background: transparent;
-            color: var(--ink-muted);
+            color: var(--gray);
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
+            font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 2px;
             cursor: pointer;
             transition: all 0.3s ease;
             border-bottom: 2px solid transparent;
@@ -117,85 +109,86 @@
         }
 
         .auth-tab.active {
-            color: var(--ink);
-            border-bottom-color: var(--ink);
+            color: var(--text);
+            border-bottom-color: var(--text);
         }
 
         .auth-tab:hover:not(.active) {
-            color: var(--ink);
+            color: var(--text);
         }
 
-        /* Forms */
         .auth-form {
             display: none;
         }
 
         .auth-form.active {
             display: block;
+            animation: formFade 0.4s ease;
+        }
+
+        @keyframes formFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 25px;
         }
 
         .form-group label {
             display: block;
-            color: var(--ink-muted);
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-bottom: 6px;
+            color: var(--gray);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
         }
 
-        .form-group input[type="email"],
-        .form-group input[type="password"] {
+        .form-group input {
             width: 100%;
-            padding: 12px 14px;
-            background: rgba(255, 255, 255, .08);
+            padding: 15px;
+            background: transparent;
             border: none;
-            border-bottom: 2px solid var(--ink-muted);
-            border-radius: var(--radius);
-            color: var(--ink);
-            font-family: 'Poppins', sans-serif;
-            font-size: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            color: var(--text);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
             transition: all 0.3s ease;
         }
 
-        .form-group input[type="email"]:focus,
-        .form-group input[type="password"]:focus {
+        .form-group input:focus {
             outline: none;
-            border-bottom-color: var(--ink);
-            background: rgba(255, 255, 255, .12);
+            border-bottom-color: var(--text);
         }
 
         .form-group input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.2);
         }
 
-        /* Checkbox stílus */
         .checkbox-group {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin: 18px 0;
+            gap: 12px;
+            margin: 25px 0;
             cursor: pointer;
         }
 
         .checkbox-group input[type="checkbox"] {
             appearance: none;
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: rgba(255, 255, 255, .08);
-            border: 2px solid var(--ink-muted);
-            border-radius: 3px;
+            width: 18px;
+            height: 18px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
             cursor: pointer;
             position: relative;
             transition: all 0.2s ease;
+            flex-shrink: 0;
         }
 
         .checkbox-group input[type="checkbox"]:checked {
-            background: var(--ink);
-            border-color: var(--ink);
+            background: var(--text);
+            border-color: var(--text);
         }
 
         .checkbox-group input[type="checkbox"]:checked::after {
@@ -204,37 +197,35 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: var(--bg-dark);
-            font-size: 14px;
+            color: var(--bg);
+            font-size: 12px;
             font-weight: bold;
         }
 
         .checkbox-group label {
-            color: var(--ink-muted);
-            font-size: 0.85rem;
+            color: var(--gray);
+            font-size: 13px;
             cursor: pointer;
-            user-select: none;
         }
 
         .submit-btn {
             width: 100%;
-            padding: 14px;
-            background: var(--ink);
-            color: var(--bg-dark);
+            padding: 18px;
+            background: var(--text);
+            color: var(--bg);
             border: none;
-            border-radius: var(--radius);
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
+            font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 3px;
             cursor: pointer;
             transition: all 0.3s ease;
             margin-top: 10px;
         }
 
         .submit-btn:hover {
-            background: var(--ink-muted);
+            background: var(--gray);
             transform: translateY(-2px);
         }
 
@@ -244,50 +235,68 @@
             transform: none;
         }
 
-        /* Messages */
         .message {
-            padding: 12px;
-            border-radius: var(--radius);
+            padding: 15px;
             margin-bottom: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 500;
             display: none;
+            border: 1px solid;
         }
 
         .message.error {
             display: block;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--ink);
-            color: var(--ink);
+            background: rgba(255, 0, 0, 0.1);
+            border-color: rgba(255, 0, 0, 0.3);
+            color: #ff6b6b;
         }
 
         .message.success {
             display: block;
-            background: #90EE90;
-            color: var(--bg-dark);
+            background: rgba(0, 255, 0, 0.1);
+            border-color: rgba(0, 255, 0, 0.3);
+            color: #6bff6b;
         }
 
-        /* Forgot password link */
         .forgot-link {
             display: block;
             text-align: center;
-            margin-top: 16px;
-            color: var(--ink-muted);
+            margin-top: 20px;
+            color: var(--gray);
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 12px;
             transition: color 0.3s ease;
         }
 
         .forgot-link:hover {
-            color: var(--ink);
+            color: var(--text);
         }
 
-        /* Spinner */
+        .back-link {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            color: var(--gray);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s;
+            z-index: 10;
+        }
+
+        .back-link:hover {
+            color: var(--text);
+        }
+
         .spinner {
             width: 20px;
             height: 20px;
-            border: 2px solid var(--ink-muted);
-            border-top-color: var(--bg-dark);
+            border: 2px solid var(--gray);
+            border-top-color: var(--bg);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
             margin: 0 auto;
@@ -297,34 +306,35 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive */
         @media (max-width: 480px) {
             .form-card {
-                padding: 24px 20px;
+                padding: 30px 20px;
             }
-            .main-title {
-                font-size: 1.6rem;
+            .back-link {
+                top: 20px;
+                left: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="bg-wrap"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <a href="index.html" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i> VISSZA
+    </a>
 
     <div class="login-container">
         <h1 class="main-title">BOMBASZ</h1>
 
         <div class="form-card">
-            <!-- Tab gombok -->
             <div class="auth-tabs">
                 <button class="auth-tab active" data-tab="login">Bejelentkezés</button>
                 <button class="auth-tab" data-tab="register">Regisztráció</button>
             </div>
 
-            <!-- Üzenetek -->
             <div id="message" class="message"></div>
 
-            <!-- Bejelentkezés form -->
             <form id="login-form" class="auth-form active">
                 <div class="form-group">
                     <label for="login-email">Email cím</label>
@@ -336,13 +346,12 @@
                 </div>
                 <div class="checkbox-group">
                     <input type="checkbox" id="remember-me" checked>
-                    <label for="remember-me">Emlékezz rám ezen az eszközön</label>
+                    <label for="remember-me">Emlékezz rám</label>
                 </div>
                 <button type="submit" class="submit-btn">Belépés</button>
                 <a href="#" class="forgot-link" id="forgot-password">Elfelejtetted a jelszavad?</a>
             </form>
 
-            <!-- Regisztráció form -->
             <form id="register-form" class="auth-form">
                 <div class="form-group">
                     <label for="register-email">Email cím</label>
@@ -361,7 +370,71 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        // Three.js háttér animáció
+        (function() {
+            const canvas = document.getElementById('bg-canvas');
+            if (!canvas || typeof THREE === 'undefined') return;
+
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            // Particles
+            const particleCount = 500;
+            const positions = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 20;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const material = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 0.02,
+                transparent: true,
+                opacity: 0.4
+            });
+
+            const particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Mouse tracking
+            let mouseX = 0, mouseY = 0;
+            document.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+                mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                particles.rotation.y += 0.0005;
+                particles.rotation.x += (mouseY * 0.1 - particles.rotation.x) * 0.02;
+                particles.rotation.y += (mouseX * 0.1 - particles.rotation.y) * 0.02;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        })();
+    </script>
+
+    <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
@@ -375,7 +448,6 @@
             sendPasswordResetEmail
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
             authDomain: "konyv-93c63.firebaseapp.com",
@@ -388,7 +460,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // Ha már be van jelentkezve, irányítsuk át
+        // Ha már be van jelentkezve, átirányítás
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 const returnUrl = sessionStorage.getItem('returnUrl') || 'index.html';
@@ -403,19 +475,14 @@
 
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                const target = tab.dataset.tab;
-                
                 tabs.forEach(t => t.classList.remove('active'));
                 forms.forEach(f => f.classList.remove('active'));
-                
                 tab.classList.add('active');
-                document.getElementById(`${target}-form`).classList.add('active');
-                
+                document.getElementById(`${tab.dataset.tab}-form`).classList.add('active');
                 hideMessage();
             });
         });
 
-        // Üzenet megjelenítés
         function showMessage(text, type) {
             const msg = document.getElementById('message');
             msg.textContent = text;
@@ -426,7 +493,7 @@
             document.getElementById('message').className = 'message';
         }
 
-        // Bejelentkezés
+        // Login
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -440,32 +507,17 @@
             hideMessage();
 
             try {
-                // Persistence beállítása a checkbox alapján
                 const persistence = rememberMe ? browserLocalPersistence : browserSessionPersistence;
                 await setPersistence(auth, persistence);
-                
                 await signInWithEmailAndPassword(auth, email, password);
                 showMessage('Sikeres bejelentkezés!', 'success');
                 
-                setTimeout(() => {
-                    const returnUrl = sessionStorage.getItem('returnUrl') || 'index.html';
-                    sessionStorage.removeItem('returnUrl');
-                    window.location.href = returnUrl;
-                }, 800);
-                
             } catch (error) {
-                console.error('Login error:', error);
                 let errorMsg = 'Hiba történt a bejelentkezéskor.';
-                
-                if (error.code === 'auth/user-not-found') {
-                    errorMsg = 'Nincs ilyen felhasználó.';
-                } else if (error.code === 'auth/wrong-password') {
-                    errorMsg = 'Hibás jelszó.';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMsg = 'Érvénytelen email cím.';
-                } else if (error.code === 'auth/invalid-credential') {
-                    errorMsg = 'Hibás email vagy jelszó.';
-                }
+                if (error.code === 'auth/user-not-found') errorMsg = 'Nincs ilyen felhasználó.';
+                else if (error.code === 'auth/wrong-password') errorMsg = 'Hibás jelszó.';
+                else if (error.code === 'auth/invalid-email') errorMsg = 'Érvénytelen email cím.';
+                else if (error.code === 'auth/invalid-credential') errorMsg = 'Hibás email vagy jelszó.';
                 
                 showMessage(errorMsg, 'error');
                 btn.disabled = false;
@@ -473,10 +525,9 @@
             }
         });
 
-        // Elfelejtett jelszó
+        // Forgot password
         document.getElementById('forgot-password').addEventListener('click', async (e) => {
             e.preventDefault();
-            
             const email = document.getElementById('login-email').value;
             
             if (!email) {
@@ -486,22 +537,13 @@
 
             try {
                 await sendPasswordResetEmail(auth, email);
-                showMessage('Jelszó visszaállító link elküldve az email címedre!', 'success');
+                showMessage('Jelszó visszaállító link elküldve!', 'success');
             } catch (error) {
-                console.error('Password reset error:', error);
-                let errorMsg = 'Hiba történt.';
-                
-                if (error.code === 'auth/user-not-found') {
-                    errorMsg = 'Nincs ilyen email címmel regisztrált felhasználó.';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMsg = 'Érvénytelen email cím.';
-                }
-                
-                showMessage(errorMsg, 'error');
+                showMessage('Hiba történt.', 'error');
             }
         });
 
-        // Regisztráció
+        // Register
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -520,28 +562,15 @@
             hideMessage();
 
             try {
-                // Alapból local persistence (megjegyzi)
                 await setPersistence(auth, browserLocalPersistence);
-                
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-
+                await createUserWithEmailAndPassword(auth, email, password);
                 showMessage('Sikeres regisztráció!', 'success');
                 
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1000);
-                
             } catch (error) {
-                console.error('Register error:', error);
                 let errorMsg = 'Hiba történt a regisztrációkor.';
-                
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMsg = 'Ez az email már regisztrálva van.';
-                } else if (error.code === 'auth/weak-password') {
-                    errorMsg = 'Túl gyenge jelszó (min. 6 karakter).';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMsg = 'Érvénytelen email cím.';
-                }
+                if (error.code === 'auth/email-already-in-use') errorMsg = 'Ez az email már regisztrálva van.';
+                else if (error.code === 'auth/weak-password') errorMsg = 'Túl gyenge jelszó.';
+                else if (error.code === 'auth/invalid-email') errorMsg = 'Érvénytelen email cím.';
                 
                 showMessage(errorMsg, 'error');
                 btn.disabled = false;
