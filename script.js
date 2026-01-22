@@ -1,101 +1,217 @@
-import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import {
-    getAuth, createUserWithEmailAndPassword, updateProfile,
-    sendEmailVerification, deleteUser,
-    setPersistence, browserSessionPersistence
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import {
-    getDatabase, ref, set, get, runTransaction, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
-    authDomain: "konyv-93c63.firebaseapp.com",
-    projectId: "konyv-93c63",
-    storageBucket: "konyv-93c63.firebasestorage.app",
-    messagingSenderId: "349471560585",
-    appId: "1:349471560585:web:55c6e78499ebbca0540758",
-    measurementId: "G-NF07N36ETJ"
-};
-
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-
-const $ = (sel) => document.querySelector(sel);
-function revealMsg(node, text, type = "") {
-    if (!node) return;
-    node.textContent = text;
-    node.className = "form-msg" + (type ? " " + type : "");
-    node.style.display = "block";
-    try { node.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (_) { }
+const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    smooth: true
+});
+function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
 }
-const normalizeUsername = (s = "") =>
-    s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase().replace(/[^a-z0-9]+/g, "").slice(0, 20);
+requestAnimationFrame(raf);
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add((time) => lenis.raf(time * 1000));
+gsap.ticker.lagSmoothing(0);
 
-{
-    const form = $("#register-form");
-    const msg = $("#register-msg");
 
-    form?.addEventListener("submit", async (e) => {
-        e.preventDefault(); e.stopPropagation();
-        revealMsg(msg, "");
+(function () {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
 
-        const rawName = $("#regDisplayName").value.trim();
-        const email = $("#regEmail").value.trim();
-        const pass = $("#regPassword").value;
-        const pass2 = $("#regPassword2").value;
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        const uname = normalizeUsername(rawName);
-        if (!rawName) return revealMsg(msg, "Adj meg egy felhasználónevet.", "error");
-        if (uname.length < 3) return revealMsg(msg, "A felhasználónév túl rövid (min. 3 karakter, ékezet nélkül).", "error");
-        if (!email || !pass || !pass2) return revealMsg(msg, "Kérlek, tölts ki minden mezőt!", "error");
-        if (pass !== pass2) return revealMsg(msg, "A két jelszó nem egyezik.", "error");
-        if (pass.length < 6) return revealMsg(msg, "A jelszónak legalább 6 karakteresnek kell lennie.", "error");
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 10;
+    const particleCount = 700;
+    const positions = new Float32Array(particleCount * 3);
+    const velocities = [];
+    for (let i = 0; i < particleCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 20;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+        velocities.push({
+            x: (Math.random() - 0.5) * 0.01,
+            y: (Math.random() - 0.5) * 0.01,
+            z: (Math.random() - 0.5) * 0.01
+        });
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const material = new THREE.PointsMaterial({
+        color: 0xffffff,
+        size: 0.02,
+        transparent: true,
+        opacity: 0.3,
+        blending: THREE.AdditiveBlending
+    });
+    const particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+    const icoGeo = new THREE.IcosahedronGeometry(2, 2);
+    const icoMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.1
+    });
+    const ico = new THREE.Mesh(icoGeo, icoMat);
+    scene.add(ico);
 
-        try {
-            const unameRef = ref(db, "usernames/" + uname);
-            const pre = await get(unameRef);
-            if (pre.exists()) return revealMsg(msg, "Ez a felhasználónév már foglalt. Válassz másikat.", "error");
+    let mouseX = 0, mouseY = 0;
+    document.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+    function animate() {
+        requestAnimationFrame(animate);
+        ico.rotation.x += (mouseY * 0.5 - ico.rotation.x) * 0.02;
+        ico.rotation.y += (mouseX * 0.5 - ico.rotation.y) * 0.02;
+        ico.rotation.z += 0.002;
 
-            await setPersistence(auth, browserSessionPersistence);
-            const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        const pos = geometry.attributes.position.array;
+        for (let i = 0; i < particleCount; i++) {
+            pos[i * 3] += velocities[i].x;
+            pos[i * 3 + 1] += velocities[i].y;
+            pos[i * 3 + 2] += velocities[i].z;
+            if (Math.abs(pos[i * 3]) > 10) velocities[i].x *= -1;
+            if (Math.abs(pos[i * 3 + 1]) > 10) velocities[i].y *= -1;
+            if (Math.abs(pos[i * 3 + 2]) > 10) velocities[i].z *= -1;
+        }
+        geometry.attributes.position.needsUpdate = true;
+        particles.rotation.y += 0.001;
 
-            const claim = await runTransaction(unameRef, (current) => {
-                if (current === null) return { uid: cred.user.uid, displayName: rawName };
-                return;
-            });
-            if (!claim.committed) {
-                try { await deleteUser(cred.user); } catch (_) { }
-                return revealMsg(msg, "Sajnálom, közben lefoglalták ezt a nevet. Válassz másikat!", "error");
-            }
+        renderer.render(scene, camera);
+    }
+    animate();
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
 
-            try { await updateProfile(cred.user, { displayName: rawName }); } catch (_) { }
+    gsap.to(ico.rotation, {
+        y: Math.PI * 4,
+        ease: 'none',
+        scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: true }
+    });
 
-            await set(ref(db, "users/" + cred.user.uid), {
-                displayName: rawName,
-                username: uname,
-                email,
-                createdAt: serverTimestamp()
-            });
+    gsap.to(camera.position, {
+        z: 5,
+        ease: 'none',
+        scrollTrigger: { trigger: '.pages-section', start: 'top bottom', end: 'bottom top', scrub: true }
+    });
 
-            try { await sendEmailVerification(cred.user); } catch (_) { }
+    gsap.to(material, {
+        opacity: 0.5,
+        ease: 'none',
+        scrollTrigger: { trigger: '.downloads-section', start: 'top bottom', end: 'bottom top', scrub: true }
+    });
 
-            revealMsg(msg, "✅ Sikeres regisztráció! Ellenőrizd az e-mailed a megerősítéshez.", "success");
-            form.reset();
-        } catch (err) {
-            let text = "Hiba történt a regisztráció során.";
-            if (err?.code === "auth/email-already-in-use") text = "Ez az e-mail már használatban van.";
-            if (err?.code === "auth/invalid-email") text = "Érvénytelen e-mail cím.";
-            if (err?.code === "auth/weak-password") text = "Gyenge jelszó (min. 6 karakter).";
-            revealMsg(msg, "❌ " + text, "error");
-            console.error(err);
+    gsap.to(ico.scale, {
+        x: 2,
+        y: 2,
+        z: 2,
+        ease: 'none',
+        scrollTrigger: { trigger: '.pages-section', start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+
+    gsap.to(material, {
+        size: 0.15,
+        ease: 'none',
+        scrollTrigger: { trigger: '.downloads-section', start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+
+    gsap.to(particles.rotation, {
+        x: Math.PI * 0.5,
+        ease: 'none',
+        scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: true }
+    });
+
+    gsap.to(camera, {
+        fov: 90,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: '.footer',
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true,
+            onUpdate: () => camera.updateProjectionMatrix()
         }
     });
-}
-document.addEventListener('keydown', function (e) {
-    if (e.key === "F12") e.preventDefault();
-    if (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "C")) e.preventDefault();
-    if (e.ctrlKey && (e.key === "u" || e.key === "s")) e.preventDefault();
+})();
+
+gsap.registerPlugin(ScrollTrigger);
+const header = document.querySelector('.header');
+
+ScrollTrigger.create({
+    start: 'top top',
+    end: 99999,
+    onUpdate: (self) => {
+        if (self.direction === 1 && self.scroll() > 50) {
+            header.classList.add('header-hidden');
+        }
+        else if (self.direction === -1) {
+            header.classList.remove('header-hidden');
+        }
+    }
 });
+document.querySelectorAll('.reveal').forEach(el => {
+    gsap.fromTo(el, { opacity: 0, y: 50 }, {
+        opacity: 1, y: 0, duration: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none reverse' }
+    });
+});
+document.querySelectorAll('.split-text').forEach(el => {
+    ScrollTrigger.create({
+        trigger: el, start: 'top 80%',
+        onEnter: () => el.classList.add('active'),
+        onLeaveBack: () => el.classList.remove('active')
+    });
+});
+document.querySelectorAll('.stagger-reveal').forEach(grid => {
+    ScrollTrigger.create({
+        trigger: grid, start: 'top 80%',
+        onEnter: () => grid.classList.add('active'),
+        onLeaveBack: () => grid.classList.remove('active')
+    });
+});
+gsap.to('.hero-title', {
+    yPercent: 50, opacity: 0, ease: 'none',
+    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+});
+
+window.showUserUI = function (user, isAdmin) {
+    const container = document.getElementById('auth-section');
+    if (!container) return;
+    const name = user.displayName || user.email.split('@')[0];
+    container.innerHTML = `
+                <span class="header-auth">
+                    ${name} ${isAdmin ? '<span style="opacity:0.5">[ADMIN]</span>' : ''}
+                </span>
+                ${isAdmin ? '<a href="admin.html" style="color:#fff;text-decoration:none;font-size:14px;"><i class="fa-solid fa-gear"></i></a>' : ''}
+                <button class="btn-header" onclick="logoutUser()">KILÉPÉS</button>
+            `;
+};
+window.showGuestUI = function () {
+    const container = document.getElementById('auth-section');
+    if (!container) return;
+    container.innerHTML = `
+                <a href="login.html" style="text-decoration:none">
+                    <button class="btn-header">BELÉPÉS</button>
+                </a>
+            `;
+};
+
+function updateClock() {
+    const now = new Date();
+    const options = {
+        timeZone: 'Europe/Budapest',
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        hour12: false
+    };
+    document.getElementById('real-time-clock').textContent = new Intl.DateTimeFormat('hu-HU', options).format(now);
+}
+setInterval(updateClock, 1000);
+updateClock();
