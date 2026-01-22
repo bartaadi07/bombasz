@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="hu">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,22 +8,27 @@
     <script type="module" src="auth.js"></script>
     <script src="user-ui.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         :root {
             --bg: #000;
             --text: #fff;
             --gray: #888;
             --dark: #111;
         }
+
         html {
             scroll-behavior: auto;
         }
+
         body {
             font-family: 'Space Grotesk', sans-serif;
             background: var(--bg);
@@ -30,16 +36,22 @@
             overflow-x: hidden;
             position: relative;
         }
+
         /* SMOOTH SCROLL WRAPPER */
-        html.lenis, html.lenis body {
+        html.lenis,
+        html.lenis body {
             height: auto;
         }
+
         .lenis.lenis-smooth {
             scroll-behavior: auto !important;
         }
+
         .lenis.lenis-smooth [data-lenis-prevent] {
             overscroll-behavior: contain;
         }
+
+        /* HEADER */
         /* HEADER */
         .header {
             position: fixed;
@@ -52,7 +64,18 @@
             align-items: center;
             z-index: 100;
             mix-blend-mode: difference;
+
+            /* ÚJ SOROK: */
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            /* Sima animáció */
+            transform: translateY(0);
         }
+
+        /* ÚJ OSZTÁLY a rejtett állapothoz */
+        .header.header-hidden {
+            transform: translateY(-100%);
+        }
+
         .logo {
             font-family: 'Orbitron', sans-serif;
             font-size: 14px;
@@ -60,15 +83,18 @@
             letter-spacing: 1px;
             color: var(--text);
         }
+
         .header-right {
             display: flex;
             align-items: center;
             gap: 20px;
         }
+
         .header-auth {
             font-size: 12px;
             color: var(--gray);
         }
+
         .btn-header {
             font-family: 'Orbitron', sans-serif;
             font-size: 10px;
@@ -81,10 +107,12 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
         .btn-header:hover {
             background: var(--text);
             color: var(--bg);
         }
+
         /* HERO SECTION */
         .hero {
             min-height: 100vh;
@@ -95,6 +123,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .hero-title {
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(50px, 15vw, 100px);
@@ -106,18 +135,21 @@
             z-index: 2;
             white-space: nowrap;
         }
+
         .hero-title .char {
             display: inline-block;
             opacity: 0;
             transform: translateY(100px) rotateX(-90deg);
             animation: charReveal 0.8s ease forwards;
         }
+
         @keyframes charReveal {
             to {
                 opacity: 1;
                 transform: translateY(0) rotateX(0);
             }
         }
+
         .hero-subtitle {
             font-size: 14px;
             letter-spacing: 3px;
@@ -126,11 +158,13 @@
             opacity: 0;
             animation: fadeUp 1s ease 1s forwards;
         }
+
         @keyframes fadeUp {
             to {
                 opacity: 1;
             }
         }
+
         .scroll-indicator {
             position: absolute;
             bottom: 40px;
@@ -143,22 +177,35 @@
             opacity: 0;
             animation: fadeUp 1s ease 1.5s forwards;
         }
+
         .scroll-text {
             font-family: 'Orbitron', sans-serif;
             font-size: 10px;
             letter-spacing: 3px;
             color: var(--gray);
         }
+
         .scroll-line {
             width: 1px;
             height: 60px;
             background: linear-gradient(to bottom, var(--text), transparent);
             animation: scrollPulse 2s ease infinite;
         }
+
         @keyframes scrollPulse {
-            0%, 100% { transform: scaleY(1); opacity: 1; }
-            50% { transform: scaleY(0.5); opacity: 0.3; }
+
+            0%,
+            100% {
+                transform: scaleY(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scaleY(0.5);
+                opacity: 0.3;
+            }
         }
+
         /* 3D Canvas */
         #hero-canvas {
             position: fixed;
@@ -168,12 +215,14 @@
             height: 100%;
             z-index: 0;
         }
+
         /* SECTIONS GENERAL */
         section {
             padding: 150px 40px;
             position: relative;
             z-index: 1;
         }
+
         .section-label {
             font-family: 'Orbitron', sans-serif;
             font-size: 10px;
@@ -183,6 +232,7 @@
             opacity: 0;
             transform: translateY(30px);
         }
+
         .section-title {
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(30px, 6vw, 60px);
@@ -190,24 +240,29 @@
             line-height: 1.1;
             margin-bottom: 40px;
         }
+
         .section-title .word {
             display: inline-block;
             overflow: hidden;
         }
+
         .section-title .word span {
             display: inline-block;
             transform: translateY(100%);
         }
+
         /* ALOLDALAK SECTION */
         .pages-section {
             background: transparent;
         }
+
         .pages-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
             margin-top: 60px;
         }
+
         .page-card {
             background: rgba(0, 0, 0, 0.8);
             border: 1px solid #222;
@@ -224,6 +279,7 @@
             transform: translateY(50px);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .page-card::before {
             content: '';
             position: absolute;
@@ -231,26 +287,31 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 50%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
             opacity: 0;
             transition: opacity 0.4s ease;
         }
+
         .page-card:hover {
             transform: translateY(-10px);
             border-color: #444;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
+
         .page-card:hover::before {
             opacity: 1;
         }
+
         .page-card i {
             font-size: 32px;
             margin-bottom: 20px;
             transition: transform 0.4s ease;
         }
+
         .page-card:hover i {
             transform: scale(1.2);
         }
+
         .page-card h4 {
             font-family: 'Orbitron', sans-serif;
             font-size: 12px;
@@ -258,85 +319,140 @@
             letter-spacing: 1px;
             text-transform: uppercase;
         }
+
         /* LETÖLTÉSEK SECTION */
         .downloads-section {
             background: transparent;
         }
+
         .download-card {
             background: rgba(0, 0, 0, 0.8);
             border: 1px solid #222;
         }
+
         .download-card small {
             font-size: 10px;
             color: var(--gray);
             margin-top: 8px;
             font-family: 'Orbitron', sans-serif;
         }
+
         /* REVEAL ANIMATIONS */
         .reveal {
             opacity: 0;
             transform: translateY(50px);
         }
+
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .stagger-reveal > * {
+
+        .stagger-reveal>* {
             opacity: 0;
             transform: translateY(30px);
         }
-        .stagger-reveal.active > * {
+
+        .stagger-reveal.active>* {
             opacity: 1;
             transform: translateY(0);
             transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .stagger-reveal.active > *:nth-child(1) { transition-delay: 0.1s; }
-        .stagger-reveal.active > *:nth-child(2) { transition-delay: 0.15s; }
-        .stagger-reveal.active > *:nth-child(3) { transition-delay: 0.2s; }
-        .stagger-reveal.active > *:nth-child(4) { transition-delay: 0.25s; }
-        .stagger-reveal.active > *:nth-child(5) { transition-delay: 0.3s; }
-        .stagger-reveal.active > *:nth-child(6) { transition-delay: 0.35s; }
-        .stagger-reveal.active > *:nth-child(7) { transition-delay: 0.4s; }
-        .stagger-reveal.active > *:nth-child(8) { transition-delay: 0.45s; }
-        .stagger-reveal.active > *:nth-child(9) { transition-delay: 0.5s; }
-        .stagger-reveal.active > *:nth-child(10) { transition-delay: 0.55s; }
+
+        .stagger-reveal.active>*:nth-child(1) {
+            transition-delay: 0.1s;
+        }
+
+        .stagger-reveal.active>*:nth-child(2) {
+            transition-delay: 0.15s;
+        }
+
+        .stagger-reveal.active>*:nth-child(3) {
+            transition-delay: 0.2s;
+        }
+
+        .stagger-reveal.active>*:nth-child(4) {
+            transition-delay: 0.25s;
+        }
+
+        .stagger-reveal.active>*:nth-child(5) {
+            transition-delay: 0.3s;
+        }
+
+        .stagger-reveal.active>*:nth-child(6) {
+            transition-delay: 0.35s;
+        }
+
+        .stagger-reveal.active>*:nth-child(7) {
+            transition-delay: 0.4s;
+        }
+
+        .stagger-reveal.active>*:nth-child(8) {
+            transition-delay: 0.45s;
+        }
+
+        .stagger-reveal.active>*:nth-child(9) {
+            transition-delay: 0.5s;
+        }
+
+        .stagger-reveal.active>*:nth-child(10) {
+            transition-delay: 0.55s;
+        }
+
         /* TEXT SPLIT ANIMATION */
         .split-text .line {
             overflow: hidden;
             display: block;
         }
+
         .split-text .line span {
             display: block;
             transform: translateY(100%);
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         .split-text.active .line span {
             transform: translateY(0);
         }
-        .split-text.active .line:nth-child(1) span { transition-delay: 0s; }
-        .split-text.active .line:nth-child(2) span { transition-delay: 0.1s; }
-        .split-text.active .line:nth-child(3) span { transition-delay: 0.2s; }
+
+        .split-text.active .line:nth-child(1) span {
+            transition-delay: 0s;
+        }
+
+        .split-text.active .line:nth-child(2) span {
+            transition-delay: 0.1s;
+        }
+
+        .split-text.active .line:nth-child(3) span {
+            transition-delay: 0.2s;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 768px) {
             .header {
                 padding: 15px 20px;
             }
+
             section {
                 padding: 100px 20px;
             }
+
             .pages-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
             }
+
             .page-card {
                 padding: 30px 15px;
             }
+
             .hero-title {
                 font-size: clamp(20px, 10vw, 50px);
                 letter-spacing: 0.02em;
             }
         }
+
         /* Óra szekció */
         .clock-section {
             padding: 20px 40px;
@@ -344,11 +460,13 @@
             position: relative;
             z-index: 1;
         }
+
         .clock-section .hero-subtitle {
             margin-top: 0;
             font-size: 24px;
             letter-spacing: 4px;
         }
+
         /* Footer */
         .footer {
             padding: 60px 40px;
@@ -359,21 +477,25 @@
             z-index: 1;
             background: transparent;
         }
+
         .social-links {
             display: flex;
             gap: 30px;
         }
+
         .social-links a {
             color: var(--gray);
             font-size: 24px;
             transition: all 0.3s ease;
         }
+
         .social-links a:hover {
             color: var(--text);
             transform: translateY(-3px);
         }
     </style>
 </head>
+
 <body>
     <!-- 3D Canvas -->
     <canvas id="hero-canvas"></canvas>
@@ -404,21 +526,13 @@
     <section class="pages-section">
         <div class="section-label reveal">> ALOLDALAK</div>
         <h2 class="section-title split-text">
-            <span class="line"><span>Ismerd meg szigmán a</span></span>
-            <span class="line"><span>platformot</span></span>
+            <span class="line"><span>Bombasz</span></span>
+            <span class="line"><span>aloldalak</span></span>
         </h2>
         <div class="pages-grid stagger-reveal">
             <a href="social.html" class="page-card">
                 <i class="fa-solid fa-comments"></i>
-                <h4>Bombasz Chat</h4>
-            </a>
-            <a href="chat.html" class="page-card">
-                <i class="fa-solid fa-users"></i>
-                <h4>Group Chat</h4>
-            </a>
-            <a href="chat2.html" class="page-card">
-                <i class="fa-solid fa-terminal"></i>
-                <h4>Terminál</h4>
+                <h4>Bombasz Chat Web</h4>
             </a>
             <a href="konyv.html" class="page-card">
                 <i class="fa-solid fa-book-open"></i>
@@ -428,21 +542,21 @@
                 <i class="fa-solid fa-play"></i>
                 <h4>Vids</h4>
             </a>
-            <a href="mikulas.html" class="page-card">
-                <i class="fa-solid fa-gift"></i>
-                <h4>Mikulás</h4>
-            </a>
             <a href="uncs.html" class="page-card">
                 <i class="fa-solid fa-check-double"></i>
-                <h4>UNCS</h4>
+                <h4>UNCS (régi főoldal)</h4>
+            </a>
+            <a href="mikulas.html" class="page-card">
+                <i class="fa-solid fa-gamepad"></i>
+                <h4>Mikulás (Játék)</h4>
             </a>
             <a href="police.html" class="page-card">
-                <i class="fa-solid fa-shield"></i>
-                <h4>Police Training</h4>
+                <i class="fa-solid fa-gamepad"></i>
+                <h4>Police Training (Játék)</h4>
             </a>
             <a href="jatek.html" class="page-card">
                 <i class="fa-solid fa-gamepad"></i>
-                <h4>UFO Játék</h4>
+                <h4>UFO (Játék)</h4>
             </a>
             <a href="tori.html" class="page-card">
                 <i class="fa-solid fa-landmark"></i>
@@ -458,22 +572,23 @@
     <section class="downloads-section">
         <div class="section-label reveal">> LETÖLTÉSEK</div>
         <h2 class="section-title split-text">
-            <span class="line"><span>Töltsd le az</span></span>
-            <span class="line"><span>alkalmazásokat</span></span>
+            <span class="line"><span>Bombasz</span></span>
+            <span class="line"><span>programok</span></span>
         </h2>
         <div class="pages-grid stagger-reveal">
             <a href="egyeb/Bombasz Chat Setup 1.0.1.exe" class="page-card download-card" download>
-                <i class="fa-solid fa-desktop"></i>
+                <i class="fa-solid fa-comments"></i>
                 <h4>Bombasz Chat</h4>
                 <small>(EXE)</small>
             </a>
-            <a href="https://drive.google.com/file/d/1xuKcJ2v9WyYMUw6O1AZQhTnJWcihYFgV/view" target="_blank" class="page-card download-card">
-                <i class="fa-solid fa-box"></i>
-                <h4>Chat Portable</h4>
+            <a href="https://drive.google.com/file/d/1xuKcJ2v9WyYMUw6O1AZQhTnJWcihYFgV/view" target="_blank"
+                class="page-card download-card">
+                <i class="fa-solid fa-comments"></i>
+                <h4>Bombasz Chat - Portable</h4>
                 <small>(EXE)</small>
             </a>
             <a href="egyeb/sub.py" class="page-card download-card" download>
-                <i class="fa-solid fa-code"></i>
+                <i class="fa-solid fa-clock"></i>
                 <h4>.srt Időzítő</h4>
                 <small>(PY)</small>
             </a>
@@ -482,12 +597,8 @@
                 <h4>.srt Időzítő</h4>
                 <small>(EXE)</small>
             </a>
-            <a href="egyeb/bombasz.apk" class="page-card download-card" download>
-                <i class="fa-solid fa-mobile-screen"></i>
-                <h4>Group Chat</h4>
-                <small>(APK)</small>
-            </a>
-            <a href="https://drive.google.com/file/d/1Ly64r0g0RMKuSsabj9iegmRgCB5U_8Ea/view" target="_blank" class="page-card download-card">
+            <a href="https://drive.google.com/file/d/1Ly64r0g0RMKuSsabj9iegmRgCB5U_8Ea/view" target="_blank"
+                class="page-card download-card">
                 <i class="fa-solid fa-music"></i>
                 <h4>Zene Letöltő</h4>
                 <small>(EXE)</small>
@@ -525,7 +636,7 @@
         gsap.ticker.lagSmoothing(0);
 
         // THREE.js setup
-        (function() {
+        (function () {
             const canvas = document.getElementById('hero-canvas');
             if (!canvas) return;
 
@@ -542,7 +653,7 @@
             const positions = new Float32Array(particleCount * 3);
             const velocities = [];
             for (let i = 0; i < particleCount; i++) {
-                positions[i * 3]     = (Math.random() - 0.5) * 20;
+                positions[i * 3] = (Math.random() - 0.5) * 20;
                 positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
                 positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
                 velocities.push({
@@ -666,6 +777,26 @@
 
         // GSAP animációk
         gsap.registerPlugin(ScrollTrigger);
+        // SMART HEADER (Görgetésre eltűnő/megjelenő fejléc)
+        const header = document.querySelector('.header');
+
+        ScrollTrigger.create({
+            start: 'top top',
+            end: 99999, // Végtelenig figyeljen
+            onUpdate: (self) => {
+                // self.direction: 1 = lefelé, -1 = felfelé
+                // self.scroll(): az aktuális görgetési pozíció
+
+                // Ha lefelé görgetünk ÉS nem vagyunk teljesen a tetején (50px buffer)
+                if (self.direction === 1 && self.scroll() > 50) {
+                    header.classList.add('header-hidden');
+                }
+                // Ha felfelé görgetünk
+                else if (self.direction === -1) {
+                    header.classList.remove('header-hidden');
+                }
+            }
+        });
         document.querySelectorAll('.reveal').forEach(el => {
             gsap.fromTo(el, { opacity: 0, y: 50 }, {
                 opacity: 1, y: 0, duration: 1, ease: 'power3.out',
@@ -692,7 +823,7 @@
         });
 
         // AUTH UI
-        window.showUserUI = function(user, isAdmin) {
+        window.showUserUI = function (user, isAdmin) {
             const container = document.getElementById('auth-section');
             if (!container) return;
             const name = user.displayName || user.email.split('@')[0];
@@ -704,7 +835,7 @@
                 <button class="btn-header" onclick="logoutUser()">KILÉPÉS</button>
             `;
         };
-        window.showGuestUI = function() {
+        window.showGuestUI = function () {
             const container = document.getElementById('auth-section');
             if (!container) return;
             container.innerHTML = `
@@ -730,4 +861,5 @@
     </script>
     <script src="script.js" type="module"></script>
 </body>
+
 </html>
