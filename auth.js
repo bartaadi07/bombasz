@@ -1,16 +1,30 @@
 // ============================================
 // BOMBASZ.HU - Végleges Auth & Sync
 // ============================================
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { 
-    getAuth, onAuthStateChanged, signOut, 
-    setPersistence, browserLocalPersistence 
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut,
+    setPersistence,
+    browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { 
-    getDatabase, ref, set, onDisconnect, serverTimestamp 
+
+import {
+    getDatabase,
+    ref,
+    set,
+    onDisconnect,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-const ADMIN_EMAILS = ["bartaadikonyv@gmail.com", "balazs.hajdu00@gmail.com", "hajdub@kkszki.hu", "adam070702@gmail.com"];
+const ADMIN_EMAILS = [
+    "bartaadikonyv@gmail.com",
+    "balazs.hajdu00@gmail.com",
+    "hajdub@kkszki.hu",
+    "adam070702@gmail.com"
+];
 
 const firebaseConfig = {
     apiKey: "AIzaSyAwRrAtHaNRh2DLwVkryA3wSf86h7aQCaI",
@@ -34,37 +48,59 @@ window.logoutUser = async function() {
         await set(ref(db, 'status/' + auth.currentUser.uid), null);
     }
     await signOut(auth);
-    window.location.reload(); // Frissítjük az oldalt a vendég nézethez
+    window.location.href = 'index.html';   // vagy 'login.html' ha szigorúbb akarsz lenni
 };
 
+// ────────────────────────────────────────────────
+//          Auth állapot figyelése + redirect logika
+// ────────────────────────────────────────────────
+
 onAuthStateChanged(auth, (user) => {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    const currentPath = window.location.pathname;
+    const currentPage = currentPath.split('/').pop() || 'index.html';
     const publicPages = ['index.html', 'login.html', 'hamarosan.html'];
 
     if (user) {
-        // 1. Adatmentés & Online státusz
+        // 1. User adat + online státusz mentése
         const userData = {
             username: user.displayName || user.email.split('@')[0],
             email: user.email,
             lastSeen: serverTimestamp()
         };
         set(ref(db, 'users/' + user.uid), userData);
-        
+
         const statusRef = ref(db, 'status/' + user.uid);
         set(statusRef, { online: true });
         onDisconnect(statusRef).remove();
 
-        // 2. UI Frissítése
-        if (typeof window.showUserUI === 'function') {
-            window.showUserUI(user, ADMIN_EMAILS.includes(user.email.toLowerCase()));
+        // 2. Redirect logika – ha van mentett céloldal, oda megyünk
+        const savedRedirect = sessionStorage.getItem('redirectAfterLogin');
+
+        if (savedRedirect) {
+            sessionStorage.removeItem('redirectAfterLogin');
+            if (savedRedirect !== currentPath && savedRedirect !== window.location.href) {
+                window.location.href = savedRedirect;
+                return;   // FONTOS: ne fusson tovább a kód
+            }
         }
-    } else {
-        // 3. Vendég mód vagy Átirányítás
+
+        // Ha nincs mentett redirect → marad az aktuális oldal (vagy index)
+        if (typeof window.showUserUI === 'function') {
+            const isAdmin = ADMIN_EMAILS.includes(user.email.toLowerCase());
+            window.showUserUI(user, isAdmin);
+        }
+    }
+    else {
+        // Nincs bejelentkezve
         if (!publicPages.includes(currentPage) && currentPage !== 'admin.html') {
+            // Elmentjük, hova akart menni
+            sessionStorage.setItem('redirectAfterLogin', currentPath + window.location.search);
             window.location.href = 'login.html';
         }
-        if (typeof window.showGuestUI === 'function') {
-            window.showGuestUI();
+        else {
+            if (typeof window.showGuestUI === 'function') {
+                window.showGuestUI();
+            }
         }
     }
 });

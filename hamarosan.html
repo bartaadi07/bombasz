@@ -1,46 +1,31 @@
 <!DOCTYPE html>
 <html lang="hu">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BOMBASZ</title>
-    <link rel="stylesheet" href="style.css">
+    <script type="module" src="auth.js"></script>
+    <script src="user-ui.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Orbitron:wght@700;900&display=swap"
-        rel="stylesheet" />
-
-    <style>
-
-    </style>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-        });
-    </script>
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+    <canvas id="hero-canvas"></canvas>
 
-    <div class="bg-wrap"></div>
-
-    <main class="container">
-
-        <h1 class="main-title-display">hamarosan</h1>
-
-        <section id="home" class="main-content-grid">
-
-            <div class="left-panel">
+   
+    <section class="hero">
+        <h1 class="hero-title">
 
 
-               
-
-        </section>
-
-    </main>
-
-    </script>
+        </h1>
+   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1/bundled/lenis.min.js"></script>
+    <script src="script.js" type="module"></script>
 </body>
-
 </html>
