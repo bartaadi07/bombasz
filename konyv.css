@@ -379,3 +379,22 @@ select,
 ::-webkit-scrollbar-thumb:hover {
     background: #444;
 }
+#book-content {
+    text-align: justify;       /* Sorkizárt szöveg */
+    text-justify: inter-word;  /* Szebb elosztás a szavak között */
+    hyphens: auto;             /* Automatikus szóelválasztás (böngészőfüggő) */
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    padding-bottom: 100px;     /* Hogy az utolsó sor ne legyen takarásban a gombok miatt */
+}
+
+/* Ha a könyv tartalma p tageken belül van, azokat is érdemes igazítani */
+#book-content p {
+    text-align: justify;
+    margin-bottom: 1.2rem;     /* Bekezdések közötti távolság */
+}
+body {
+    padding: 1.5rem;           /* Kicsit több hely a széleken */
+    max-width: 800px;          /* Optimális olvasási szélesség */
+    margin: 0 auto;
+}
