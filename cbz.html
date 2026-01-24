@@ -192,7 +192,7 @@
         <div class="nav-content">
             <button class="nav-btn" onclick="changeChapter(-1)">←</button>
             <div class="chapter-control">
-                NO. <input type="number" id="chapNum" value="1" onchange="jumpToChapter()">
+                ch. <input type="number" id="chapNum" value="1" onchange="jumpToChapter()">
             </div>
             <button class="nav-btn" onclick="changeChapter(1)">→</button>
         </div>
@@ -205,12 +205,12 @@
         
         <div id="error-screen">
             <h2>404</h2>
-            <p>A(z) <span id="error-chap-num"></span>. fejezet nem található.</p>
+            <p>A(z) <span id="error-chap-num"></span>. még nem jelent meg.</p>
             <button class="retry-btn" onclick="goBackSafe()">Vissza</button>
         </div>
 
         <div class="bottom-nav">
-            <button id="bottom-next-btn" class="big-next-btn" onclick="changeChapter(1)">Next Chapter</button>
+            <button id="bottom-next-btn" class="big-next-btn" onclick="changeChapter(1)">Következő fejezet</button>
         </div>
     </div>
 
