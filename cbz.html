@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>cbz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #000000;
+            --navbar-bg: rgba(0, 0, 0, 0.9);
+            --text-color: #ffffff;
+            --text-muted: #666666;
+            --accent-color: #ffffff;
+            --border-color: #333333;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            background-color: var(--navbar-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 60px;
+            display: flex;
+            justify-content: center; /* Középre rendezve */
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-hidden {
+            transform: translateY(-100%);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* --- INPUT MEZŐ --- */
+        .chapter-control {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        input {
+            padding: 5px;
+            width: 50px;
+            text-align: center;
+            background: transparent;
+            color: var(--text-color);
+            border: none;
+            font-size: 18px;
+            font-weight: 900;
+            font-family: 'Inter', sans-serif;
+            transition: color 0.2s;
+        }
+
+        input:focus { outline: none; color: #aaa; }
+
+        /* Nyilak eltüntetése */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
+        /* --- GOMBOK --- */
+        .nav-btn {
+            background: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px; /* Kicsit szögletesebb, modern */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: var(--text-color);
+            color: var(--bg-color);
+            border-color: var(--text-color);
+        }
+
+        .nav-btn:active { transform: scale(0.95); }
+
+        /* --- KÉP --- */
+        #comic-container {
+            width: 100%;
+            max-width: 800px;
+            min-height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        #comic-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        #comic-img.loaded { opacity: 1; }
+
+        /* --- HIBA KÉPERNYŐ (Modern) --- */
+        #error-screen {
+            display: none; /* Alapból rejtve */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            text-align: center;
+            width: 100%;
+            height: 60vh;
+        }
+
+        #error-screen h2 { font-size: 40px; margin: 0 0 10px 0; font-weight: 900; letter-spacing: -1px; }
+        #error-screen p { color: var(--text-muted); margin-bottom: 30px; font-size: 14px; max-width: 300px; line-height: 1.5; }
+
+        .retry-btn {
+            background: var(--text-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 12px 30px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .retry-btn:hover { opacity: 0.9; }
+
+        /* --- LOADING --- */
+        #loader {
+            position: absolute;
+            top: 100px;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #333;
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- ALSÓ NAV --- */
+        .bottom-nav {
+            width: 100%;
+            padding: 60px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .big-next-btn {
+            background: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--text-color);
+            padding: 15px 50px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .big-next-btn:hover {
+            background: var(--text-color);
+            color: var(--bg-color);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="navbar" id="navbar">
+        <div class="nav-content">
+            <button class="nav-btn" onclick="changeChapter(-1)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            
+            <div class="chapter-control">
+                ch. <input type="number" id="chapNum" value="1" onchange="jumpToChapter()">
+            </div>
+
+            <button class="nav-btn" onclick="changeChapter(1)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="comic-container">
+        <div id="loader"></div>
+        
+        <img id="comic-img" src="" alt="Manga Page" onload="onImageLoad()" onerror="onImageError()">
+        
+        <div id="error-screen">
+            <button class="retry-btn" onclick="goBackSafe()">Vissza</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button id="bottom-next-btn" class="big-next-btn" onclick="changeChapter(1)">Következő fejezet</button>
+    </div>
+
+    <script>
+        // --- KONFIGURÁCIÓ ---
+        const FOLDER = "chapters/"; 
+        const PREFIX = "[Dewil]_Chainsaw_Man_Chp.";
+        const SUFFIX = "_long.jpg";
+        // ---------------------
+
+        let currentChapter = 1;
+        let lastSuccessfulChapter = 1;
+
+        const imgElement = document.getElementById('comic-img');
+        const loader = document.getElementById('loader');
+        const errorScreen = document.getElementById('error-screen');
+        const errorChapSpan = document.getElementById('error-chap-num');
+        const inputElement = document.getElementById('chapNum');
+        const navbar = document.getElementById('navbar');
+        const bottomBtn = document.getElementById('bottom-next-btn');
+
+        // --- GÖRGETÉS KEZELÉS ---
+        let lastScrollTop = 0;
+        window.addEventListener("scroll", function() {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            if (currentScroll > lastScrollTop && currentScroll > 50) {
+                navbar.classList.add("navbar-hidden");
+            } else {
+                navbar.classList.remove("navbar-hidden");
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; 
+        }, false);
+
+        // Indítás
+        loadImage(currentChapter);
+
+        function padNumber(num, size) {
+            let s = num + "";
+            while (s.length < size) s = "0" + s;
+            return s;
+        }
+
+        function loadImage(num) {
+            // UI Reset
+            if(window.scrollY > 100) window.scrollTo(0,0);
+            
+            errorScreen.style.display = 'none';
+            imgElement.style.display = 'none'; // Elrejtjük amíg tölt
+            imgElement.classList.remove('loaded');
+            loader.style.display = 'block';
+            bottomBtn.style.display = 'none';
+
+            // Fájlnév generálás
+            let formattedNum = padNumber(num, 3);
+            let rawFilename = PREFIX + formattedNum + SUFFIX;
+            let encodedFilename = encodeURIComponent(rawFilename);
+            
+            // Debug célra elmentjük
+            imgElement.dataset.targetNum = num;
+            imgElement.dataset.rawPath = FOLDER + rawFilename;
+            
+            // Betöltés indítása
+            imgElement.src = FOLDER + encodedFilename;
+            inputElement.value = num;
+        }
+
+        // --- ESEMÉNYEK ---
+
+        function onImageLoad() {
+            // SIKER
+            loader.style.display = 'none';
+            imgElement.style.display = 'block';
+            bottomBtn.style.display = 'block';
+            
+            // Kis késleltetés a fade-inhez
+            setTimeout(() => {
+                imgElement.classList.add('loaded');
+            }, 50);
+
+            // Ez volt az utolsó jó fejezet
+            lastSuccessfulChapter = parseInt(imgElement.dataset.targetNum);
+        }
+
+        function onImageError() {
+            // HIBA (Nem találtam a képet)
+            // Megpróbáljuk kódolás nélkül, ha még nem tettük
+            if (!imgElement.dataset.retried) {
+                imgElement.dataset.retried = "true";
+                imgElement.src = imgElement.dataset.rawPath;
+                return;
+            }
+            imgElement.dataset.retried = ""; // Reset
+
+            // Végleges hiba állapot
+            loader.style.display = 'none';
+            imgElement.style.display = 'none';
+            bottomBtn.style.display = 'none';
+            
+            // Hiba képernyő megjelenítése
+            errorChapSpan.innerText = imgElement.dataset.targetNum;
+            errorScreen.style.display = 'flex';
+        }
+
+        function goBackSafe() {
+            // A "Vissza" gomb a hiba képernyőn
+            currentChapter = lastSuccessfulChapter;
+            loadImage(currentChapter);
+        }
+
+        function changeChapter(delta) {
+            currentChapter += delta;
+            if (currentChapter < 1) currentChapter = 1;
+            loadImage(currentChapter);
+        }
+
+        function jumpToChapter() {
+            let val = parseInt(inputElement.value);
+            if (val > 0) {
+                currentChapter = val;
+                loadImage(currentChapter);
+                inputElement.blur();
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if(e.key === "ArrowLeft") changeChapter(-1);
+            if(e.key === "ArrowRight") changeChapter(1);
+        });
+    </script>
+     <script type="module" src="auth.js"></script>
+</body>
+</html>
