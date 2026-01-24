@@ -40,7 +40,7 @@ select {
 
 /* Kiemelt szó */
 mark {
-    background-color: #ffeb3b;
+    background-color: #ffffff49;
     color: #000;
     border-radius: 3px;
     padding: 0 2px;
@@ -397,4 +397,96 @@ body {
     padding: 1.5rem;           /* Kicsit több hely a széleken */
     max-width: 800px;          /* Optimális olvasási szélesség */
     margin: 0 auto;
+}
+/* ===== AUTOMATIKUS ELTŰNÉS STÍLUSAI (JAVÍTOTT) ===== */
+
+/* ==========================================================
+   MODERN AMOLED GOMBOK + ÚJ IKONOK
+========================================================== */
+
+#bookmark-btn,
+#goto-bookmark-btn,
+#scrollToTop-btn {
+    /* Méret és alak */
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    
+    /* Vékony, modern keret */
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+
+    /* MÉLYFEKETE HÁTTÉR */
+    background-color: #000000;
+    
+    /* Diszkrét árnyék */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+
+    /* Ikon igazítás */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    
+    /* Pozíció */
+    position: fixed; 
+    bottom: 30px;
+
+    /* Átmenetek */
+    transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
+    transform: scale(1);
+}
+
+/* ===== IKONOK STÍLUSA (ÚJ) ===== */
+/* Itt állítjuk be a méretet és a "Neon" ragyogást az ikonnak */
+#bookmark-btn i,
+#goto-bookmark-btn i,
+#scrollToTop-btn i {
+    font-size: 24px; /* Ikon mérete */
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3)); /* Finom ragyogás az ikon körül */
+    transition: filter 0.3s ease;
+}
+
+/* ===== EGYEDI SZÍNEK ===== */
+
+/* 1. Könyvjelző (Arany) */
+#bookmark-btn {
+    right: 20px;
+    color: #ffca28; /* Elegánsabb arany szín */
+}
+
+/* 2. Ugrás (Türkiz/Cyan - modernebb, mint a sima zöld) */
+#goto-bookmark-btn {
+    right: 90px;
+    color: #00e5ff; 
+}
+
+/* 3. Fel (Magenta/Lila) */
+#scrollToTop-btn {
+    right: 160px;
+    color: #e040fb; 
+}
+
+/* ===== HOVER (RÁMUTATÁS) ===== */
+#bookmark-btn:hover,
+#goto-bookmark-btn:hover,
+#scrollToTop-btn:hover {
+    background-color: #1a1a1a; /* Sötétszürke háttér */
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1); /* Nincs méretváltozás */
+}
+
+/* ===== KATTINTÁS (Active) ===== */
+#bookmark-btn:active,
+#goto-bookmark-btn:active,
+#scrollToTop-btn:active {
+    background-color: #333;
+    transform: scale(0.95);
+}
+
+/* ===== REJTETT ÁLLAPOT ===== */
+.ui-hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateY(30px) !important; 
 }

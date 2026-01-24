@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Bombasz Könyvek</title>
   <link rel="stylesheet" href="konyv.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
   <div id="progress-bar"></div>
@@ -70,10 +71,18 @@
     <main id="book-content"></main>
 
     <div id="controls">
-      <button id="bookmark-btn" title="Kijelölés mentése">🔖</button>
-      <button id="goto-bookmark-btn" title="Ugrás a mentéshez">⤴️</button>
-      <a href="konyv.html"><button id="scrollToTop-btn" title="Oldal tetejére">⬆️</button></a>
-    </div>
+  <button id="bookmark-btn" title="Kijelölés mentése">
+    <i class="fa-solid fa-bookmark"></i>
+  </button>
+  
+  <button id="goto-bookmark-btn" title="Ugrás a mentéshez">
+    <i class="fa-solid fa-location-crosshairs"></i>
+  </button>
+
+  <button id="scrollToTop-btn" title="Ugrás a választóhoz">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+</div>
 
     <div id="toast">Értesítés</div>
 
