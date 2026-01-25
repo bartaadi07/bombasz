@@ -12,6 +12,7 @@
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Observer.min.js"></script>
 </head>
 
 <body>
@@ -23,6 +24,7 @@
             <span class="header-auth">CONNECTING...</span>
         </div>
     </header>
+
     <section class="hero">
         <h1 class="hero-title">
             <span class="char" style="animation-delay: 0.1s">B</span>
@@ -34,6 +36,7 @@
             <span class="char" style="animation-delay: 0.4s">Z</span>
         </h1>
     </section>
+
     <section class="pages-section">
         <div class="section-label reveal">> ALOLDALAK</div>
         <h2 class="section-title split-text">
@@ -81,11 +84,13 @@
                 <i class="fa-solid fa-book-open"></i>
                 <h4>cbz</h4>
             </a>
+
+
+
+
         </div>
     </section>
-    <section class="clock-section">
-        <p class="hero-subtitle" id="real-time-clock"></p>
-    </section>
+
     <section class="downloads-section">
         <div class="section-label reveal">> LETÖLTÉSEK</div>
         <h2 class="section-title split-text">
@@ -95,13 +100,13 @@
         <div class="pages-grid stagger-reveal">
             <a href="egyeb/Bombasz Chat Setup 1.0.1.exe" class="page-card download-card" download>
                 <i class="fa-solid fa-comments"></i>
-                <h4>Bombasz Chat</h4>
+                <h4>Chat Setup</h4>
                 <small>(EXE)</small>
             </a>
             <a href="https://drive.google.com/file/d/1xuKcJ2v9WyYMUw6O1AZQhTnJWcihYFgV/view" target="_blank"
                 class="page-card download-card">
                 <i class="fa-solid fa-comments"></i>
-                <h4>Bombasz Chat - Portable</h4>
+                <h4>Chat Portable</h4>
                 <small>(EXE)</small>
             </a>
             <a href="egyeb/sub.py" class="page-card download-card" download>
@@ -109,35 +114,36 @@
                 <h4>.srt Időzítő</h4>
                 <small>(PY)</small>
             </a>
-            <a href="egyeb/Setup.exe" class="page-card download-card" download>
-                <i class="fa-solid fa-clock"></i>
-                <h4>.srt Időzítő</h4>
-                <small>(EXE)</small>
-            </a>
             <a href="https://drive.google.com/file/d/1Ly64r0g0RMKuSsabj9iegmRgCB5U_8Ea/view" target="_blank"
                 class="page-card download-card">
                 <i class="fa-solid fa-music"></i>
                 <h4>Zene Letöltő</h4>
                 <small>(EXE)</small>
             </a>
-                        <a href="egyeb/cbz.py" class="page-card download-card" download>
+             <a href="egyeb/cbz.py" class="page-card download-card" download>
                 <i class="fa-solid fa-chevron-up"></i>
-<h4>cbz/zip to long image</h4>
-                <small>(py)</small>
+                <h4>cbz/zip tool</h4>
+                <small>(PY)</small>
             </a>
-
+            
         </div>
     </section>
+
     <footer class="footer">
-        <div class="social-links">
-            <a href="https://x.com/barta_adi" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+        <div class="footer-clock-container">
+
+            <p id="real-time-clock" class="footer-clock"></p>
+        </div>
+
+
         </div>
     </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Observer.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1/bundled/lenis.min.js"></script>
     <script src="script.js" type="module"></script>
 </body>
-
 </html>
