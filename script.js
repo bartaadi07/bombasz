@@ -194,6 +194,7 @@ function gotoSection(index, direction) {
 }
 
 // --- JAVÍTOTT OBSERVER: KÉNYELMES SEBESSÉG ---
+// --- JAVÍTOTT OBSERVER: KÜLÖN MOBIL ÉRZÉKENYSÉG ---
 Observer.create({
     target: window,
     type: "wheel,touch,pointer",
@@ -207,6 +208,13 @@ Observer.create({
         const delta = self.deltaY; 
         const scrollable = self.event.target.closest('.pages-grid');
 
+        // MOBIL ÉRZÉKELÉS
+        const isMobile = window.innerWidth < 768;
+        
+        // ITT ÁLLÍTSD AZ ERŐSSÉGET!
+        // Ha mobil: 3.5 (könnyű görgetés), Ha gép: 1.5 (precíz görgetés)
+        const scrollForce = isMobile ? 9.0 : 1.5; 
+
         // 1. ESET: KÁRTYÁK GÖRGETÉSE
         if (scrollable) {
             const maxScroll = scrollable.scrollHeight - scrollable.clientHeight;
@@ -215,11 +223,10 @@ Observer.create({
             // LEFELÉ
             if (delta < 0) {
                 if (currentScroll < maxScroll - 2) {
-                    // --- KORRIGÁLT FIZIKA ---
                     gsap.to(scrollable, {
-                        scrollTop: currentScroll - (delta * 1.5), // Kisebb szorzó (3 helyett 1.5)
-                        duration: 0.5, // Rövidebb idő (0.8 helyett 0.5) -> Pattogósabb
-                        ease: "power3.out", // Természetesebb lassulás
+                        scrollTop: currentScroll - (delta * scrollForce), // Itt használjuk a változót
+                        duration: 0.5,
+                        ease: "power3.out",
                         overwrite: true
                     });
                     return; 
@@ -228,9 +235,8 @@ Observer.create({
             // FELFELÉ
             else if (delta > 0) {
                 if (currentScroll > 2) {
-                    // --- KORRIGÁLT FIZIKA ---
                     gsap.to(scrollable, {
-                        scrollTop: currentScroll - (delta * 1.5),
+                        scrollTop: currentScroll - (delta * scrollForce), // Itt is
                         duration: 0.5,
                         ease: "power3.out",
                         overwrite: true
@@ -242,9 +248,9 @@ Observer.create({
 
         // 2. ESET: LAPOZÁS
         if (delta < 0) {
-            gotoSection(currentIndex + 1, 1); // Következő
+            gotoSection(currentIndex + 1, 1); 
         } else {
-            gotoSection(currentIndex - 1, -1); // Előző
+            gotoSection(currentIndex - 1, -1); 
         }
     }
 });
