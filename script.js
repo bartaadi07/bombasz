@@ -213,7 +213,7 @@ Observer.create({
         
         // ITT ÁLLÍTSD AZ ERŐSSÉGET!
         // Ha mobil: 3.5 (könnyű görgetés), Ha gép: 1.5 (precíz görgetés)
-        const scrollForce = isMobile ? 7.0 : 1.5; 
+        const scrollForce = isMobile ? 5.0 : 1.5; 
 
         // 1. ESET: KÁRTYÁK GÖRGETÉSE
         if (scrollable) {
